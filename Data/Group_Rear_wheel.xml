@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Parameter xmlns="http://www.mbsim-env.de/MBXMLUtils">
+    <vectorParameter name="r_RW">
+        <xmlVector>
+            <ele>0.297000</ele>
+        </xmlVector>
+    </vectorParameter>
+    <vectorParameter name="rc_RW">
+        <xmlVector>
+            <ele>0.095000</ele>
+        </xmlVector>
+    </vectorParameter>
+    <vectorParameter name="r_rim_RW">
+        <xmlVector>
+            <ele>0.202000</ele>
+        </xmlVector>
+    </vectorParameter>
+    <vectorParameter name="z0_I_Road">
+        <xmlVector>
+            <ele>-0.472400</ele>
+        </xmlVector>
+    </vectorParameter>
+    <scalarParameter name="m_RW">14.700000</scalarParameter>
+    <matrixParameter name="T_RW">
+        <xmlMatrix>
+            <row>
+                <ele>0.383000</ele>
+                <ele>0.000000</ele>
+                <ele>0.000000</ele>
+            </row>
+            <row>
+                <ele>0.000000</ele>
+                <ele>0.638000</ele>
+                <ele>0.000000</ele>
+            </row>
+            <row>
+                <ele>0.000000</ele>
+                <ele>0.000000</ele>
+                <ele>0.383000</ele>
+            </row>
+        </xmlMatrix>
+    </matrixParameter>
+    <scalarParameter name="Fz0_RW">1305.170000</scalarParameter>
+    <scalarParameter name="rBx1">13.476000</scalarParameter>
+    <scalarParameter name="rBx2">11.354000</scalarParameter>
+    <scalarParameter name="Cxal">1.123100</scalarParameter>
+    <scalarParameter name="Cx">1.606400</scalarParameter>
+    <scalarParameter name="pDx1">1.355000</scalarParameter>
+    <scalarParameter name="pDx2">-0.060300</scalarParameter>
+    <scalarParameter name="pEx1">0.026300</scalarParameter>
+    <scalarParameter name="pEx2">0.270560</scalarParameter>
+    <scalarParameter name="pEx3">-0.076900</scalarParameter>
+    <scalarParameter name="pEx4">1.126800</scalarParameter>
+    <scalarParameter name="pKx1">25.940000</scalarParameter>
+    <scalarParameter name="pKx2">-4.233000</scalarParameter>
+    <scalarParameter name="pKx3">0.336900</scalarParameter>
+    <scalarParameter name="rBy1">7.785600</scalarParameter>
+    <scalarParameter name="rBy2">8.169700</scalarParameter>
+    <scalarParameter name="rBy3">-0.059140</scalarParameter>
+    <scalarParameter name="Cyka">1.053300</scalarParameter>
+    <scalarParameter name="Cy">0.900000</scalarParameter>
+    <scalarParameter name="pDy1">1.300000</scalarParameter>
+    <scalarParameter name="pDy2">0.000000</scalarParameter>
+    <scalarParameter name="pDy3">0.000000</scalarParameter>
+    <scalarParameter name="pEy1">-2.222700</scalarParameter>
+    <scalarParameter name="pEy2">-1.669000</scalarParameter>
+    <scalarParameter name="pEy4">-4.288000</scalarParameter>
+    <scalarParameter name="pKy1">15.791000</scalarParameter>
+    <scalarParameter name="pKy2">1.693500</scalarParameter>
+    <scalarParameter name="pKy3">1.460400</scalarParameter>
+    <scalarParameter name="pKy4">0.669000</scalarParameter>
+    <scalarParameter name="pKy5">0.187080</scalarParameter>
+    <scalarParameter name="Cga">0.613970</scalarParameter>
+    <scalarParameter name="pKy6">0.455120</scalarParameter>
+    <scalarParameter name="pKy7">0.013293</scalarParameter>
+    <scalarParameter name="Ega">-19.990000</scalarParameter>
+    <scalarParameter name="Ct">1.315300</scalarParameter>
+    <scalarParameter name="qBz1">10.041000</scalarParameter>
+    <scalarParameter name="qBz2">-0.000000</scalarParameter>
+    <scalarParameter name="qBz5">-0.767840</scalarParameter>
+    <scalarParameter name="qBz6">0.734220</scalarParameter>
+    <scalarParameter name="qBz9">16.390000</scalarParameter>
+    <scalarParameter name="qBz10">-0.355490</scalarParameter>
+    <scalarParameter name="qDz1">0.263310</scalarParameter>
+    <scalarParameter name="qDz2">0.030987</scalarParameter>
+    <scalarParameter name="qDz3">-0.620130</scalarParameter>
+    <scalarParameter name="qDz4">0.985240</scalarParameter>
+    <scalarParameter name="qDz8">0.504530</scalarParameter>
+    <scalarParameter name="qDz9">0.363120</scalarParameter>
+    <scalarParameter name="qDz10">-0.191680</scalarParameter>
+    <scalarParameter name="qDz11">-0.407090</scalarParameter>
+    <scalarParameter name="qEz1">-0.199240</scalarParameter>
+    <scalarParameter name="qEz2">-0.017638</scalarParameter>
+    <scalarParameter name="qEz5">3.651100</scalarParameter>
+    <scalarParameter name="qHz3">-0.028448</scalarParameter>
+    <scalarParameter name="qHz4">-0.009862</scalarParameter>
+    <scalarParameter name="c_z_RW">141000.000000</scalarParameter>
+    <scalarParameter name="d_z_RW">800.000000</scalarParameter>
+    <scalarParameter name="d_kappa">2.000000</scalarParameter>
+</Parameter>
