@@ -5628,12 +5628,6 @@ ret = [-MxG; -MyG; -MzG]  % Wirkung auf Fahrzeug ==&gt; neg. VZ!!!</SymbolicFunc
         <links/>
         <constraints/>
         <observers>
-          <FrameObserver name="Hauptrahmen">
-            <frame ref="../Group[Group_Frame]/Object[Frame]/Frame[C]"/>
-          </FrameObserver>
-          <FrameObserver name="Front_wheel">
-            <frame ref="../Group[Group_Front_wheel]/Object[Front_wheel]/Frame[C]"/>
-          </FrameObserver>
         </observers>  
         <enableOpenMBVFrameI/>
         <environments>
