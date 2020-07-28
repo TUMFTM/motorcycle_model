@@ -59,10 +59,28 @@ please make sure to actually have Java. If the error still remains a solution co
 to write the following line after `pkg load io`:<br />
 `pkg load windows`<br />
 
+# FMU
+MBSim provides some functionalities to produce a so-called Functional Mock-Up (FMU).
+This is an interface which allows to export the MBSim model and to run it in other 
+environments. The model can be exported as Co-Simulation or Model-Exchange. In the first 
+case the solver in MBSim is exported together with the model; in the second case the 
+solver must be provided from the environment where the model is run. Further information 
+about FMU can be found in (https://fmi-standard.org/). In order to export the FMU 
+from MBSim the following command must be executed from the terminal:<br />
+`path\to\mbsim-env\bin\mbsimCreateFMU.exe --cosim path\to\Motorcycle_FMU.mbsx`<br />
+The command `--cosim` is needed to generate a Co-Simulation. Without it a Model-Exchange
+is generated.<br />
+The file `Motorcycle_FMU.mbsx` is identical to the standand model, with the addition of an
+`Input_Output` group, where the inputs and outputs of the model can be chosen. Please 
+add inputs and outpus under `links` with `ExternSignalSource` and `ExternSignalSink` respectively. 
+When importing the FMU for example in Simulink, the inputs and outpus will appear 
+in the related box. Moreover, a suitable solver for the Co-Simulation is already set
+in `Motorcycle_FMU.mbsx`.
+
 # Authors
 The multibody model was developed by Francesco Passigato (Chair of Automotive Technology at TU Munich) and
 Dipl.-Ing. Dirk Wisselmann. A part of the rider model was created by Michael Härtl (Master Degree Student at TU Munich).
-A great contribution to the model was given by Prof. Martin Förg (University of Landshut), who helped to 
+A great contribution was given by Prof. Martin Förg (University of Landshut), who helped to 
 solve several problems and provided lots of suggestions on how to structure the model istelf. 
 
 # References 
