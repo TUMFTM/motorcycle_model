@@ -5450,50 +5450,6 @@ ret = [-MxG; -MyG; -MzG]  % Wirkung auf Fahrzeug ==&gt; neg. VZ!!!</SymbolicFunc
                 <GeneralizedVelocitySensor xmlns="http://www.mbsim-env.de/MBSimControl" name="alp">
                   <object ref="../../Group[Group_Front_fork]/Object[Fork_rot_x]"/>
                 </GeneralizedVelocitySensor>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="gyro_comp">
-                  <inputSignal ref="../Link[alp]"/>
-                  <inputSignal ref="../../Group[Group_Front_wheel]/Link[om_y_f]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="alp" arg1Dim="1" arg2="om" arg2Dim="1">
-                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>alp(1)*om(1)*T_FW(5)*sin(caster_angle)</ele>
-                        <ele>0</ele>
-                        <ele>alp(1)*om(1)*T_FW(5)*cos(caster_angle)</ele>
-                      </xmlVector>
-                    </SymbolicFunction>
-                  </function>
-                </SignalOperation>
-                <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" count="0" counterName="n">
-                  <KineticExcitation xmlns="http://www.mbsim-env.de/MBSim" name="gyro_comp_exc">
-                    <connect ref2="../../Group[Group_Front_wheel]/Object[Front_wheel]/Frame[C]"/>
-                    <frameOfReference>"secondFrame"</frameOfReference>
-                    <momentDirection unit="-">
-                      <xmlMatrix xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <row>
-                          <ele>1</ele>
-                          <ele>0</ele>
-                          <ele>0</ele>
-                        </row>
-                        <row>
-                          <ele>0</ele>
-                          <ele>1</ele>
-                          <ele>0</ele>
-                        </row>
-                        <row>
-                          <ele>0</ele>
-                          <ele>0</ele>
-                          <ele>1</ele>
-                        </row>
-                      </xmlMatrix>
-                    </momentDirection>
-                    <momentFunction>
-                      <SignalFunction xmlns="http://www.mbsim-env.de/MBSimControl">
-                        <returnSignal ref="../../Link[gyro_comp]"/>
-                      </SignalFunction>
-                    </momentFunction>
-                    <enableOpenMBV/>
-                  </KineticExcitation>
-                </Embed>
               </links>  
               <constraints/>
               <observers/>
