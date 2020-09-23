@@ -436,84 +436,84 @@
                                 <row>
                                   <ele>-0.9</ele>
                                   <ele>-6.</ele>
-                              </row>
+                                </row>
                                 <row>
                                   <ele>-0.8</ele>
                                   <ele>-7.91</ele>
-                              </row>
+                                </row>
                                 <row>
                                   <ele>-0.75</ele>
                                   <ele>-8.73</ele>
-                              </row>
+                                </row>
                                 <row>
                                   <ele>-0.7</ele>
                                   <ele>-9.02</ele>
-                              </row>
+                                </row>
                                 <row>
                                   <ele>-0.65</ele>
                                   <ele>-8.96</ele>
-                              </row>
+                                </row>
                                 <row>
                                   <ele>-0.6</ele>
                                   <ele>-8.66</ele>
-                              </row>
+                                </row>
                                 <row>
                                   <ele>-0.5</ele>
                                   <ele>-7.51</ele>
-                              </row>
+                                </row>
                                 <row>
                                   <ele>-0.4</ele>
                                   <ele>-5.95</ele>
-                              </row>
+                                </row>
                                 <row>
                                   <ele>-0.3</ele>
                                   <ele>-4.24</ele>
-                              </row>
+                                </row>
                                 <row>
                                   <ele>0</ele>
                                   <ele>0</ele>
-                              </row>
+                                </row>
                                 <row>
                                   <ele>0.3</ele>
                                   <ele>4.24</ele>
-                              </row>
+                                </row>
                                 <row>
                                   <ele>0.4</ele>
                                   <ele>5.95</ele>
-                              </row>
+                                </row>
                                 <row>
                                   <ele>0.5</ele>
                                   <ele>7.51</ele>
-                              </row>
+                                </row>
                                 <row>
                                   <ele>0.6</ele>
                                   <ele>8.66</ele>
-                              </row>
+                                </row>
                                 <row>
                                   <ele>0.65</ele>
                                   <ele>8.96</ele>
-                              </row>
+                                </row>
                                 <row>
                                   <ele>0.7</ele>
                                   <ele>9.02</ele>
-                              </row>
+                                </row>
                                 <row>
                                   <ele>0.75</ele>
                                   <ele>8.73</ele>
-                              </row>
+                                </row>
                                 <row>
                                   <ele>0.8</ele>
                                   <ele>7.91</ele>
-                              </row>
+                                </row>
                                 <row>
-                                  <ele>9</ele>
+                                  <ele>0.9</ele>
                                   <ele>6.0</ele>
-                              </row>
-                            </xmlMatrix>
-                          </xy>
-                        </TabularFunction>
-                      </function>
-                    </SignalOperation>
+                                </row>
+                              </xmlMatrix>
+                            </xy>
+                          </TabularFunction>
+                        </function>
+                      </SignalOperation>
                       <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Param_P_controller">
                         <inputSignal ref="../../Link[v_x]"/>
                         <inputSignal ref="../Link[roll_angle]"/>
@@ -1304,14 +1304,6 @@ ret = [Steering_controller*(P_Reg+K_Reg)]</SymbolicFunction>
                     <FixedRelativeFrame name="joint_rider">
                       <frameOfReference ref="../Frame[C]"/>
                       <relativePosition unit="m">joint_rider</relativePosition>
-                    </FixedRelativeFrame>
-                    <FixedRelativeFrame name="right_shoulder">
-                      <frameOfReference ref="../Frame[C]"/>
-                      <relativePosition unit="m">right_shoulder</relativePosition>
-                    </FixedRelativeFrame>
-                    <FixedRelativeFrame name="left_shoulder">
-                      <frameOfReference ref="../Frame[C]"/>
-                      <relativePosition unit="m">left_shoulder</relativePosition>
                     </FixedRelativeFrame>
                   </frames>
                   <contours/>
@@ -5617,6 +5609,7 @@ ret = [-MxG; -MyG; -MzG]  % Wirkung auf Fahrzeug ==&gt; neg. VZ!!!</SymbolicFunc
       <plotStepSize unit="s">1e-2</plotStepSize>
     </RADAU5Integrator>
   </MBSimProject>
+
 
 
 
