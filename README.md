@@ -3,7 +3,8 @@ The motorcycle model is based on the open source mulitbody simulation software M
 Please download the software under following link: https://www.mbsim-env.de/builds/run/current/win64-dailyrelease/. 
 
 # Motorcycle model
-In the following some information about the model functionalities are given.
+In the following some information about the model functionalities are given. More details on the model 
+can be found in the following paper: https://www.mdpi.com/2076-3417/10/19/6826.
 
 ### Switch for Dofs
 The parameters with the name beginning in "enable_" allow to decide which Dofs are 
