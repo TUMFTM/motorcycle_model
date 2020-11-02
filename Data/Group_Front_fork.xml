@@ -1,122 +1,119 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Parameter xmlns="http://www.mbsim-env.de/MBXMLUtils">
-    <vectorParameter name="L0_spring_f">
-        <xmlVector>
-            <ele>0.350000</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="CG_upper_fork">
-        <xmlVector>
-            <ele>0.007288</ele>
+
+
+   <vectorParameter name="L0_spring_f">
+      <xmlVector>
+         <ele>0.350000</ele>
+      </xmlVector>
+   </vectorParameter>
+   <vectorParameter name="CG_upper_fork">
+      <xmlVector>
+         <ele>0.007288</ele>
+         <ele>0.000000</ele>
+         <ele>0.032801</ele>
+      </xmlVector>
+   </vectorParameter>
+   <vectorParameter name="fork_joint">
+      <xmlVector>
+         <ele>0.123330</ele>
+         <ele>0.000000</ele>
+         <ele>-0.260890</ele>
+      </xmlVector>
+   </vectorParameter>
+   <vectorParameter name="joint_fork">
+      <xmlVector>
+         <ele>-0.008900</ele>
+         <ele>0.000000</ele>
+         <ele>0.085250</ele>
+      </xmlVector>
+   </vectorParameter>
+   <vectorParameter name="Wheel_Center">
+      <xmlVector>
+         <ele>0.097470</ele>
+         <ele>0.000000</ele>
+         <ele>-0.153640</ele>
+      </xmlVector>
+   </vectorParameter>
+   <vectorParameter name="right_handlebar">
+      <xmlVector>
+         <ele>0.025000</ele>
+         <ele>-0.220000</ele>
+         <ele>0.173000</ele>
+      </xmlVector>
+   </vectorParameter>
+   <vectorParameter name="left_handlebar">
+      <xmlVector>
+         <ele>0.025000</ele>
+         <ele>0.220000</ele>
+         <ele>0.173000</ele>
+      </xmlVector>
+   </vectorParameter>
+   <scalarParameter name="m_upper_fork">9.300000</scalarParameter>
+   <matrixParameter name="T_upper_fork">
+      <xmlMatrix>
+         <row>
+            <ele>0.500000</ele>
             <ele>0.000000</ele>
-            <ele>0.032801</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="fork_joint">
-        <xmlVector>
-            <ele>0.123330</ele>
             <ele>0.000000</ele>
-            <ele>-0.260890</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="joint_fork">
-        <xmlVector>
-            <ele>-0.008900</ele>
+         </row>
+         <row>
             <ele>0.000000</ele>
-            <ele>0.085250</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="Wheel_Center">
-        <xmlVector>
-            <ele>0.097470</ele>
+            <ele>0.400000</ele>
             <ele>0.000000</ele>
-            <ele>-0.153640</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="right_handlebar">
-        <xmlVector>
-            <ele>0.025000</ele>
-            <ele>-0.220000</ele>
-            <ele>0.173000</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="left_handlebar">
-        <xmlVector>
-            <ele>0.025000</ele>
-            <ele>0.220000</ele>
-            <ele>0.173000</ele>
-        </xmlVector>
-    </vectorParameter>
-    <scalarParameter name="m_upper_fork">9.300000</scalarParameter>
-    <matrixParameter name="T_upper_fork">
-        <xmlMatrix>
-            <row>
-                <ele>0.500000</ele>
-                <ele>0.000000</ele>
-                <ele>0.000000</ele>
-            </row>
-            <row>
-                <ele>0.000000</ele>
-                <ele>0.400000</ele>
-                <ele>0.000000</ele>
-            </row>
-            <row>
-                <ele>0.000000</ele>
-                <ele>0.000000</ele>
-                <ele>0.130000</ele>
-            </row>
-        </xmlMatrix>
-    </matrixParameter>
-    <scalarParameter name="m_lower_fork">6.500000</scalarParameter>
-    <matrixParameter name="T_lower_fork">
-        <xmlMatrix>
-            <row>
-                <ele>0.300000</ele>
-                <ele>0.000000</ele>
-                <ele>0.000000</ele>
-            </row>
-            <row>
-                <ele>0.000000</ele>
-                <ele>0.250000</ele>
-                <ele>0.000000</ele>
-            </row>
-            <row>
-                <ele>0.000000</ele>
-                <ele>0.000000</ele>
-                <ele>0.090000</ele>
-            </row>
-        </xmlMatrix>
-    </matrixParameter>
-    <vectorParameter name="tors_fork">
-        <xmlVector>
-            <ele>16000.000000</ele>
-            <ele>20.000000</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="bend_fork">
-        <xmlVector>
-            <ele>55300.000000</ele>
-            <ele>20.000000</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="c_suspension_f">
-        <xmlVector>
-            <ele>17000.000000</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="Fd_compression_f">
-        <xmlVector>
-            <ele>203.000000</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="Fd_rebound_f">
-        <xmlVector>
-            <ele>865.800000</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="F0_suspension_f">
-        <xmlVector>
-            <ele>876.231000</ele>
-        </xmlVector>
-    </vectorParameter>
+         </row>
+         <row>
+            <ele>0.000000</ele>
+            <ele>0.000000</ele>
+            <ele>0.130000</ele>
+         </row>
+      </xmlMatrix>
+   </matrixParameter>
+   <scalarParameter name="m_lower_fork">6.500000</scalarParameter>
+   <matrixParameter name="T_lower_fork">
+      <xmlMatrix>
+         <row>
+            <ele>0.300000</ele>
+            <ele>0.000000</ele>
+            <ele>0.000000</ele>
+         </row>
+         <row>
+            <ele>0.000000</ele>
+            <ele>0.250000</ele>
+            <ele>0.000000</ele>
+         </row>
+         <row>
+            <ele>0.000000</ele>
+            <ele>0.000000</ele>
+            <ele>0.090000</ele>
+         </row>
+      </xmlMatrix>
+   </matrixParameter>
+   <vectorParameter name="tors_fork">
+      <xmlVector>
+         <ele>16000.000000</ele>
+         <ele>20.000000</ele>
+      </xmlVector>
+   </vectorParameter>
+   <vectorParameter name="bend_fork">
+      <xmlVector>
+         <ele>55300.000000</ele>
+         <ele>20.000000</ele>
+      </xmlVector>
+   </vectorParameter>
+   <vectorParameter name="c_suspension_f">
+      <xmlVector>
+         <ele>17000.000000</ele>
+      </xmlVector>
+   </vectorParameter>
+   <vectorParameter name="Fd_compression_f">
+      <xmlVector>
+         <ele>203.000000</ele>
+      </xmlVector>
+   </vectorParameter>
+   <vectorParameter name="Fd_rebound_f">
+      <xmlVector>
+         <ele>865.800000</ele>
+      </xmlVector>
+   </vectorParameter>
 </Parameter>

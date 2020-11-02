@@ -132,3 +132,24 @@ for i=1:length(s)
     end
 end
 xmlwrite(strcat(char(file_name),'.xml'),DOMnode);
+
+filename = 'Vorlage.xml';
+DOMnode = xmlread('Vorlage.xml');
+Parameter = DOMnode.getDocumentElement;
+for i=1:length(m)
+    read = strcat('A',mat2str(i),':K',mat2str(i));
+    [data,name] = xlsread('Data.xlsx','Mass-Inertia',read);
+    if isempty(data)==0 && isempty(name)==0
+        if length(data)==1
+            scalarPar = DOMnode.createElement('scalarParameter');
+            scalarPar.setAttribute('name',char(name));
+            scalarPar.appendChild(DOMnode.createTextNode(sprintf('%f',data(1))));
+            Parameter.appendChild(scalarPar);
+        else
+        trash = 0;
+        end
+    else
+        trash = 0;
+    end
+end
+xmlwrite('kinematic_check.xml',DOMnode);

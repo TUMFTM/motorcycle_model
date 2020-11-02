@@ -1,245 +1,247 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Parameter xmlns="http://www.mbsim-env.de/MBXMLUtils">
-    <vectorParameter name="z0_I_Road">
-        <xmlVector>
+
+
+   <vectorParameter name="z0_I_Road">
+      <xmlVector>
+         <ele>0.000000</ele>
+         <ele>0.000000</ele>
+         <ele>-0.472400</ele>
+      </xmlVector>
+   </vectorParameter>
+   <vectorParameter name="x_Frame_C">
+      <xmlVector>
+         <ele>0.732088</ele>
+         <ele>0.000000</ele>
+         <ele>0.000000</ele>
+      </xmlVector>
+   </vectorParameter>
+   <vectorParameter name="point_for_kin">
+      <xmlVector>
+         <ele>-0.023300</ele>
+         <ele>0.000000</ele>
+         <ele>0.027600</ele>
+      </xmlVector>
+   </vectorParameter>
+   <vectorParameter name="CG_lower_body">
+      <xmlVector>
+         <ele>-0.313900</ele>
+         <ele>0.000000</ele>
+         <ele>0.371400</ele>
+      </xmlVector>
+   </vectorParameter>
+   <vectorParameter name="CG_swingarm">
+      <xmlVector>
+         <ele>-0.481900</ele>
+         <ele>0.000000</ele>
+         <ele>-0.161100</ele>
+      </xmlVector>
+   </vectorParameter>
+   <vectorParameter name="CG_trim_mass">
+      <xmlVector>
+         <ele>0.235320</ele>
+         <ele>0.000000</ele>
+         <ele>-0.203620</ele>
+      </xmlVector>
+   </vectorParameter>
+   <vectorParameter name="steering_head">
+      <xmlVector>
+         <ele>0.495100</ele>
+         <ele>0.000000</ele>
+         <ele>0.276600</ele>
+      </xmlVector>
+   </vectorParameter>
+   <vectorParameter name="axis_swingarm">
+      <xmlVector>
+         <ele>-0.128900</ele>
+         <ele>0.000000</ele>
+         <ele>-0.111600</ele>
+      </xmlVector>
+   </vectorParameter>
+   <vectorParameter name="rear_suspension_top">
+      <xmlVector>
+         <ele>-0.190900</ele>
+         <ele>0.000000</ele>
+         <ele>0.016400</ele>
+      </xmlVector>
+   </vectorParameter>
+   <vectorParameter name="p19">
+      <xmlVector>
+         <ele>-0.138900</ele>
+         <ele>0.000000</ele>
+         <ele>-0.284600</ele>
+      </xmlVector>
+   </vectorParameter>
+   <vectorParameter name="wheel_axis_rear">
+      <xmlVector>
+         <ele>-0.677900</ele>
+         <ele>0.000000</ele>
+         <ele>-0.175400</ele>
+      </xmlVector>
+   </vectorParameter>
+   <vectorParameter name="pack_bag_le">
+      <xmlVector>
+         <ele>-0.511270</ele>
+         <ele>0.200000</ele>
+         <ele>0.000000</ele>
+      </xmlVector>
+   </vectorParameter>
+   <vectorParameter name="pack_bag_ri">
+      <xmlVector>
+         <ele>-0.511270</ele>
+         <ele>-0.200000</ele>
+         <ele>0.000000</ele>
+      </xmlVector>
+   </vectorParameter>
+   <vectorParameter name="joint_rider">
+      <xmlVector>
+         <ele>-0.051000</ele>
+         <ele>0.000000</ele>
+         <ele>-0.296200</ele>
+      </xmlVector>
+   </vectorParameter>
+   <vectorParameter name="right_shoulder">
+      <xmlVector>
+         <ele>0.188300</ele>
+         <ele>-0.220000</ele>
+         <ele>-0.050000</ele>
+      </xmlVector>
+   </vectorParameter>
+   <vectorParameter name="left_shoulder">
+      <xmlVector>
+         <ele>0.188300</ele>
+         <ele>0.220000</ele>
+         <ele>-0.050000</ele>
+      </xmlVector>
+   </vectorParameter>
+   <scalarParameter name="m_Frame">153.716000</scalarParameter>
+   <matrixParameter name="T_Frame">
+      <xmlMatrix>
+         <row>
+            <ele>9.277400</ele>
+            <ele>0.000000</ele>
+            <ele>2.267000</ele>
+         </row>
+         <row>
+            <ele>0.000000</ele>
+            <ele>19.019300</ele>
+            <ele>0.000000</ele>
+         </row>
+         <row>
+            <ele>2.267000</ele>
+            <ele>0.000000</ele>
+            <ele>13.670200</ele>
+         </row>
+      </xmlMatrix>
+   </matrixParameter>
+   <scalarParameter name="m_lower_body">11.414000</scalarParameter>
+   <matrixParameter name="T_lower_body">
+      <xmlMatrix>
+         <row>
+            <ele>0.116300</ele>
+            <ele>0.000000</ele>
+            <ele>-0.005500</ele>
+         </row>
+         <row>
+            <ele>0.000000</ele>
+            <ele>0.094200</ele>
+            <ele>0.000000</ele>
+         </row>
+         <row>
+            <ele>-0.005500</ele>
+            <ele>0.000000</ele>
+            <ele>0.103600</ele>
+         </row>
+      </xmlMatrix>
+   </matrixParameter>
+   <scalarParameter name="m_upper_body">33.680000</scalarParameter>
+   <matrixParameter name="T_upper_body">
+      <xmlMatrix>
+         <row>
+            <ele>1.428000</ele>
+            <ele>0.000000</ele>
+            <ele>-0.443000</ele>
+         </row>
+         <row>
+            <ele>0.000000</ele>
+            <ele>1.347000</ele>
+            <ele>0.000000</ele>
+         </row>
+         <row>
+            <ele>-0.443000</ele>
+            <ele>0.000000</ele>
+            <ele>0.916000</ele>
+         </row>
+      </xmlMatrix>
+   </matrixParameter>
+   <scalarParameter name="m_trim_mass">0.000000</scalarParameter>
+   <matrixParameter name="T_trim_mass">
+      <xmlMatrix>
+         <row>
             <ele>0.000000</ele>
             <ele>0.000000</ele>
-            <ele>-0.472400</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="x_Frame_C">
-        <xmlVector>
-            <ele>0.732088</ele>
+            <ele>0.000000</ele>
+         </row>
+         <row>
             <ele>0.000000</ele>
             <ele>0.000000</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="point_for_kin">
-        <xmlVector>
-            <ele>-0.023300</ele>
             <ele>0.000000</ele>
-            <ele>0.027600</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="CG_lower_body">
-        <xmlVector>
-            <ele>-0.313900</ele>
+         </row>
+         <row>
             <ele>0.000000</ele>
-            <ele>0.371400</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="CG_swingarm">
-        <xmlVector>
-            <ele>-0.481900</ele>
             <ele>0.000000</ele>
-            <ele>-0.161100</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="CG_trim_mass">
-        <xmlVector>
-            <ele>0.235320</ele>
             <ele>0.000000</ele>
-            <ele>-0.203620</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="steering_head">
-        <xmlVector>
-            <ele>0.495100</ele>
+         </row>
+      </xmlMatrix>
+   </matrixParameter>
+   <scalarParameter name="m_pack_bag">0.000000</scalarParameter>
+   <matrixParameter name="T_pack_bag">
+      <xmlMatrix>
+         <row>
             <ele>0.000000</ele>
-            <ele>0.276600</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="axis_swingarm">
-        <xmlVector>
-            <ele>-0.128900</ele>
             <ele>0.000000</ele>
-            <ele>-0.111600</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="rear_suspension_top">
-        <xmlVector>
-            <ele>-0.190900</ele>
             <ele>0.000000</ele>
-            <ele>0.016400</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="p19">
-        <xmlVector>
-            <ele>-0.138900</ele>
+         </row>
+         <row>
             <ele>0.000000</ele>
-            <ele>-0.284600</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="wheel_axis_rear">
-        <xmlVector>
-            <ele>-0.677900</ele>
             <ele>0.000000</ele>
-            <ele>-0.175400</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="pack_bag_le">
-        <xmlVector>
-            <ele>-0.511270</ele>
-            <ele>0.200000</ele>
             <ele>0.000000</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="pack_bag_ri">
-        <xmlVector>
-            <ele>-0.511270</ele>
-            <ele>-0.200000</ele>
+         </row>
+         <row>
             <ele>0.000000</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="joint_rider">
-        <xmlVector>
-            <ele>-0.051000</ele>
             <ele>0.000000</ele>
-            <ele>-0.296200</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="right_shoulder">
-        <xmlVector>
-            <ele>0.188300</ele>
-            <ele>-0.220000</ele>
-            <ele>-0.050000</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="left_shoulder">
-        <xmlVector>
-            <ele>0.188300</ele>
-            <ele>0.220000</ele>
-            <ele>-0.050000</ele>
-        </xmlVector>
-    </vectorParameter>
-    <scalarParameter name="m_Frame">153.716000</scalarParameter>
-    <matrixParameter name="T_Frame">
-        <xmlMatrix>
-            <row>
-                <ele>9.277400</ele>
-                <ele>0.000000</ele>
-                <ele>2.267000</ele>
-            </row>
-            <row>
-                <ele>0.000000</ele>
-                <ele>19.019300</ele>
-                <ele>0.000000</ele>
-            </row>
-            <row>
-                <ele>2.267000</ele>
-                <ele>0.000000</ele>
-                <ele>13.670200</ele>
-            </row>
-        </xmlMatrix>
-    </matrixParameter>
-    <scalarParameter name="m_lower_body">11.414000</scalarParameter>
-    <matrixParameter name="T_lower_body">
-        <xmlMatrix>
-            <row>
-                <ele>0.116300</ele>
-                <ele>0.000000</ele>
-                <ele>-0.005500</ele>
-            </row>
-            <row>
-                <ele>0.000000</ele>
-                <ele>0.094200</ele>
-                <ele>0.000000</ele>
-            </row>
-            <row>
-                <ele>-0.005500</ele>
-                <ele>0.000000</ele>
-                <ele>0.103600</ele>
-            </row>
-        </xmlMatrix>
-    </matrixParameter>
-    <scalarParameter name="m_upper_body">33.680000</scalarParameter>
-    <matrixParameter name="T_upper_body">
-        <xmlMatrix>
-            <row>
-                <ele>1.428000</ele>
-                <ele>0.000000</ele>
-                <ele>-0.443000</ele>
-            </row>
-            <row>
-                <ele>0.000000</ele>
-                <ele>1.347000</ele>
-                <ele>0.000000</ele>
-            </row>
-            <row>
-                <ele>-0.443000</ele>
-                <ele>0.000000</ele>
-                <ele>0.916000</ele>
-            </row>
-        </xmlMatrix>
-    </matrixParameter>
-    <scalarParameter name="m_trim_mass">0.000000</scalarParameter>
-    <matrixParameter name="T_trim_mass">
-        <xmlMatrix>
-            <row>
-                <ele>0.000000</ele>
-                <ele>0.000000</ele>
-                <ele>0.000000</ele>
-            </row>
-            <row>
-                <ele>0.000000</ele>
-                <ele>0.000000</ele>
-                <ele>0.000000</ele>
-            </row>
-            <row>
-                <ele>0.000000</ele>
-                <ele>0.000000</ele>
-                <ele>0.000000</ele>
-            </row>
-        </xmlMatrix>
-    </matrixParameter>
-    <scalarParameter name="m_pack_bag">0.000000</scalarParameter>
-    <matrixParameter name="T_pack_bag">
-        <xmlMatrix>
-            <row>
-                <ele>0.000000</ele>
-                <ele>0.000000</ele>
-                <ele>0.000000</ele>
-            </row>
-            <row>
-                <ele>0.000000</ele>
-                <ele>0.000000</ele>
-                <ele>0.000000</ele>
-            </row>
-            <row>
-                <ele>0.000000</ele>
-                <ele>0.000000</ele>
-                <ele>0.000000</ele>
-            </row>
-        </xmlMatrix>
-    </matrixParameter>
-    <vectorParameter name="tors_Frame">
-        <xmlVector>
-            <ele>163000.000000</ele>
-            <ele>100.000000</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="rider_lean">
-        <xmlVector>
-            <ele>380.000000</ele>
-            <ele>34.000000</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="rider_lat">
-        <xmlVector>
-            <ele>38416.000000</ele>
-            <ele>981.000000</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="rider_yaw_upper_body">
-        <xmlVector>
-            <ele>75.800000</ele>
-            <ele>4.790000</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="rider_yaw_arms">
-        <xmlVector>
-            <ele>1053.400000</ele>
-            <ele>19.280000</ele>
-        </xmlVector>
-    </vectorParameter>
+            <ele>0.000000</ele>
+         </row>
+      </xmlMatrix>
+   </matrixParameter>
+   <vectorParameter name="tors_Frame">
+      <xmlVector>
+         <ele>163000.000000</ele>
+         <ele>100.000000</ele>
+      </xmlVector>
+   </vectorParameter>
+   <vectorParameter name="rider_lean">
+      <xmlVector>
+         <ele>380.000000</ele>
+         <ele>34.000000</ele>
+      </xmlVector>
+   </vectorParameter>
+   <vectorParameter name="rider_lat">
+      <xmlVector>
+         <ele>38416.000000</ele>
+         <ele>981.000000</ele>
+      </xmlVector>
+   </vectorParameter>
+   <vectorParameter name="rider_yaw_upper_body">
+      <xmlVector>
+         <ele>75.800000</ele>
+         <ele>4.790000</ele>
+      </xmlVector>
+   </vectorParameter>
+   <vectorParameter name="rider_yaw_arms">
+      <xmlVector>
+         <ele>1053.400000</ele>
+         <ele>19.280000</ele>
+      </xmlVector>
+   </vectorParameter>
 </Parameter>

@@ -7,10 +7,11 @@
 
     <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils">
       <Parameter>
+        <scalarParameter name="_______________kinematic_structure_________________________________________">0%________________________________________________________________</scalarParameter>
         <scalarParameter name="enable_frame_torsion">1                     % [/]</scalarParameter>
         <scalarParameter name="enable_swingarm_torsion">1                     % [/]</scalarParameter>
         <scalarParameter name="enable_rider_lean">1                     % [/]</scalarParameter>
-        <scalarParameter name="enable_rider_yaw">1                     % [/]</scalarParameter>
+        <scalarParameter name="enable_rider_yaw">0                     % [/]</scalarParameter>
         <scalarParameter name="enable_rider_lateral">1                     % [/]</scalarParameter>
         <scalarParameter name="enable_fork_rot_x">1                     % [/]</scalarParameter>
         <scalarParameter name="enable_fork_rot_y">1                     % [/]</scalarParameter>
@@ -22,24 +23,38 @@
         <scalarParameter name="Komp_Gyro_RW">0                     % Comp. centrifugal moments rear wheel [/]          </scalarParameter>
         <scalarParameter name="Switch_Gyro_comp_wobble">0                     % Comp. centrifugal moment fork bending [/]</scalarParameter>
         <scalarParameter name="Switch_Komp_vy">0                     % Comp. r*alp in v_cf_C [/]</scalarParameter>
-        <scalarParameter name="v0">50                % [km/h]                                            </scalarParameter>
-        <scalarParameter name="Velocity_controller">0                     % [/]</scalarParameter>
-        <scalarParameter name="Steering_controller">0                     % [/]                           </scalarParameter>
-        <scalarParameter name="Brake_distribution">0.8                   % front brake</scalarParameter>
+        <scalarParameter name="_______________velocity_control____________________________________________________________">0%____________________________________________________________________</scalarParameter>        
+        <scalarParameter name="v0">200                % [km/h]                                            </scalarParameter>
+        <scalarParameter name="Velocity_controller">1                     % [/]</scalarParameter>
+        <scalarParameter name="Brake_distribution">0.8                   % front brake</scalarParameter>        
+        <scalarParameter name="_______________steering_control___________________________________________________________">0%____________________________________________________________________</scalarParameter>        
+        <scalarParameter name="Steering_controller">1                     % [/]                           </scalarParameter>
+        <scalarParameter name="Setval_roll_angle">30                  % [Grad]         </scalarParameter>
+        <scalarParameter name="T_roll_start">0.5                   % [sec]      </scalarParameter>
+        <scalarParameter name="T_roll_exc">1.0                    % Duration ramp up setvalue [sec]      </scalarParameter>
+        <scalarParameter name="_______________excitation__________________________________________________________________">0%____________________________________________________________________</scalarParameter>
         <scalarParameter name="Torque_steer_cos">0                     % [Nm]       </scalarParameter>
         <scalarParameter name="T_To_start">0                     % [sec]      </scalarParameter>
         <scalarParameter name="T_To_exc">1.5                   % Duration Torque [sec]      </scalarParameter>
         <scalarParameter name="Fy_Impuls">0 %1000                %  [N]       </scalarParameter>
         <scalarParameter name="T_Fy_start">0                     % [sec]      </scalarParameter>
         <scalarParameter name="T_Fy_exc">0.2                   % Duration Fy_Impuls [sec]      </scalarParameter>
-        <scalarParameter name="steering_damper">6.944               %[Nm]</scalarParameter>
-        <scalarParameter name="M0_rot_y_fork">108.49              % preload fork [Nm]</scalarParameter>
-        <scalarParameter name="caster_angle">-0.4189             % [rad]</scalarParameter>
         <scalarParameter name="h_road_waves">0*0.02              % height cosinus-road waves [m]</scalarParameter>
         <scalarParameter name="l_road_waves">2.65                 % length road waves [m]</scalarParameter>
-        <scalarParameter name="n_road_waves">2                   % number of road waves [/]</scalarParameter>
+        <scalarParameter name="n_road_waves">2                      % number of road waves [/]</scalarParameter>
         <scalarParameter name="T_start_road_waves">1                      % [sec]</scalarParameter>
-        <scalarParameter name="wheelbase">1.41                 % [m]</scalarParameter>
+        <scalarParameter name="_______________preload______________________________________________________________________">0%____________________________________________________________________</scalarParameter>
+        <scalarParameter name="Fz0_FW">1172.57              %[N]</scalarParameter>
+        <scalarParameter name="Fz0_RW">1272.19              %[N]</scalarParameter>
+        <scalarParameter name="M0_rot_y_fork">111.73                % preload fork [Nm]</scalarParameter>
+        <scalarParameter name="F0_suspension_f">906.30                %[N]</scalarParameter>
+        <scalarParameter name="F0_suspension_r">1946.22              %[N]</scalarParameter>
+        <scalarParameter name="_______________vehicle_data___________________________________________________________________">0%____________________________________________________________________</scalarParameter>
+        <scalarParameter name="caster_angle">-0.4189             % [rad]</scalarParameter>
+        <scalarParameter name="steering_damper">6.944                %[Nm]</scalarParameter>
+        <scalarParameter name="wheelbase">1.41                  % [m]</scalarParameter>
+        <scalarParameter name="x_CoG">-0.0016             % vector p_to_kin =&gt; CoG [m] </scalarParameter>
+        <scalarParameter name="z_CoG">0.0674              % vector p_to_kin =&gt; CoG [m] </scalarParameter>
       </Parameter>
      <DynamicSystemSolver xmlns="http://www.mbsim-env.de/MBSim" name="MBS">
         <plotFeatureRecursive value="generalizedPosition">true</plotFeatureRecursive>
@@ -74,7 +89,7 @@
                   <Parameter>
                     <scalarParameter name="M_brake_max">-1000                %[Nm]</scalarParameter>
                     <scalarParameter name="M_drive_max">400                    %[N]</scalarParameter>
-                    <scalarParameter name="T_cos_start">0                     % [sec]      </scalarParameter>
+                    <scalarParameter name="T_cos_start">99                   % [sec]      </scalarParameter>
                     <scalarParameter name="T_cos_exc">2                     % [sec]      </scalarParameter>
                     <scalarParameter name="T_end">5                     % [sec]      </scalarParameter>
                     <scalarParameter name="v_cos_end">150                  % [km/h]                                            </scalarParameter>
@@ -142,7 +157,7 @@
                       </function>
                     </SignalOperation>
                       <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="vx_diff">
-                        <inputSignal ref="../../Link[v_x]"/>
+                        <inputSignal ref="../../Link[v_long]"/>
                         <inputSignal ref="../Link[vx_target]"/>
                         <function>
                           <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="vx" arg1Dim="1" arg2="vxt" arg2Dim="1">
@@ -315,75 +330,69 @@
                     <observers/>
                   </Group>
                 </Embed>
-                <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                  <Parameter>
-                    <scalarParameter name="Setval_roll_angle">0                   % [Grad]                                             </scalarParameter>
-                    <scalarParameter name="T_roll_start">0.6                   % [sec]      </scalarParameter>
-                    <scalarParameter name="T_roll_exc">1                     % Duration ramp up setvalue [sec]      </scalarParameter>
-                  </Parameter>
-                  <Group xmlns="http://www.mbsim-env.de/MBSim" name="lateral">
+                <Group name="lateral" xmlns="http://www.mbsim-env.de/MBSim">
                     <frames/>
                     <contours/>
                     <groups/>
                     <objects/>
                     <links>
                       <KineticExcitation name="Torque_steering_cos_exc">
-                        <connect ref1="../../../Group[Group_Frame]/Object[frame_torsion]/Frame[C]" ref2="../../../Group[Group_Front_fork]/Object[Steering_axis]/Frame[C]"/>
-                        <momentDirection unit="-">
-                          <xmlMatrix xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                            <row>
-                              <ele>0</ele>
+                      <connect ref1="../../../Group[Group_Frame]/Object[frame_torsion]/Frame[C]" ref2="../../../Group[Group_Front_fork]/Object[Steering_axis]/Frame[C]"/>
+                      <momentDirection unit="-">
+                        <xmlMatrix xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                          <row>
+                            <ele>0</ele>
                           </row>
-                            <row>
-                              <ele>0</ele>
+                          <row>
+                            <ele>0</ele>
                           </row>
-                            <row>
-                              <ele>1</ele>
+                          <row>
+                            <ele>1</ele>
                           </row>
                         </xmlMatrix>
                       </momentDirection>
-                        <momentFunction>
-                          <PiecewiseDefinedFunction>
-                            <limitedFunctions>
-                              <LimitedFunction>
-                                <function>
-                                  <ConstantFunction>
-                                    <a0>0</a0>
+                      <momentFunction>
+                        <PiecewiseDefinedFunction>
+                          <limitedFunctions>
+                            <LimitedFunction>
+                              <function>
+                                <ConstantFunction>
+                                  <a0>0</a0>
                                 </ConstantFunction>
                               </function>
-                                <limit>T_To_start</limit>
+                              <limit>T_To_start</limit>
                             </LimitedFunction>
-                              <LimitedFunction>
-                                <function>
-                                  <SymbolicFunction arg1="t">
-                                    <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                                      <ele>ret = Torque_steer_cos*0.5*(1-cos(2*pi*1/T_To_exc*t))*(1-Steering_controller)</ele>
+                            <LimitedFunction>
+                              <function>
+                                <SymbolicFunction arg1="t">
+                                  <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                                    <ele>ret = Torque_steer_cos*0.5*(1-cos(2*pi*1/T_To_exc*(t-T_To_start)))*(1-Steering_controller)</ele>
                                   </xmlVector>
                                 </SymbolicFunction>
                               </function>
-                                <limit>T_To_start + T_To_exc</limit>
+                              <limit>T_To_start + T_To_exc</limit>
                             </LimitedFunction>
-                              <LimitedFunction>
-                                <function>
-                                  <ConstantFunction>
-                                    <a0>0</a0>
+                            <LimitedFunction>
+                              <function>
+                                <ConstantFunction>
+                                  <a0>0</a0>
                                 </ConstantFunction>
                               </function>
-                                <limit>1000</limit>
+                              <limit>1000</limit>
                             </LimitedFunction>
                           </limitedFunctions>
                         </PiecewiseDefinedFunction>
                       </momentFunction>
-                        <enableOpenMBV>
-                          <diffuseColor>
-                            <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                              <ele>0.333333</ele>
-                              <ele>1</ele>
-                              <ele>0.666667</ele>
+                      <enableOpenMBV>
+                        <diffuseColor>
+                          <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                            <ele>0.333333</ele>
+                            <ele>1</ele>
+                            <ele>0.666667</ele>
                           </xmlVector>
                         </diffuseColor>
-                          <scaleLength>.1</scaleLength>
-                          <scaleSize>.1</scaleSize>
+                        <scaleLength>.1</scaleLength>
+                        <scaleSize>.1</scaleSize>
                       </enableOpenMBV>
                     </KineticExcitation>
                       <GeneralizedPositionSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="roll_angle">
@@ -401,238 +410,84 @@
                                 <function>
                                   <ConstantFunction>
                                     <a0>0</a0>
-                                </ConstantFunction>
-                              </function>
+                                  </ConstantFunction>
+                                </function>
                                 <limit>T_roll_start</limit>
-                            </LimitedFunction>
+                              </LimitedFunction>
                               <LimitedFunction>
                                 <function>
                                   <SymbolicFunction arg1="t" arg1Dim="1">
                                     <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
                                       <ele>ret = Setval_roll_angle*pi/180*0.5*(1-cos(pi*1/(T_roll_exc)*(t(1)-T_roll_start)))</ele>
-                                  </xmlVector>
-                                </SymbolicFunction>
-                              </function>
+                                    </xmlVector>
+                                  </SymbolicFunction>
+                                </function>
                                 <limit>T_roll_start + T_roll_exc</limit>
-                            </LimitedFunction>
+                              </LimitedFunction>
                               <LimitedFunction>
                                 <function>
                                   <ConstantFunction>
                                     <a0>Setval_roll_angle*pi/180</a0>
-                                </ConstantFunction>
-                              </function>
+                                  </ConstantFunction>
+                                </function>
                                 <limit>1000</limit>
-                            </LimitedFunction>
-                          </limitedFunctions>
-                        </PiecewiseDefinedFunction>
-                      </function>
-                    </SignalOperation>
-                      <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="M_steer_stat_100kmh">
-                        <inputSignal ref="../Link[roll_angle]"/>
-                        <function>
-                          <TabularFunction xmlns="http://www.mbsim-env.de/MBSim">
-                            <xy>
-                              <xmlMatrix xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                                <row>
-                                  <ele>-0.9</ele>
-                                  <ele>-6.</ele>
-                                </row>
-                                <row>
-                                  <ele>-0.8</ele>
-                                  <ele>-7.91</ele>
-                                </row>
-                                <row>
-                                  <ele>-0.75</ele>
-                                  <ele>-8.73</ele>
-                                </row>
-                                <row>
-                                  <ele>-0.7</ele>
-                                  <ele>-9.02</ele>
-                                </row>
-                                <row>
-                                  <ele>-0.65</ele>
-                                  <ele>-8.96</ele>
-                                </row>
-                                <row>
-                                  <ele>-0.6</ele>
-                                  <ele>-8.66</ele>
-                                </row>
-                                <row>
-                                  <ele>-0.5</ele>
-                                  <ele>-7.51</ele>
-                                </row>
-                                <row>
-                                  <ele>-0.4</ele>
-                                  <ele>-5.95</ele>
-                                </row>
-                                <row>
-                                  <ele>-0.3</ele>
-                                  <ele>-4.24</ele>
-                                </row>
-                                <row>
-                                  <ele>0</ele>
-                                  <ele>0</ele>
-                                </row>
-                                <row>
-                                  <ele>0.3</ele>
-                                  <ele>4.24</ele>
-                                </row>
-                                <row>
-                                  <ele>0.4</ele>
-                                  <ele>5.95</ele>
-                                </row>
-                                <row>
-                                  <ele>0.5</ele>
-                                  <ele>7.51</ele>
-                                </row>
-                                <row>
-                                  <ele>0.6</ele>
-                                  <ele>8.66</ele>
-                                </row>
-                                <row>
-                                  <ele>0.65</ele>
-                                  <ele>8.96</ele>
-                                </row>
-                                <row>
-                                  <ele>0.7</ele>
-                                  <ele>9.02</ele>
-                                </row>
-                                <row>
-                                  <ele>0.75</ele>
-                                  <ele>8.73</ele>
-                                </row>
-                                <row>
-                                  <ele>0.8</ele>
-                                  <ele>7.91</ele>
-                                </row>
-                                <row>
-                                  <ele>0.9</ele>
-                                  <ele>6.0</ele>
-                                </row>
-                              </xmlMatrix>
-                            </xy>
-                          </TabularFunction>
+                              </LimitedFunction>
+                            </limitedFunctions>
+                          </PiecewiseDefinedFunction>
                         </function>
                       </SignalOperation>
-                      <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Param_P_controller">
-                        <inputSignal ref="../../Link[v_x]"/>
-                        <inputSignal ref="../Link[roll_angle]"/>
-                        <function>
-                          <TwoDimensionalTabularFunction xmlns="http://www.mbsim-env.de/MBSim">
-                            <x>
-                              <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                                <ele>0</ele>
-                                <ele>50/3.6</ele>
-                                <ele>100/3.6</ele>
-                                <ele>200/3.6</ele>
-                                <ele>300/3.6</ele>
-                            </xmlVector>
+                      <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="M_steer_stat">
+                      <inputSignal ref="../../Link[v_long]"/>
+                      <inputSignal ref="../Link[roll_angle]"/>
+                      <function>
+                        <TwoDimensionalTabularFunction xmlns="http://www.mbsim-env.de/MBSim">
+                          <x>
+                            <fromFile xmlns="http://www.mbsim-env.de/MBXMLUtils" href="Data/vel.txt"/>
                           </x>
-                            <y>
-                              <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                                <ele>-0.9</ele>
-                                <ele>0</ele>
-                                <ele>0.9</ele>
-                            </xmlVector>
+                          <y>
+                            <fromFile xmlns="http://www.mbsim-env.de/MBXMLUtils" href="Data/roll_des.txt"/>
                           </y>
-                            <z>
-                              <xmlMatrix xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                                <row>
-                                  <ele>40</ele>
-                                  <ele>40</ele>
-                                  <ele>25</ele>
-                                  <ele>25</ele>
-                                  <ele>25</ele>
-                              </row>
-                                <row>
-                                  <ele>50</ele>
-                                  <ele>50</ele>
-                                  <ele>60</ele>
-                                  <ele>150</ele>
-                                  <ele>150</ele>
-                              </row>
-                                <row>
-                                  <ele>40</ele>
-                                  <ele>40</ele>
-                                  <ele>25</ele>
-                                  <ele>25</ele>
-                                  <ele>25</ele>
-                              </row>
-                            </xmlMatrix>
+                          <z>
+                            <fromFile xmlns="http://www.mbsim-env.de/MBXMLUtils" href="Data/steer_mom_stat.txt"/>
                           </z>
                         </TwoDimensionalTabularFunction>
                       </function>
                     </SignalOperation>
-                      <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Param_K_controller">
-                        <inputSignal ref="../../Link[v_x]"/>
-                        <inputSignal ref="../Link[roll_angle]"/>
-                        <function>
-                          <TwoDimensionalTabularFunction xmlns="http://www.mbsim-env.de/MBSim">
-                            <x>
-                              <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                                <ele>0</ele>
-                                <ele>50/3.6</ele>
-                                <ele>100/3.6</ele>
-                                <ele>200/3.6</ele>
-                                <ele>300/3.6</ele>
-                            </xmlVector>
+                      <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Param_P_controller">
+                      <inputSignal ref="../../Link[v_long]"/>
+                      <inputSignal ref="../Link[roll_angle]"/>
+                      <function>
+                        <TwoDimensionalTabularFunction xmlns="http://www.mbsim-env.de/MBSim">
+                          <x>
+                            <fromFile xmlns="http://www.mbsim-env.de/MBXMLUtils" href="Data/vel.txt"/>
                           </x>
-                            <y>
-                              <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                                <ele>-0.9</ele>
-                                <ele>0</ele>
-                                <ele>0.9</ele>
-                            </xmlVector>
+                          <y>
+                            <fromFile xmlns="http://www.mbsim-env.de/MBXMLUtils" href="Data/roll_des.txt"/>
                           </y>
-                            <z>
-                              <xmlMatrix xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                                <row>
-                                  <ele>4</ele>
-                                  <ele>8</ele>
-                                  <ele>35</ele>
-                                  <ele>90</ele>
-                                  <ele>90</ele>
-                              </row>
-                                <row>
-                                  <ele>10</ele>
-                                  <ele>10</ele>
-                                  <ele>20</ele>
-                                  <ele>60</ele>
-                                  <ele>60</ele>
-                              </row>
-                                <row>
-                                  <ele>4</ele>
-                                  <ele>8</ele>
-                                  <ele>35</ele>
-                                  <ele>90</ele>
-                                  <ele>90</ele>
-                              </row>
-                            </xmlMatrix>
+                          <z>
+                            <fromFile xmlns="http://www.mbsim-env.de/MBXMLUtils" href="Data/P_par.txt"/>
                           </z>
                         </TwoDimensionalTabularFunction>
                       </function>
                     </SignalOperation>
                       <Multiplexer xmlns="http://www.mbsim-env.de/MBSimControl" name="steering_controller_input">
-                        <inputSignal ref="../Link[roll_angle_setval]"/>
-                        <inputSignal ref="../Link[roll_angle]"/>
-                        <inputSignal ref="../Link[roll_angle_vel]"/>
-                        <inputSignal ref="../Link[Param_P_controller]"/>
-                        <inputSignal ref="../Link[Param_K_controller]"/>
-                        <inputSignal ref="../Link[M_steer_stat_100kmh]"/>
-                  </Multiplexer>  
+                      <inputSignal ref="../Link[roll_angle_setval]"/>
+                      <inputSignal ref="../Link[roll_angle]"/>
+                      <inputSignal ref="../Link[roll_angle_vel]"/>
+                      <inputSignal ref="../Link[Param_P_controller]"/>
+                      <inputSignal ref="../Link[M_steer_stat]"/>
+                    </Multiplexer>  
                       <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="steering_controller_sop">
-                        <inputSignal ref="../Link[steering_controller_input]"/>
-                        <function>
-                          <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="in" arg1Dim="6">RW_s = in(1);
+                      <inputSignal ref="../Link[steering_controller_input]"/>
+                      <function>
+                        <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="in" arg1Dim="5">RW_s = in(1);
 RW    = in(2);
 RWp  = in(3);
 P       = in(4);
-K       = in(5);
-MLs   = in(6);
+MLs   = in(5);
 %----------------------------------------------
 P_Reg = P*(RW_s-RW)+MLs;
-K_Reg = K*RWp;
-ret = [Steering_controller*(P_Reg+K_Reg)]</SymbolicFunction>
+ret = [Steering_controller*(P_Reg)]</SymbolicFunction>
                       </function>
                     </SignalOperation>  
                       <KineticExcitation name="steering_controller_exc">
@@ -671,7 +526,29 @@ ret = [Steering_controller*(P_Reg+K_Reg)]</SymbolicFunction>
                     <constraints/>
                     <observers/>
                   </Group>
-                </Embed>
+                <Group name="kinematics">
+                  <frames/>
+                  <contours/>
+                  <groups/>
+                  <objects/>
+                  <links>
+                    <AccelerationSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="a_frame_I">
+                      <frame ref="../../../Group[Group_Frame]/Object[Frame]/Frame[C]"/>
+                    </AccelerationSensor>
+                    <OrientationSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="S_I_yaw_axis">
+                      <frame ref="../../../Group[Group_Frame]/Object[yaw_axis]/Frame[C]"/>
+                    </OrientationSensor>
+                    <GeneralizedPositionSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="pitch_angle">
+                      <object ref="../../../Group[Group_Frame]/Object[Frame]"/>
+                    </GeneralizedPositionSensor>
+                    <GeneralizedPositionSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="yaw_angle">
+                      <object ref="../../../Group[Group_Frame]/Object[yaw_axis]"/>
+                    </GeneralizedPositionSensor>
+                  </links>
+                  <constraints/>
+                  <observers/>
+                  <enableOpenMBVFrameI/>
+                </Group>
               </groups>
               <objects/>
               <links>
@@ -682,25 +559,38 @@ ret = [Steering_controller*(P_Reg+K_Reg)]</SymbolicFunction>
                 </LinearFunction>
               </function>
             </FunctionSensor>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="v_x">
+                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="v_long">
                   <inputSignal ref="../../Group[Group_Rear_wheel]/Link[v_cr_C]"/>
                   <function>
                     <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="v" arg1Dim="3">
                       <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
                         <ele>ret = v(1)</ele>
-                  </xmlVector>
-                </SymbolicFunction>
-              </function>
-            </SignalOperation>
-                <AccelerationSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="a_frame_I">
-                  <frame ref="../../Group[Group_Frame]/Object[Frame]/Frame[C]"/>
-                </AccelerationSensor>
-                <OrientationSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="S_I_yaw_axis">
-                  <frame ref="../../Group[Group_Frame]/Object[yaw_axis]/Frame[C]"/>
-                </OrientationSensor>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="a_frame_yaw_Axis">
-                  <inputSignal ref="../Link[a_frame_I]"/>
-                  <inputSignal ref="../Link[S_I_yaw_axis]"/>
+                      </xmlVector>
+                    </SymbolicFunction>
+                  </function>
+                </SignalOperation>
+                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="v_kmh">
+                  <inputSignal ref="../Link[v_long]"/>
+                  <function>
+                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="v" arg1Dim="1">
+                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                        <ele>ret = v(1)*3.6</ele>
+                      </xmlVector>
+                    </SymbolicFunction>
+                  </function>
+                </SignalOperation>
+                <NonlinearTransferSystem xmlns="http://www.mbsim-env.de/MBSimControl" name="s_long">
+                  <inputSignal ref="../Link[v_long]"/>
+                  <systemFunction>
+                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="x" arg1Dim="1" arg2="u" arg2Dim="1">
+                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                        <ele>u(1)</ele>
+                      </xmlVector>
+                    </SymbolicFunction>
+                  </systemFunction>
+                </NonlinearTransferSystem><SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="a_long">
+                  <inputSignal ref="../Group[kinematics]/Link[a_frame_I]"/>
+                  <inputSignal ref="../Group[kinematics]/Link[S_I_yaw_axis]"/>
                   <function>
                     <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="a" arg1Dim="3" arg2="s" arg2Dim="9">
                       <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
@@ -710,8 +600,17 @@ ret = [Steering_controller*(P_Reg+K_Reg)]</SymbolicFunction>
                       </xmlVector>
                     </SymbolicFunction>
                   </function>
-                </SignalOperation>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Roll_angle_deg">
+                </SignalOperation><SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="a_lat">
+                  <inputSignal ref="../Group[kinematics]/Link[a_frame_I]"/>
+                  <inputSignal ref="../Group[kinematics]/Link[S_I_yaw_axis]"/>
+                  <function>
+                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="a" arg1Dim="3" arg2="s" arg2Dim="9">
+                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                        <ele>ret = s(2)*a(1) + s(5)*a(2) + s(8)*a(3)</ele>
+                      </xmlVector>
+                    </SymbolicFunction>
+                  </function>
+                </SignalOperation><SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Roll_angle_deg">
                   <inputSignal ref="../Group[lateral]/Link[roll_angle]"/>
                   <function>
                     <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="al" arg1Dim="1">
@@ -720,8 +619,25 @@ ret = [Steering_controller*(P_Reg+K_Reg)]</SymbolicFunction>
                       </xmlVector>
                     </SymbolicFunction>
                   </function>
-                </SignalOperation>
-              </links>
+                </SignalOperation><SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Pitch_angle_deg">
+                  <inputSignal ref="../Group[kinematics]/Link[pitch_angle]"/>
+                  <function>
+                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="be" arg1Dim="1">
+                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                        <ele>ret = be(1)*180/pi</ele>
+                      </xmlVector>
+                    </SymbolicFunction>
+                  </function>
+                </SignalOperation><SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Yaw_angle_deg">
+                  <inputSignal ref="../Group[kinematics]/Link[yaw_angle]"/>
+                  <function>
+                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="ga" arg1Dim="4">
+                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                        <ele>ret = ga(4)*180/pi</ele>
+                      </xmlVector>
+                    </SymbolicFunction>
+                  </function>
+                </SignalOperation></links>
               <constraints/>
               <observers/>
             </Group>
@@ -733,6 +649,7 @@ ret = [Steering_controller*(P_Reg+K_Reg)]</SymbolicFunction>
               <contours/>
               <groups>
                 <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" count="enable_frame_torsion" counterName="n">
+                  <Parameter/>
                   <Group xmlns="http://www.mbsim-env.de/MBSim" name="Dof_frame_torsion">
                     <frames/>
                     <contours/>
@@ -792,8 +709,9 @@ ret = [Steering_controller*(P_Reg+K_Reg)]</SymbolicFunction>
                     <constraints/>
                     <observers/>
                 </Group>
-              </Embed>
+                </Embed>
                 <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" count="enable_rider_lean" counterName="n">
+                  <Parameter/>
                   <Group xmlns="http://www.mbsim-env.de/MBSim" name="Dof_rider_torsion">
                     <frames/>
                     <contours/>
@@ -853,8 +771,9 @@ ret = [Steering_controller*(P_Reg+K_Reg)]</SymbolicFunction>
                     <constraints/>
                     <observers/>
                 </Group>
-              </Embed>
+                </Embed>
                 <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" count="enable_rider_lateral" counterName="n">
+                  <Parameter/>
                   <Group xmlns="http://www.mbsim-env.de/MBSim" name="Dof_rider_lateral">
                     <frames/>
                     <contours/>
@@ -916,6 +835,7 @@ ret = [Steering_controller*(P_Reg+K_Reg)]</SymbolicFunction>
                   </Group>
                 </Embed>
                 <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" count="enable_rider_yaw" counterName="n">
+                  <Parameter/>
                   <Group xmlns="http://www.mbsim-env.de/MBSim" name="Dof_rider_yaw">
                     <frames/>
                     <contours/>
@@ -966,6 +886,553 @@ ret = [Steering_controller*(P_Reg+K_Reg)]</SymbolicFunction>
                     </links>
                     <constraints/>
                     <observers/>
+                    <enableOpenMBVFrameI/>
+                  </Group>
+                </Embed>
+                <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" count="0" counterName="n">
+                  <Parameter/>
+                  <Group xmlns="http://www.mbsim-env.de/MBSim" name="vis_screw_axis">
+                    <frames/>
+                    <contours/>
+                    <groups/>
+                    <objects/>
+                    <links>
+                      <VelocitySensor xmlns="http://www.mbsim-env.de/MBSimControl" name="v_obs_1">
+                        <frame ref="../../Object[Frame]/Frame[obs_1]"/>
+                      </VelocitySensor>
+                      <VelocitySensor xmlns="http://www.mbsim-env.de/MBSimControl" name="v_obs_2">
+                        <frame ref="../../Object[Frame]/Frame[obs_2]"/>
+                      </VelocitySensor>
+                      <VelocitySensor xmlns="http://www.mbsim-env.de/MBSimControl" name="v_obs_3">
+                        <frame ref="../../Object[Frame]/Frame[obs_3]"/>
+                      </VelocitySensor>
+                      <VelocitySensor xmlns="http://www.mbsim-env.de/MBSimControl" name="v_obs_4">
+                        <frame ref="../../Object[Frame]/Frame[obs_4]"/>
+                      </VelocitySensor>
+                      <VelocitySensor xmlns="http://www.mbsim-env.de/MBSimControl" name="v_obs_5">
+                        <frame ref="../../Object[Frame]/Frame[obs_5]"/>
+                      </VelocitySensor>
+                      <VelocitySensor xmlns="http://www.mbsim-env.de/MBSimControl" name="v_obs_6">
+                        <frame ref="../../Object[Frame]/Frame[obs_6]"/>
+                      </VelocitySensor>
+                      <VelocitySensor xmlns="http://www.mbsim-env.de/MBSimControl" name="v_obs_7">
+                        <frame ref="../../Object[Frame]/Frame[obs_7]"/>
+                      </VelocitySensor>
+                      <VelocitySensor xmlns="http://www.mbsim-env.de/MBSimControl" name="v_obs_8">
+                        <frame ref="../../Object[Frame]/Frame[obs_8]"/>
+                      </VelocitySensor>
+                      <VelocitySensor xmlns="http://www.mbsim-env.de/MBSimControl" name="v_obs_9">
+                        <frame ref="../../Object[Frame]/Frame[obs_9]"/>
+                      </VelocitySensor>
+                      <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="v_obs_1_yaw">
+                        <inputSignal ref="../Link[v_obs_1]"/>
+                        <inputSignal ref="../../../Group[Group_Controller]/Group[kinematics]/Link[S_I_yaw_axis]"/>
+                        <function>
+                          <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="v" arg1Dim="3" arg2="s" arg2Dim="9">vy_yaw = s(2)*v(1) + s(5)*v(2) +s(8)*v(3);
+
+vx_I = s(2)*vy_yaw + s(3)*v(3);
+vy_I = s(5)*vy_yaw + s(6)*v(3);
+vz_I = s(8)*vy_yaw + s(9)*v(3);
+ret =[vx_I; vy_I; vz_I]</SymbolicFunction>
+                        </function>
+                      </SignalOperation>
+                      <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="v_obs_2_yaw">
+                        <inputSignal ref="../Link[v_obs_2]"/>
+                        <inputSignal ref="../../../Group[Group_Controller]/Group[kinematics]/Link[S_I_yaw_axis]"/>
+                        <function>
+                          <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="v" arg1Dim="3" arg2="s" arg2Dim="9">vy_yaw = s(2)*v(1) + s(5)*v(2) +s(8)*v(3);
+
+vx_I = s(2)*vy_yaw + s(3)*v(3);
+vy_I = s(5)*vy_yaw + s(6)*v(3);
+vz_I = s(8)*vy_yaw + s(9)*v(3);
+ret =[vx_I; vy_I; vz_I]</SymbolicFunction>
+                        </function>
+                      </SignalOperation>
+                      <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="v_obs_3_yaw">
+                        <inputSignal ref="../Link[v_obs_3]"/>
+                        <inputSignal ref="../../../Group[Group_Controller]/Group[kinematics]/Link[S_I_yaw_axis]"/>
+                        <function>
+                          <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="v" arg1Dim="3" arg2="s" arg2Dim="9">vy_yaw = s(2)*v(1) + s(5)*v(2) +s(8)*v(3);
+
+vx_I = s(2)*vy_yaw + s(3)*v(3);
+vy_I = s(5)*vy_yaw + s(6)*v(3);
+vz_I = s(8)*vy_yaw + s(9)*v(3);
+ret =[vx_I; vy_I; vz_I]</SymbolicFunction>
+                        </function>
+                      </SignalOperation>
+                      <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="v_obs_4_yaw">
+                        <inputSignal ref="../Link[v_obs_4]"/>
+                        <inputSignal ref="../../../Group[Group_Controller]/Group[kinematics]/Link[S_I_yaw_axis]"/>
+                        <function>
+                          <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="v" arg1Dim="3" arg2="s" arg2Dim="9">vy_yaw = s(2)*v(1) + s(5)*v(2) +s(8)*v(3);
+
+vx_I = s(2)*vy_yaw + s(3)*v(3);
+vy_I = s(5)*vy_yaw + s(6)*v(3);
+vz_I = s(8)*vy_yaw + s(9)*v(3);
+ret =[vx_I; vy_I; vz_I]</SymbolicFunction>
+                        </function>
+                      </SignalOperation>
+                      <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="v_obs_5_yaw">
+                        <inputSignal ref="../Link[v_obs_5]"/>
+                        <inputSignal ref="../../../Group[Group_Controller]/Group[kinematics]/Link[S_I_yaw_axis]"/>
+                        <function>
+                          <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="v" arg1Dim="3" arg2="s" arg2Dim="9">vy_yaw = s(2)*v(1) + s(5)*v(2) +s(8)*v(3);
+
+vx_I = s(2)*vy_yaw + s(3)*v(3);
+vy_I = s(5)*vy_yaw + s(6)*v(3);
+vz_I = s(8)*vy_yaw + s(9)*v(3);
+ret =[vx_I; vy_I; vz_I]</SymbolicFunction>
+                        </function>
+                      </SignalOperation>
+                      <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="v_obs_6_yaw">
+                        <inputSignal ref="../Link[v_obs_6]"/>
+                        <inputSignal ref="../../../Group[Group_Controller]/Group[kinematics]/Link[S_I_yaw_axis]"/>
+                        <function>
+                          <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="v" arg1Dim="3" arg2="s" arg2Dim="9">vy_yaw = s(2)*v(1) + s(5)*v(2) +s(8)*v(3);
+
+vx_I = s(2)*vy_yaw + s(3)*v(3);
+vy_I = s(5)*vy_yaw + s(6)*v(3);
+vz_I = s(8)*vy_yaw + s(9)*v(3);
+ret =[vx_I; vy_I; vz_I]</SymbolicFunction>
+                        </function>
+                      </SignalOperation>
+                      <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="v_obs_7_yaw">
+                        <inputSignal ref="../Link[v_obs_7]"/>
+                        <inputSignal ref="../../../Group[Group_Controller]/Group[kinematics]/Link[S_I_yaw_axis]"/>
+                        <function>
+                          <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="v" arg1Dim="3" arg2="s" arg2Dim="9">vy_yaw = s(2)*v(1) + s(5)*v(2) +s(8)*v(3);
+
+vx_I = s(2)*vy_yaw + s(3)*v(3);
+vy_I = s(5)*vy_yaw + s(6)*v(3);
+vz_I = s(8)*vy_yaw + s(9)*v(3);
+ret =[vx_I; vy_I; vz_I]</SymbolicFunction>
+                        </function>
+                      </SignalOperation>
+                      <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="v_obs_8_yaw">
+                        <inputSignal ref="../Link[v_obs_8]"/>
+                        <inputSignal ref="../../../Group[Group_Controller]/Group[kinematics]/Link[S_I_yaw_axis]"/>
+                        <function>
+                          <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="v" arg1Dim="3" arg2="s" arg2Dim="9">vy_yaw = s(2)*v(1) + s(5)*v(2) +s(8)*v(3);
+
+vx_I = s(2)*vy_yaw + s(3)*v(3);
+vy_I = s(5)*vy_yaw + s(6)*v(3);
+vz_I = s(8)*vy_yaw + s(9)*v(3);
+ret =[vx_I; vy_I; vz_I]</SymbolicFunction>
+                        </function>
+                      </SignalOperation>
+                      <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="v_obs_9_yaw">
+                        <inputSignal ref="../Link[v_obs_9]"/>
+                        <inputSignal ref="../../../Group[Group_Controller]/Group[kinematics]/Link[S_I_yaw_axis]"/>
+                        <function>
+                          <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="v" arg1Dim="3" arg2="s" arg2Dim="9">vy_yaw = s(2)*v(1) + s(5)*v(2) +s(8)*v(3);
+
+vx_I = s(2)*vy_yaw + s(3)*v(3);
+vy_I = s(5)*vy_yaw + s(6)*v(3);
+vz_I = s(8)*vy_yaw + s(9)*v(3);
+ret =[vx_I; vy_I; vz_I]</SymbolicFunction>
+                        </function>
+                      </SignalOperation>
+                      <PositionSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="pos_obs_1">
+                        <frame ref="../../Object[Frame]/Frame[obs_1]"/>
+                      </PositionSensor>
+                      <PositionSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="pos_obs_2">
+                        <frame ref="../../Object[Frame]/Frame[obs_2]"/>
+                      </PositionSensor>
+                      <PositionSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="pos_obs_3">
+                        <frame ref="../../Object[Frame]/Frame[obs_3]"/>
+                      </PositionSensor>
+                      <PositionSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="pos_obs_4">
+                        <frame ref="../../Object[Frame]/Frame[obs_4]"/>
+                      </PositionSensor>
+                      <PositionSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="pos_obs_5">
+                        <frame ref="../../Object[Frame]/Frame[obs_5]"/>
+                      </PositionSensor>
+                      <PositionSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="pos_obs_6">
+                        <frame ref="../../Object[Frame]/Frame[obs_6]"/>
+                      </PositionSensor>
+                      <PositionSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="pos_obs_7">
+                        <frame ref="../../Object[Frame]/Frame[obs_7]"/>
+                      </PositionSensor>
+                      <PositionSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="pos_obs_8">
+                        <frame ref="../../Object[Frame]/Frame[obs_8]"/>
+                      </PositionSensor>
+                      <PositionSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="pos_obs_9">
+                        <frame ref="../../Object[Frame]/Frame[obs_9]"/>
+                      </PositionSensor>
+                    </links>
+                    <constraints/>
+                    <observers>
+                      <SignalObserver xmlns="http://www.mbsim-env.de/MBSimControl" name="sig_obs_1">
+                        <signal ref="../Link[v_obs_1_yaw]"/>
+                        <position ref="../Link[pos_obs_1]"/>
+                        <enableOpenMBV>
+                          <diffuseColor xmlns="http://www.mbsim-env.de/MBSim">
+                            <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                              <ele>0.583333</ele>
+                              <ele>0.666667</ele>
+                              <ele>1</ele>
+                            </xmlVector>
+                          </diffuseColor>
+                          <scaleLength xmlns="http://www.mbsim-env.de/MBSim">2</scaleLength>
+                          <scaleSize xmlns="http://www.mbsim-env.de/MBSim">0.5</scaleSize>
+                        </enableOpenMBV>
+                      </SignalObserver>
+                      <SignalObserver xmlns="http://www.mbsim-env.de/MBSimControl" name="sig_obs_2">
+                        <signal ref="../Link[v_obs_2_yaw]"/>
+                        <position ref="../Link[pos_obs_2]"/>
+                        <enableOpenMBV>
+                          <diffuseColor xmlns="http://www.mbsim-env.de/MBSim">
+                            <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                              <ele>0.583333</ele>
+                              <ele>0.666667</ele>
+                              <ele>1</ele>
+                            </xmlVector>
+                          </diffuseColor>
+                          <scaleLength xmlns="http://www.mbsim-env.de/MBSim">2</scaleLength>
+                          <scaleSize xmlns="http://www.mbsim-env.de/MBSim">0.5</scaleSize>
+                        </enableOpenMBV>
+                      </SignalObserver>
+                      <SignalObserver xmlns="http://www.mbsim-env.de/MBSimControl" name="sig_obs_3">
+                        <signal ref="../Link[v_obs_3_yaw]"/>
+                        <position ref="../Link[pos_obs_3]"/>
+                        <enableOpenMBV>
+                          <diffuseColor xmlns="http://www.mbsim-env.de/MBSim">
+                            <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                              <ele>0.583333</ele>
+                              <ele>0.666667</ele>
+                              <ele>1</ele>
+                            </xmlVector>
+                          </diffuseColor>
+                          <scaleLength xmlns="http://www.mbsim-env.de/MBSim">2</scaleLength>
+                          <scaleSize xmlns="http://www.mbsim-env.de/MBSim">0.5</scaleSize>
+                        </enableOpenMBV>
+                      </SignalObserver>
+                      <SignalObserver xmlns="http://www.mbsim-env.de/MBSimControl" name="sig_obs_4">
+                        <signal ref="../Link[v_obs_4_yaw]"/>
+                        <position ref="../Link[pos_obs_4]"/>
+                        <enableOpenMBV>
+                          <diffuseColor xmlns="http://www.mbsim-env.de/MBSim">
+                            <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                              <ele>0.5</ele>
+                              <ele>0.333333</ele>
+                              <ele>1</ele>
+                            </xmlVector>
+                          </diffuseColor>
+                          <scaleLength xmlns="http://www.mbsim-env.de/MBSim">2</scaleLength>
+                          <scaleSize xmlns="http://www.mbsim-env.de/MBSim">0.5</scaleSize>
+                        </enableOpenMBV>
+                      </SignalObserver>
+                      <SignalObserver xmlns="http://www.mbsim-env.de/MBSimControl" name="sig_obs_5">
+                        <signal ref="../Link[v_obs_5_yaw]"/>
+                        <position ref="../Link[pos_obs_5]"/>
+                        <enableOpenMBV>
+                          <diffuseColor xmlns="http://www.mbsim-env.de/MBSim">
+                            <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                              <ele>0.5</ele>
+                              <ele>0.333333</ele>
+                              <ele>1</ele>
+                            </xmlVector>
+                          </diffuseColor>
+                          <scaleLength xmlns="http://www.mbsim-env.de/MBSim">2</scaleLength>
+                          <scaleSize xmlns="http://www.mbsim-env.de/MBSim">0.5</scaleSize>
+                        </enableOpenMBV>
+                      </SignalObserver>
+                      <SignalObserver xmlns="http://www.mbsim-env.de/MBSimControl" name="sig_obs_6">
+                        <signal ref="../Link[v_obs_6_yaw]"/>
+                        <position ref="../Link[pos_obs_6]"/>
+                        <enableOpenMBV>
+                          <diffuseColor xmlns="http://www.mbsim-env.de/MBSim">
+                            <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                              <ele>0.5</ele>
+                              <ele>0.333333</ele>
+                              <ele>1</ele>
+                            </xmlVector>
+                          </diffuseColor>
+                          <scaleLength xmlns="http://www.mbsim-env.de/MBSim">2</scaleLength>
+                          <scaleSize xmlns="http://www.mbsim-env.de/MBSim">0.5</scaleSize>
+                        </enableOpenMBV>
+                      </SignalObserver>
+                      <SignalObserver xmlns="http://www.mbsim-env.de/MBSimControl" name="sig_obs_7">
+                        <signal ref="../Link[v_obs_7_yaw]"/>
+                        <position ref="../Link[pos_obs_7]"/>
+                        <enableOpenMBV>
+                          <diffuseColor xmlns="http://www.mbsim-env.de/MBSim">
+                            <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                              <ele>0.222222</ele>
+                              <ele>1</ele>
+                              <ele>1</ele>
+                            </xmlVector>
+                          </diffuseColor>
+                          <scaleLength xmlns="http://www.mbsim-env.de/MBSim">2</scaleLength>
+                          <scaleSize xmlns="http://www.mbsim-env.de/MBSim">0.5</scaleSize>
+                        </enableOpenMBV>
+                      </SignalObserver>
+                      <SignalObserver xmlns="http://www.mbsim-env.de/MBSimControl" name="sig_obs_8">
+                        <signal ref="../Link[v_obs_8_yaw]"/>
+                        <position ref="../Link[pos_obs_8]"/>
+                        <enableOpenMBV>
+                          <diffuseColor xmlns="http://www.mbsim-env.de/MBSim">
+                            <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                              <ele>0.222222</ele>
+                              <ele>1</ele>
+                              <ele>1</ele>
+                            </xmlVector>
+                          </diffuseColor>
+                          <scaleLength xmlns="http://www.mbsim-env.de/MBSim">2</scaleLength>
+                          <scaleSize xmlns="http://www.mbsim-env.de/MBSim">0.5</scaleSize>
+                        </enableOpenMBV>
+                      </SignalObserver>
+                      <SignalObserver xmlns="http://www.mbsim-env.de/MBSimControl" name="sig_obs_9">
+                        <signal ref="../Link[v_obs_9_yaw]"/>
+                        <position ref="../Link[pos_obs_9]"/>
+                        <enableOpenMBV>
+                          <diffuseColor xmlns="http://www.mbsim-env.de/MBSim">
+                            <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                              <ele>0.222222</ele>
+                              <ele>1</ele>
+                              <ele>1</ele>
+                            </xmlVector>
+                          </diffuseColor>
+                          <scaleLength xmlns="http://www.mbsim-env.de/MBSim">2</scaleLength>
+                          <scaleSize xmlns="http://www.mbsim-env.de/MBSim">0.5</scaleSize>
+                        </enableOpenMBV>
+                      </SignalObserver>
+                    </observers>
+                    <enableOpenMBVFrameI/>
+                  </Group>
+                </Embed>
+                <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                  <Parameter>
+                    <scalarParameter name="m_Frame">153.716000</scalarParameter>
+                    <scalarParameter name="m_lower_body">11.414000</scalarParameter>
+                    <scalarParameter name="m_upper_body">33.680000</scalarParameter>
+                    <scalarParameter name="m_trim_mass">0.000000</scalarParameter>
+                    <scalarParameter name="m_pack_bag">0.000000</scalarParameter>
+                    <scalarParameter name="m_upper_fork">9.300000</scalarParameter>
+                    <scalarParameter name="m_lower_fork">6.500000</scalarParameter>
+                    <scalarParameter name="m_FW">11.900000</scalarParameter>
+                    <scalarParameter name="m_unbalance">0.000000</scalarParameter>
+                    <scalarParameter name="m_swingarm">8.000000</scalarParameter>
+                    <scalarParameter name="m_RW">14.700000</scalarParameter>
+                  </Parameter>
+                  <Group xmlns="http://www.mbsim-env.de/MBSim" name="kinematic_check">
+                    <frames/>
+                    <contours/>
+                    <groups/>
+                    <objects/>
+                    <links>
+                      <PositionSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="r_wc_f">
+                        <frame ref="../../../Group[Group_Front_wheel]/Object[Front_wheel]/Frame[C]"/>
+                    </PositionSensor>
+                      <PositionSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="r_wc_r">
+                        <frame ref="../../../Group[Group_Rear_wheel]/Object[Rear_wheel]/Frame[C]"/>
+                    </PositionSensor>
+                      <PositionSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="r_lower_body">
+                        <frame ref="../../Object[lower_body]/Frame[C]"/>
+                    </PositionSensor>
+                      <PositionSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="r_upper_body">
+                        <frame ref="../../Object[upper_body]/Frame[C]"/>
+                    </PositionSensor>
+                      <PositionSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="r_trim_mass">
+                        <frame ref="../../Object[trim_mass]/Frame[C]"/>
+                    </PositionSensor>
+                      <PositionSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="r_frame">
+                        <frame ref="../../Object[Frame]/Frame[C]"/>
+                    </PositionSensor>
+                      <PositionSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="r_lower_fork">
+                        <frame ref="../../../Group[Group_Front_fork]/Object[lower_fork]/Frame[C]"/>
+                    </PositionSensor>
+                      <PositionSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="r_upper_fork">
+                        <frame ref="../../../Group[Group_Front_fork]/Object[upper_fork]/Frame[C]"/>
+                    </PositionSensor>
+                      <PositionSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="r_swingarm">
+                        <frame ref="../../../Group[Group_swingarm]/Object[swingarm]/Frame[C]"/>
+                    </PositionSensor>
+                      <PositionSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="r_inertial">
+                        <frame ref="../../Object[roll_axis]/Frame[C]"/>
+                    </PositionSensor>
+                      <PositionSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="steering_head_pos">
+                        <frame ref="../../Object[Frame]/Frame[steering_head]"/>
+                    </PositionSensor>
+                      <Multiplexer xmlns="http://www.mbsim-env.de/MBSimControl" name="CoG_input">
+                        <inputSignal ref="../Link[r_wc_f]"/>
+                        <inputSignal ref="../Link[r_wc_r]"/>
+                        <inputSignal ref="../../../Group[Group_Front_wheel]/Link[Fz_Tyre_f_C]"/>
+                        <inputSignal ref="../../../Group[Group_Rear_wheel]/Link[Fz_Tyre_r_C]"/>
+                        <inputSignal ref="../Link[r_lower_body]"/>
+                        <inputSignal ref="../Link[r_upper_body]"/>
+                        <inputSignal ref="../Link[r_trim_mass]"/>
+                        <inputSignal ref="../Link[r_frame]"/>
+                        <inputSignal ref="../Link[r_lower_fork]"/>
+                        <inputSignal ref="../Link[r_upper_fork]"/>
+                        <inputSignal ref="../Link[r_swingarm]"/>
+                        <inputSignal ref="../Link[r_inertial]"/>
+                    </Multiplexer>
+                      <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="mass_by_wheelload">
+                        <inputSignal ref="../../../Group[Group_Front_wheel]/Link[Fz_Tyre_f_C]"/>
+                        <inputSignal ref="../../../Group[Group_Rear_wheel]/Link[Fz_Tyre_r_C]"/>
+                        <function>
+                          <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="Fzf" arg1Dim="1" arg2="Fzr" arg2Dim="1">
+                            <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                              <ele>ret = (Fzf(1) + Fzr(1))/9.81</ele>
+                          </xmlVector>
+                        </SymbolicFunction>
+                      </function>
+                    </SignalOperation>
+                      <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="wheelbase_check               %only valid for straight running!!! ">
+                        <inputSignal ref="../Link[r_wc_f]"/>
+                        <inputSignal ref="../Link[r_wc_r]"/>
+                        <function>
+                          <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="r_f" arg1Dim="3" arg2="r_r" arg2Dim="3">
+                            <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                              <ele>ret = (r_f(1) - r_r(1))*1000</ele>
+                          </xmlVector>
+                        </SymbolicFunction>
+                      </function>
+                    </SignalOperation>
+                      <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="trail">
+                        <inputSignal ref="../Link[r_wc_f]"/>
+                        <inputSignal ref="../Link[steering_head_pos]"/>
+                        <function>
+                          <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="r_wheel" arg1Dim="3" arg2="r_st_head" arg2Dim="3">z_sth_road = r_st_head(3) -z0_I_Road(3)
+ret = (r_st_head(1) + z_sth_road*tan(-caster_angle) - r_wheel(1))*1000</SymbolicFunction>
+                        </function>
+                      </SignalOperation>
+                      <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="trail_eff">
+                        <inputSignal ref="../Link[trail]"/>
+                        <function>
+                          <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="n" arg1Dim="1">
+                            <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                              <ele>ret = n(1)*cos(caster_angle)</ele>
+                            </xmlVector>
+                          </SymbolicFunction>
+                        </function>
+                      </SignalOperation>
+                      <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="fork_offset_check               %only valid for straight running!!!">
+                        <inputSignal ref="../Link[r_wc_f]"/>
+                        <inputSignal ref="../Link[steering_head_pos]"/>
+                        <function>
+                          <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="r_f" arg1Dim="3" arg2="r_sh" arg2Dim="3">r_sf_wc = r_f-r_sh;
+
+ret = (cos(caster_angle)*r_sf_wc(1) - sin(caster_angle)*r_sf_wc(3) )*1000;</SymbolicFunction>
+                      </function>
+                    </SignalOperation>  
+                      <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="CoGx_by_wheelload           %only valid for straight running!!!">
+                        <inputSignal ref="../Link[CoG_input]"/>
+                        <function>
+                          <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="i" arg1Dim="32">wb = i(1) - i(4);
+l_v = wb/(i(7)/i(8)+1);
+ret =i(1)-i(30)-l_v;</SymbolicFunction>
+                      </function>
+                    </SignalOperation>  
+                      <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="CoG_by_masses                %only valid for straigth running!!!">
+                        <inputSignal ref="../Link[CoG_input]"/>
+                        <function>
+                          <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="i" arg1Dim="32">xs = (i(1)*m_FW+i(4)*m_RW+i(9)*m_lower_body  +i(12)*m_upper_body+i(15)*m_trim_mass+ i(18)*m_Frame+i(21)*m_lower_fork+i(24)*m_upper_fork+i(27)*m_swingarm) / (m_FW+m_RW+m_lower_body+m_upper_body+m_trim_mass+m_Frame+m_lower_fork+m_upper_fork+m_swingarm);
+zs = (i(3)*m_FW+i(6)*m_RW+i(11)*m_lower_body+i(14)*m_upper_body+i(17)*m_trim_mass+ i(20)*m_Frame+i(23)*m_lower_fork+i(26)*m_upper_fork+i(29)*m_swingarm) / (m_FW+m_RW+m_lower_body+m_upper_body+m_trim_mass+m_Frame+m_lower_fork+m_upper_fork+m_swingarm) ;
+m_tot = (m_FW+m_RW+m_lower_body+m_upper_body+m_Frame+m_lower_fork+m_upper_fork+m_swingarm) ;
+ret =[xs-i(30);zs-i(32);m_tot] </SymbolicFunction>
+                        </function>
+                      </SignalOperation>
+                    </links>
+                    <constraints/>
+                    <observers/>
+                    <enableOpenMBVFrameI/>
+                  </Group></Embed>
+                <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" count="0" counterName="n">
+                  <Parameter/>
+                  <Group xmlns="http://www.mbsim-env.de/MBSim" name="axis_rotation">
+                    <frames/>
+                    <contours/>
+                    <groups/>
+                    <objects/>
+                    <links>
+                      <OrientationSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="S_I_roll_axis">
+                        <frame ref="../../Object[roll_axis]/Frame[C]"/>
+                    </OrientationSensor>
+                      <VelocitySensor xmlns="http://www.mbsim-env.de/MBSimControl" name="v_I_obs">
+                        <frame ref="../../Object[roll_axis]/Frame[v_obs_top]"/>
+                    </VelocitySensor>
+                      <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="vy_obs">
+                        <inputSignal ref="../Link[S_I_roll_axis]"/>
+                        <inputSignal ref="../Link[v_I_obs]"/>
+                        <function>
+                          <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="s" arg1Dim="9" arg2="v" arg2Dim="3">
+                            <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                              <ele>ret = s(2)*v(1) + s(5)*v(2) +s(8)*v(3);</ele>
+                          </xmlVector>
+                        </SymbolicFunction>
+                      </function>
+                    </SignalOperation>
+                      <AngularVelocitySensor xmlns="http://www.mbsim-env.de/MBSimControl" name="om_I_roll_axis">
+                        <frame ref="../../Object[roll_axis]/Frame[C]"/>
+                    </AngularVelocitySensor>
+                      <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="omx_R_roll_axis">
+                        <inputSignal ref="../Link[S_I_roll_axis]"/>
+                        <inputSignal ref="../Link[om_I_roll_axis]"/>
+                        <function>
+                          <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="s" arg1Dim="9" arg2="om" arg2Dim="3">
+                            <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                              <ele>ret = s(1)*om(1) + s(4)*om(2) +s(7)*om(3);</ele>
+                          </xmlVector>
+                        </SymbolicFunction>
+                      </function>
+                    </SignalOperation>
+                      <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="z_rot_axis">
+                        <inputSignal ref="../Link[vy_obs]"/>
+                        <inputSignal ref="../Link[omx_R_roll_axis]"/>
+                        <function>
+                          <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="v" arg1Dim="1" arg2="om" arg2Dim="1">
+                            <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                              <ele>ret = v(1)/(om(1)+1e-7) + 1 - z_CoG</ele>
+                            </xmlVector>
+                          </SymbolicFunction>
+                        </function>
+                      </SignalOperation>
+                      <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="z_rot_axis_lim">
+                        <inputSignal ref="../Link[z_rot_axis]"/>
+                        <function>
+                          <BoundedFunction xmlns="http://www.mbsim-env.de/MBSim">
+                            <lowerBound>-2.5</lowerBound>
+                            <upperBound>2.5</upperBound>
+                          </BoundedFunction>
+                        </function>
+                      </SignalOperation>
+                      <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="pos_roll_axis">
+                        <inputSignal ref="../Link[S_I_roll_axis]"/>
+                        <inputSignal ref="../Link[z_rot_axis_lim]"/>
+                        <function>
+                          <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="s" arg1Dim="9" arg2="z" arg2Dim="1">
+                            <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                              <ele>ret = s(3)*z(1)</ele>
+                              <ele>ret = s(6)*z(1)</ele>
+                              <ele>ret = s(9)*z(1)</ele>
+                            </xmlVector>
+                          </SymbolicFunction>
+                        </function>
+                      </SignalOperation>
+                      <PositionSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="pos_obs_CoG">
+                        <frame ref="../../Object[CoG]/Frame[C]"/>
+                      </PositionSensor>
+                    </links>
+                    <constraints/>
+                    <observers>
+                      <SignalObserver xmlns="http://www.mbsim-env.de/MBSimControl" name="roll_axis_obs">
+                        <signal ref="../Link[pos_roll_axis]"/>
+                        <position ref="../Link[pos_obs_CoG]"/>
+                        <enableOpenMBV>
+                          <diffuseColor xmlns="http://www.mbsim-env.de/MBSim">
+                            <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                              <ele>0.166667</ele>
+                              <ele>1</ele>
+                              <ele>0.666667</ele>
+                            </xmlVector>
+                          </diffuseColor>
+                          <scaleLength xmlns="http://www.mbsim-env.de/MBSim">1</scaleLength>
+                          <scaleSize xmlns="http://www.mbsim-env.de/MBSim">0.3</scaleSize>
+                        </enableOpenMBV>
+                      </SignalObserver>
+                    </observers>
                     <enableOpenMBVFrameI/>
                   </Group>
                 </Embed>
@@ -1048,24 +1515,33 @@ ret = [Steering_controller*(P_Reg+K_Reg)]</SymbolicFunction>
                         <ele>0</ele>
                         <ele>0</ele>
                         <ele>0</ele>
-                    </row>
+                      </row>
                       <row>
                         <ele>0</ele>
                         <ele>0</ele>
                         <ele>0</ele>
-                    </row>
+                      </row>
                       <row>
                         <ele>0</ele>
                         <ele>0</ele>
                         <ele>0</ele>
-                    </row>
-                  </xmlMatrix>
-                </inertiaTensor>
+                      </row>
+                    </xmlMatrix>
+                  </inertiaTensor>
                   <stateDependentRotation>
                     <RotationAboutXAxis/>
-                </stateDependentRotation>
-                  <frames/>
-                  <contours/>
+                  </stateDependentRotation>
+                  <frames>
+                    <FixedRelativeFrame name="v_obs_top">
+                      <relativePosition unit="m">
+                        <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                          <ele>0</ele>
+                          <ele>0</ele>
+                          <ele>1</ele>
+                        </xmlVector>
+                      </relativePosition>
+                    </FixedRelativeFrame>
+                  </frames><contours/>
                   <openMBVRigidBody>
                     <Cylinder xmlns="http://www.mbsim-env.de/OpenMBV" name="Cylinder2">
                       <transparency unit="-">0.3</transparency>
@@ -1074,21 +1550,21 @@ ret = [Steering_controller*(P_Reg+K_Reg)]</SymbolicFunction>
                           <ele>0</ele>
                           <ele>0</ele>
                           <ele>0</ele>
-                      </xmlVector>
-                    </initialTranslation>
+                        </xmlVector>
+                      </initialTranslation>
                       <initialRotation unit="rad">
                         <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
                           <ele>0</ele>
                           <ele>0</ele>
                           <ele>0</ele>
-                      </xmlVector>
-                    </initialRotation>
+                        </xmlVector>
+                      </initialRotation>
                       <scaleFactor unit="-">1</scaleFactor>
                       <radius unit="m">0.02</radius>
                       <height unit="m">0.1</height>
-                  </Cylinder>
-                </openMBVRigidBody>
-              </RigidBody>
+                    </Cylinder>
+                  </openMBVRigidBody>
+                </RigidBody>
                 <RigidBody name="Frame">
                   <generalizedInitialPosition>
                     <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
@@ -1145,8 +1621,97 @@ ret = [Steering_controller*(P_Reg+K_Reg)]</SymbolicFunction>
                       <frameOfReference ref="../Frame[point_for_kin]"/>
                       <relativePosition unit="m">p19</relativePosition>
                     </FixedRelativeFrame>
-                  </frames>
-                  <contours/>
+                    <FixedRelativeFrame name="obs_1">
+                      <relativePosition unit="m">
+                        <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                          <ele>0.8</ele>
+                          <ele>0</ele>
+                          <ele>0.47</ele>
+                        </xmlVector>
+                      </relativePosition>
+                    </FixedRelativeFrame>
+                    <FixedRelativeFrame name="obs_2">
+                      <relativePosition unit="m">
+                        <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                          <ele>0.1</ele>
+                          <ele>0</ele>
+                          <ele>0.47</ele>
+                        </xmlVector>
+                      </relativePosition>
+                    </FixedRelativeFrame>
+                    <FixedRelativeFrame name="obs_3">
+                      <relativePosition unit="m">
+                        <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                          <ele>-0.6</ele>
+                          <ele>0</ele>
+                          <ele>0.47</ele>
+                        </xmlVector>
+                      </relativePosition>
+                    </FixedRelativeFrame>
+                    <FixedRelativeFrame name="obs_4">
+                      <relativePosition unit="m">
+                        <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                          <ele>0.8</ele>
+                          <ele>0</ele>
+                          <ele>0</ele>
+                        </xmlVector>
+                      </relativePosition>
+                    </FixedRelativeFrame>
+                    <FixedRelativeFrame name="obs_5">
+                      <relativePosition unit="m">
+                        <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                          <ele>0.1</ele>
+                          <ele>0</ele>
+                          <ele>0.</ele>
+                        </xmlVector>
+                      </relativePosition>
+                    </FixedRelativeFrame>
+                    <FixedRelativeFrame name="obs_6">
+                      <relativePosition unit="m">
+                        <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                          <ele>-0.6</ele>
+                          <ele>0</ele>
+                          <ele>0</ele>
+                        </xmlVector>
+                      </relativePosition>
+                    </FixedRelativeFrame>
+                    <FixedRelativeFrame name="obs_7">
+                      <relativePosition unit="m">
+                        <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                          <ele>0.8</ele>
+                          <ele>0</ele>
+                          <ele>-0.47</ele>
+                        </xmlVector>
+                      </relativePosition>
+                    </FixedRelativeFrame>
+                    <FixedRelativeFrame name="obs_8">
+                      <relativePosition unit="m">
+                        <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                          <ele>0.1</ele>
+                          <ele>0</ele>
+                          <ele>-0.47</ele>
+                        </xmlVector>
+                      </relativePosition>
+                    </FixedRelativeFrame>
+                    <FixedRelativeFrame name="obs_9">
+                      <relativePosition unit="m">
+                        <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                          <ele>-0.6</ele>
+                          <ele>0</ele>
+                          <ele>-0.47</ele>
+                        </xmlVector>
+                      </relativePosition>
+                    </FixedRelativeFrame>
+                    <FixedRelativeFrame name="pos_CoG">
+                      <relativePosition unit="m">
+                        <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                          <ele>x_CoG</ele>
+                          <ele>0</ele>
+                          <ele>z_CoG</ele>
+                        </xmlVector>
+                      </relativePosition>
+                    </FixedRelativeFrame>
+                  </frames><contours/>
                   <openMBVRigidBody>
                     <Cuboid xmlns="http://www.mbsim-env.de/OpenMBV" name="Cuboid2">
                       <transparency unit="-">0.3</transparency>
@@ -1282,7 +1847,13 @@ ret = [Steering_controller*(P_Reg+K_Reg)]</SymbolicFunction>
                   <stateDependentRotation>
                     <RotationAboutZAxis/>
                   </stateDependentRotation>
-                  <frames/>
+                  <frames>
+                    <FixedRelativeFrame name="joint_upper_body">
+                      <relativeOrientation>
+                        <aboutY xmlns="http://www.mbsim-env.de/MBXMLUtils" unit="degree">30</aboutY>
+                      </relativeOrientation>
+                    </FixedRelativeFrame>
+                  </frames>
                   <contours/>
                   <openMBVRigidBody>
                     <Cube xmlns="http://www.mbsim-env.de/OpenMBV" name="Cube2">
@@ -1293,10 +1864,11 @@ ret = [Steering_controller*(P_Reg+K_Reg)]</SymbolicFunction>
                   </openMBVRigidBody>
                 </RigidBody>
                 <RigidBody name="upper_body">
-                  <frameOfReference ref="../Object[torso_z_rotation]/Frame[C]"/>
+                  <frameOfReference ref="../Object[torso_z_rotation]/Frame[joint_upper_body]"/>
                   <frameForKinematics ref="Frame[joint_rider]"/>
                   <mass unit="kg">m_upper_body</mass>
                   <inertiaTensor unit="kg*m^2">T_upper_body</inertiaTensor>
+                  <frameForInertiaTensor ref="Frame[MTM_Trafo]"/>
                   <stateDependentRotation>
                     <RotationAboutXAxis/>
                   </stateDependentRotation>
@@ -1304,6 +1876,11 @@ ret = [Steering_controller*(P_Reg+K_Reg)]</SymbolicFunction>
                     <FixedRelativeFrame name="joint_rider">
                       <frameOfReference ref="../Frame[C]"/>
                       <relativePosition unit="m">joint_rider</relativePosition>
+                    </FixedRelativeFrame>
+                    <FixedRelativeFrame name="MTM_Trafo">
+                      <relativeOrientation>
+                        <aboutY xmlns="http://www.mbsim-env.de/MBXMLUtils" unit="degree">30</aboutY>
+                      </relativeOrientation>
                     </FixedRelativeFrame>
                   </frames>
                   <contours/>
@@ -1314,7 +1891,7 @@ ret = [Steering_controller*(P_Reg+K_Reg)]</SymbolicFunction>
                         <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
                           <ele>0</ele>
                           <ele>0</ele>
-                          <ele>0</ele>
+                          <ele>-0.1</ele>
                         </xmlVector>
                       </initialTranslation>
                       <initialRotation unit="rad">
@@ -1327,14 +1904,15 @@ ret = [Steering_controller*(P_Reg+K_Reg)]</SymbolicFunction>
                       <scaleFactor unit="-">1</scaleFactor>
                       <length unit="m">
                         <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                          <ele>.05</ele>
-                          <ele>.05</ele>
-                          <ele>.05</ele>
+                          <ele>0.2</ele>
+                          <ele>0.3</ele>
+                          <ele>0.5</ele>
                         </xmlVector>
                       </length>
                     </Cuboid>
                   </openMBVRigidBody>
-                </RigidBody><RigidBody name="trim_mass">
+                </RigidBody>
+                <RigidBody name="trim_mass">
                   <frameOfReference ref="../Object[Frame]/Frame[CG_trim_mass]"/>
                   <mass unit="kg">m_trim_mass</mass>
                   <inertiaTensor unit="kg*m^2">T_trim_mass</inertiaTensor>
@@ -1361,7 +1939,8 @@ ret = [Steering_controller*(P_Reg+K_Reg)]</SymbolicFunction>
                       <length unit="m">1</length>
                     </Cube>
                   </openMBVRigidBody>
-                </RigidBody><RigidBody name="pack_bag_le">
+                </RigidBody>
+                <RigidBody name="pack_bag_le">
                   <frameOfReference ref="../Object[Frame]/Frame[pack_bag_le]"/>
                   <mass unit="kg">m_pack_bag</mass>
                   <inertiaTensor unit="kg*m^2">T_pack_bag</inertiaTensor>
@@ -1481,6 +2060,44 @@ ret = [Steering_controller*(P_Reg+K_Reg)]</SymbolicFunction>
                     </Cuboid>
                   </openMBVRigidBody>
                 </RigidBody>
+                <RigidBody name="CoG">
+                  <frameOfReference ref="../Object[Frame]/Frame[pos_CoG]"/>
+                  <mass unit="kg">0</mass>
+                  <inertiaTensor unit="kg*m^2">
+                    <xmlMatrix xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                      <row>
+                        <ele>0</ele>
+                        <ele>0</ele>
+                        <ele>0</ele>
+                      </row>
+                      <row>
+                        <ele>0</ele>
+                        <ele>0</ele>
+                        <ele>0</ele>
+                      </row>
+                      <row>
+                        <ele>0</ele>
+                        <ele>0</ele>
+                        <ele>0</ele>
+                      </row>
+                    </xmlMatrix>
+                  </inertiaTensor>
+                  <frames/>
+                  <contours/>
+                  <openMBVRigidBody>
+                    <Sphere xmlns="http://www.mbsim-env.de/OpenMBV" name="Sphere2">
+                      <diffuseColor>
+                        <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                          <ele>0</ele>
+                          <ele>1</ele>
+                          <ele>0.666667</ele>
+                        </xmlVector>
+                      </diffuseColor>
+                      <transparency unit="-">0.3</transparency>
+                      <radius unit="m">0.06</radius>
+                    </Sphere>
+                  </openMBVRigidBody>
+                </RigidBody>
               </objects>
               <links>
                 <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="trail">
@@ -1522,7 +2139,7 @@ ret=x_LK-x_RA</SymbolicFunction>
                           <function>
                             <SymbolicFunction arg1="t">
                               <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                                <ele>ret = Fy_Impuls*0.5*(1-cos(2*pi*1/T_Fy_exc*t))%*(1-Steering_controller)</ele>
+                                <ele>ret = Fy_Impuls*0.5*(1-cos(2*pi*1/T_Fy_exc*(t-T_Fy_start)))*(1-Steering_controller)</ele>
                               </xmlVector>
                             </SymbolicFunction>
                           </function>
@@ -1542,7 +2159,7 @@ ret=x_LK-x_RA</SymbolicFunction>
                   <enableOpenMBV/>
                 </KineticExcitation>
                 <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Aero_force_sop">
-                  <inputSignal ref="../../Group[Group_Controller]/Link[v_x]"/>
+                  <inputSignal ref="../../Group[Group_Controller]/Link[v_long]"/>
                   <function>
                     <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="v" arg1Dim="1">drag = 0.5*0.48*0.65*1.225*(v(1))^2
 lift = 0.5*0.078*0.65*1.225*(v(1))^2
@@ -1550,12 +2167,13 @@ ret = [drag;lift]</SymbolicFunction>
                   </function>
                 </SignalOperation>
                 <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Aero_moment_sop">
-                  <inputSignal ref="../../Group[Group_Controller]/Link[v_x]"/>
+                  <inputSignal ref="../../Group[Group_Controller]/Link[v_long]"/>
                   <function>
                     <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="v" arg1Dim="1">ret = 0.5*0.189*0.65*1.225*(v(1))^2</SymbolicFunction>
                   </function>
                 </SignalOperation>
                 <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" count="enable_aero" counterName="n">
+                  <Parameter/>
                   <KineticExcitation xmlns="http://www.mbsim-env.de/MBSim" name="Aero_force_moment_exc">
                     <connect ref2="../Object[Frame]/Frame[point_for_kin]"/>
                     <forceDirection unit="-">
@@ -1600,6 +2218,7 @@ ret = [drag;lift]</SymbolicFunction>
                   </KineticExcitation>
                 </Embed>
                 <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" count="enable_rider_yaw" counterName="n">
+                  <Parameter/>
                   <Multiplexer xmlns="http://www.mbsim-env.de/MBSimControl" name="Arms_mom_input">
                     <inputSignal ref="../Group[Dof_rider_yaw]/Link[theta_rider_yaw]"/>
                     <inputSignal ref="../Group[Dof_rider_yaw]/Link[thetap_rider_yaw]"/>
@@ -1608,6 +2227,7 @@ ret = [drag;lift]</SymbolicFunction>
                   </Multiplexer>
                 </Embed>
                 <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" count="enable_rider_yaw" counterName="n">
+                  <Parameter/>
                   <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Arms_mom">
                     <inputSignal ref="../Link[Arms_mom_input]"/>
                     <function>
@@ -1621,6 +2241,7 @@ ret=(gamma-delta)*rider_yaw_arms(1)+(gamma_p-delta_p)*rider_yaw_arms(2)</Symboli
                   </SignalOperation>
                 </Embed>
                 <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" count="enable_rider_yaw" counterName="n">
+                  <Parameter/>
                   <KineticExcitation xmlns="http://www.mbsim-env.de/MBSim" name="Arms_mom_upperbody">
                     <connect ref1="../Object[lower_body]/Frame[C]" ref2="../Object[torso_z_rotation]/Frame[C]"/>
                     <momentDirection unit="-">
@@ -1648,6 +2269,7 @@ ret=(gamma-delta)*rider_yaw_arms(1)+(gamma_p-delta_p)*rider_yaw_arms(2)</Symboli
                   </KineticExcitation>
                 </Embed>
                 <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" count="enable_rider_yaw" counterName="n">
+                  <Parameter/>
                   <KineticExcitation xmlns="http://www.mbsim-env.de/MBSim" name="Arms_mom_handlebar">
                     <connect ref1="../Object[frame_torsion]/Frame[C]" ref2="../../Group[Group_Front_fork]/Object[Steering_axis]/Frame[C]"/>
                     <momentDirection unit="-">
@@ -1677,6 +2299,7 @@ ret=(gamma-delta)*rider_yaw_arms(1)+(gamma_p-delta_p)*rider_yaw_arms(2)</Symboli
               </links>
               <constraints>
                 <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" count="1-enable_frame_torsion" counterName="n">
+                  <Parameter/>
                   <GeneralizedPositionConstraint xmlns="http://www.mbsim-env.de/MBSim" name="con_al_frame_torsion">
                     <dependentRigidBody ref="../Object[frame_torsion]"/>
                     <constraintFunction>
@@ -1685,8 +2308,9 @@ ret=(gamma-delta)*rider_yaw_arms(1)+(gamma_p-delta_p)*rider_yaw_arms(2)</Symboli
                     </ConstantFunction>
                   </constraintFunction>
                 </GeneralizedPositionConstraint>
-              </Embed>
+                </Embed>
                 <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" count="1-enable_rider_lean" counterName="n">
+                  <Parameter/>
                   <GeneralizedPositionConstraint xmlns="http://www.mbsim-env.de/MBSim" name="con_al_rider_torsion">
                     <dependentRigidBody ref="../Object[upper_body]"/>
                     <constraintFunction>
@@ -1695,8 +2319,9 @@ ret=(gamma-delta)*rider_yaw_arms(1)+(gamma_p-delta_p)*rider_yaw_arms(2)</Symboli
                     </ConstantFunction>
                   </constraintFunction>
                 </GeneralizedPositionConstraint>
-              </Embed>
+                </Embed>
                 <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" count="1-enable_rider_lateral" counterName="n">
+                  <Parameter/>
                   <GeneralizedPositionConstraint xmlns="http://www.mbsim-env.de/MBSim" name="con_y_rider_lateral">
                     <dependentRigidBody ref="../Object[lower_body]"/>
                     <constraintFunction>
@@ -1707,6 +2332,7 @@ ret=(gamma-delta)*rider_yaw_arms(1)+(gamma_p-delta_p)*rider_yaw_arms(2)</Symboli
                   </GeneralizedPositionConstraint>
                 </Embed>
                 <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" count="1-enable_rider_yaw" counterName="n">
+                  <Parameter/>
                   <GeneralizedPositionConstraint xmlns="http://www.mbsim-env.de/MBSim" name="con_theta_rider_yaw">
                     <dependentRigidBody ref="../Object[torso_z_rotation]"/>
                     <constraintFunction>
@@ -1726,6 +2352,7 @@ ret=(gamma-delta)*rider_yaw_arms(1)+(gamma_p-delta_p)*rider_yaw_arms(2)</Symboli
               <contours/>
               <groups>
                 <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" count="enable_fork_rot_x" counterName="n">
+                  <Parameter/>
                   <Group xmlns="http://www.mbsim-env.de/MBSim" name="Dof_fork_rot_x">
                     <frames/>
                     <contours/>
@@ -1785,8 +2412,9 @@ ret=(gamma-delta)*rider_yaw_arms(1)+(gamma_p-delta_p)*rider_yaw_arms(2)</Symboli
                     <constraints/>
                     <observers/>
                 </Group>
-              </Embed>
+                </Embed>
                 <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" count="enable_fork_rot_y" counterName="n">
+                  <Parameter/>
                   <Group xmlns="http://www.mbsim-env.de/MBSim" name="Dof_fork_rot_y">
                     <frames/>
                     <contours/>
@@ -1846,8 +2474,9 @@ ret=(gamma-delta)*rider_yaw_arms(1)+(gamma_p-delta_p)*rider_yaw_arms(2)</Symboli
                     <constraints/>
                     <observers/>
                 </Group>
-              </Embed>
+                </Embed>
                 <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" count="enable_fork_rot_z" counterName="n">
+                  <Parameter/>
                   <Group xmlns="http://www.mbsim-env.de/MBSim" name="Dof_fork_rot_z">
                     <frames/>
                     <contours/>
@@ -1907,8 +2536,9 @@ ret=(gamma-delta)*rider_yaw_arms(1)+(gamma_p-delta_p)*rider_yaw_arms(2)</Symboli
                     <constraints/>
                     <observers/>
                 </Group>
-              </Embed>
+                </Embed>
                 <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" count="enable_front_susp" counterName="n">
+                  <Parameter/>
                   <Group xmlns="http://www.mbsim-env.de/MBSim" name="Dof_fork_suspension">
                     <frames/>
                     <contours/>
@@ -2598,13 +3228,17 @@ ret=(gamma-delta)*rider_yaw_arms(1)+(gamma_p-delta_p)*rider_yaw_arms(2)</Symboli
                 </enableOpenMBV>
               </KineticExcitation>  
                 <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="fork_offset">
-                  <inputSignal ref="../../Group[Group_Controller]/Link[time]"/>
+                  <inputSignal ref="../../Group[Group_Kinematic_Observer]/Link[S_I_upperfork]"/>
+                  <inputSignal ref="../Link[r_st_wc_I]"/>
                   <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="t" arg1Dim="1">rI = CG_upper_fork + fork_joint - joint_fork + Wheel_Center;    % vector Steering-Head to wheel-center (I-System)
-x_offset = cos(-caster_angle)*rI(1) + sin(-caster_angle)*rI(3);
-ret= [x_offset]</SymbolicFunction>
+                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="s" arg1Dim="9" arg2="r" arg2Dim="3">
+                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                        <ele>ret = s(1)*r(1) + s(4)*r(2) + s(7)*r(3)</ele>
+                      </xmlVector>
+                    </SymbolicFunction>
                   </function>
-                </SignalOperation><SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="h_offset">
+                </SignalOperation>
+                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="h_offset">
                   <inputSignal ref="../../Group[Group_Controller]/Link[time]"/>
                   <function>
                     <ConstantFunction xmlns="http://www.mbsim-env.de/MBSim">
@@ -2612,9 +3246,29 @@ ret= [x_offset]</SymbolicFunction>
                     </ConstantFunction>
                   </function>
                 </SignalOperation>
+                <PositionSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="r_steering_head_I">
+                  <frame ref="../../Group[Group_Frame]/Object[Frame]/Frame[steering_head]"/>
+                </PositionSensor>
+                <PositionSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="r_wheel_center_f_I">
+                  <frame ref="../../Group[Group_Front_wheel]/Object[Front_wheel]/Frame[C]"/>
+                </PositionSensor>
+                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="r_st_wc_I">
+                  <inputSignal ref="../Link[r_wheel_center_f_I]"/>
+                  <inputSignal ref="../Link[r_steering_head_I]"/>
+                  <function>
+                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="r_wc" arg1Dim="3" arg2="r_st" arg2Dim="3">
+                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                        <ele>ret = r_wc(1) - r_st(1)</ele>
+                        <ele>ret = r_wc(2) - r_st(2)</ele>
+                        <ele>ret = r_wc(3) - r_st(3)</ele>
+                      </xmlVector>
+                    </SymbolicFunction>
+                  </function>
+                </SignalOperation>
               </links>
               <constraints>
                 <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" count="1-enable_fork_rot_x" counterName="n">
+                  <Parameter/>
                   <GeneralizedPositionConstraint xmlns="http://www.mbsim-env.de/MBSim" name="con_fork_rot_x">
                     <dependentRigidBody ref="../Object[Fork_rot_x]"/>
                     <constraintFunction>
@@ -2623,8 +3277,9 @@ ret= [x_offset]</SymbolicFunction>
                   </ConstantFunction>
                 </constraintFunction>
               </GeneralizedPositionConstraint>
-            </Embed>
+                </Embed>
                 <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" count="1-enable_fork_rot_y" counterName="n">
+                  <Parameter/>
                   <GeneralizedPositionConstraint xmlns="http://www.mbsim-env.de/MBSim" name="con_fork_rot_y">
                     <dependentRigidBody ref="../Object[Fork_rot_y]"/>
                     <constraintFunction>
@@ -2633,8 +3288,9 @@ ret= [x_offset]</SymbolicFunction>
                   </ConstantFunction>
                 </constraintFunction>
               </GeneralizedPositionConstraint>
-            </Embed>
+                </Embed>
                 <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" count="1-enable_fork_rot_z" counterName="n">
+                  <Parameter/>
                   <GeneralizedPositionConstraint xmlns="http://www.mbsim-env.de/MBSim" name="con_fork_rot_z">
                     <dependentRigidBody ref="../Object[Fork_rot_z]"/>
                     <constraintFunction>
@@ -2643,8 +3299,9 @@ ret= [x_offset]</SymbolicFunction>
                   </ConstantFunction>
                 </constraintFunction>
               </GeneralizedPositionConstraint>
-            </Embed>
+                </Embed>
                 <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" count="1-enable_front_susp" counterName="n">
+                  <Parameter/>
                   <GeneralizedPositionConstraint xmlns="http://www.mbsim-env.de/MBSim" name="con_z_fork_susp">
                     <dependentRigidBody ref="../Object[lower_fork]"/>
                     <constraintFunction>
@@ -2653,8 +3310,8 @@ ret= [x_offset]</SymbolicFunction>
                   </ConstantFunction>
                 </constraintFunction>
               </GeneralizedPositionConstraint>
-            </Embed>
-          </constraints>
+                </Embed>
+              </constraints>
               <observers/>
             </Group>
           </Embed>
@@ -3029,7 +3686,7 @@ Dy=Fz*pDy1*exp(pDy2*dfz)/(1+pDy3*ga^2)
 Ey=pEy1+pEy2*ga^2+pEy4*ga*sign(als)
 %Kyal=pKy1*Fz0*sin(pKy2*atan(Fz/((pKy3+pKy4*ga^2)*Fz0)))/(1+pKy5*ga^2)
 By=Kyal/(Cy*Dy)
-Kyga=(pKy6+pKy7*dfz)*Fz
+Kyga=(pKy6+pKy7*dfz)*Fz *0.8 % scaling camber stiffnes for physically correct camber force
 Bga=Kyga/(Cga*Dy)
 Fy0=Dy*sin(Cy*atan(By*als-Ey*(By*als-atan(By*als)))+Cga*atan(Bga*ga-Ega*(Bga*ga-atan(Bga*ga))))
 
@@ -3038,7 +3695,8 @@ Fy=cos(Cyka*atan(Byka*ka))*Fy0
 
 ret=-Fy</SymbolicFunction>
                   </function>
-                </SignalOperation><SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Fz_Tyre_f_unlim">
+                </SignalOperation>
+                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Fz_Tyre_f_unlim">
                   <inputSignal ref="../Link[z_Tyre_f]"/>
                   <inputSignal ref="../Link[v_cf_C]"/>
                   <function>
@@ -3468,6 +4126,7 @@ ret = - R_eff*Fx(1) </SymbolicFunction>
               <contours/>
               <groups>
                 <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" count="enable_swingarm_torsion" counterName="n">
+                  <Parameter/>
                   <Group xmlns="http://www.mbsim-env.de/MBSim" name="Dof_swingarm_torsion">
                     <frames/>
                     <contours/>
@@ -3529,6 +4188,7 @@ ret = - R_eff*Fx(1) </SymbolicFunction>
                   </Group>
                 </Embed>
                 <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" count="enable_rear_susp" counterName="n">
+                  <Parameter/>
                   <Group xmlns="http://www.mbsim-env.de/MBSim" name="Dof_rear_susp">
                     <frames/>
                     <contours/>
@@ -3601,6 +4261,29 @@ ret = - R_eff*Fx(1) </SymbolicFunction>
                           <crossSectionRadius unit="m">0.008</crossSectionRadius>
                         </enableOpenMBV>
                       </SpringDamper>
+                      <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" count="0" counterName="n">
+                        <Parameter/>
+                        <PositionSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="rear_susp_top">
+                          <frame ref="../../../Group[Group_Frame]/Object[Frame]/Frame[rear_suspension_top]"/>
+                      </PositionSensor></Embed>
+                      <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" count="0" counterName="n">
+                        <Parameter/>
+                        <PositionSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="rear_susp_bottom">
+                          <frame ref="../../Object[Rocker]/Frame[p21]"/>
+                      </PositionSensor></Embed>
+                      <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" count="0" counterName="n">
+                        <Parameter/>
+                        <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="L0_rear_suspension">
+                          <inputSignal ref="../Link[rear_susp_top]"/>
+                          <inputSignal ref="../Link[rear_susp_bottom]"/>
+                          <function>
+                            <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="rt" arg1Dim="3" arg2="rb" arg2Dim="3">
+                              <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                                <ele>ret = sqrt( (rb(1)-rt(1))^2 + (rb(3)-rt(3))^2) </ele>
+                            </xmlVector>
+                          </SymbolicFunction>
+                        </function>
+                      </SignalOperation></Embed>
                     </links>
                     <constraints/>
                     <observers/>
@@ -3961,6 +4644,7 @@ ret = - R_eff*Fx(1) </SymbolicFunction>
               </links>
               <constraints>
                 <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" count="1-enable_swingarm_torsion" counterName="n">
+                  <Parameter/>
                   <GeneralizedPositionConstraint xmlns="http://www.mbsim-env.de/MBSim" name="con_swingarm_torsion">
                     <dependentRigidBody ref="../Object[swingarm]"/>
                     <constraintFunction>
@@ -3971,6 +4655,7 @@ ret = - R_eff*Fx(1) </SymbolicFunction>
                   </GeneralizedPositionConstraint>
                 </Embed>
                 <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" count="1-enable_rear_susp" counterName="n">
+                  <Parameter/>
                   <GeneralizedPositionConstraint xmlns="http://www.mbsim-env.de/MBSim" name="con_rear_suspension">
                     <dependentRigidBody ref="../Object[swingarm_axis]"/>
                     <constraintFunction>
@@ -3979,8 +4664,9 @@ ret = - R_eff*Fx(1) </SymbolicFunction>
                   </ConstantFunction>
                 </constraintFunction>
               </GeneralizedPositionConstraint>
-            </Embed>    
+                </Embed>    
                 <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" count="1-enable_rear_susp" counterName="n">
+                  <Parameter/>
                   <GeneralizedPositionConstraint xmlns="http://www.mbsim-env.de/MBSim" name="con_rocker">
                     <dependentRigidBody ref="../Object[Rocker]"/>
                     <constraintFunction>
@@ -3991,6 +4677,7 @@ ret = - R_eff*Fx(1) </SymbolicFunction>
                   </GeneralizedPositionConstraint>
                 </Embed>
                 <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" count="1-enable_rear_susp" counterName="n">
+                  <Parameter/>
                   <GeneralizedPositionConstraint xmlns="http://www.mbsim-env.de/MBSim" name="con_pull_rod">
                     <dependentRigidBody ref="../Object[Pull_rod_body]"/>
                     <constraintFunction>
@@ -4001,6 +4688,7 @@ ret = - R_eff*Fx(1) </SymbolicFunction>
                   </GeneralizedPositionConstraint>
                 </Embed>
                 <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" count="enable_rear_susp" counterName="n">
+                  <Parameter/>
                   <JointConstraint xmlns="http://www.mbsim-env.de/MBSim" name="Pr_sw">
                     <dependentRigidBodyOnFirstSide ref="../Object[Pull_rod_body]"/>
                     <dependentRigidBodyOnSecondSide ref="../Object[swingarm_axis]"/>
@@ -5442,50 +6130,6 @@ ret = [-MxG; -MyG; -MzG]  % Wirkung auf Fahrzeug ==&gt; neg. VZ!!!</SymbolicFunc
                 <GeneralizedVelocitySensor xmlns="http://www.mbsim-env.de/MBSimControl" name="alp">
                   <object ref="../../Group[Group_Front_fork]/Object[Fork_rot_x]"/>
                 </GeneralizedVelocitySensor>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="gyro_comp">
-                  <inputSignal ref="../Link[alp]"/>
-                  <inputSignal ref="../../Group[Group_Front_wheel]/Link[om_y_f]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="alp" arg1Dim="1" arg2="om" arg2Dim="1">
-                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>alp(1)*om(1)*T_FW(5)*sin(caster_angle)</ele>
-                        <ele>0</ele>
-                        <ele>alp(1)*om(1)*T_FW(5)*cos(caster_angle)</ele>
-                      </xmlVector>
-                    </SymbolicFunction>
-                  </function>
-                </SignalOperation>
-                <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" count="0" counterName="n">
-                  <KineticExcitation xmlns="http://www.mbsim-env.de/MBSim" name="gyro_comp_exc">
-                    <connect ref2="../../Group[Group_Front_wheel]/Object[Front_wheel]/Frame[C]"/>
-                    <frameOfReference>"secondFrame"</frameOfReference>
-                    <momentDirection unit="-">
-                      <xmlMatrix xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <row>
-                          <ele>1</ele>
-                          <ele>0</ele>
-                          <ele>0</ele>
-                        </row>
-                        <row>
-                          <ele>0</ele>
-                          <ele>1</ele>
-                          <ele>0</ele>
-                        </row>
-                        <row>
-                          <ele>0</ele>
-                          <ele>0</ele>
-                          <ele>1</ele>
-                        </row>
-                      </xmlMatrix>
-                    </momentDirection>
-                    <momentFunction>
-                      <SignalFunction xmlns="http://www.mbsim-env.de/MBSimControl">
-                        <returnSignal ref="../../Link[gyro_comp]"/>
-                      </SignalFunction>
-                    </momentFunction>
-                    <enableOpenMBV/>
-                  </KineticExcitation>
-                </Embed>
               </links>  
               <constraints/>
               <observers/>
@@ -5661,12 +6305,33 @@ ret = [-MxG; -MyG; -MzG]  % Wirkung auf Fahrzeug ==&gt; neg. VZ!!!</SymbolicFunc
         <determineEquilibriumState>false</determineEquilibriumState>
       </DynamicSystemSolver>
     </Embed>
-    <RADAU5Integrator xmlns="http://www.mbsim-env.de/MBSim">
+    <LSODEIntegrator xmlns="http://www.mbsim-env.de/MBSim">
       <startTime unit="s">0</startTime>
       <endTime unit="s">5</endTime>
       <plotStepSize unit="s">1e-2</plotStepSize>
-    </RADAU5Integrator>
+    </LSODEIntegrator>
   </MBSimProject>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

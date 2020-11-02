@@ -1,89 +1,86 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Parameter xmlns="http://www.mbsim-env.de/MBXMLUtils">
-    <vectorParameter name="frame_axis">
-        <xmlVector>
-            <ele>0.353000</ele>
+
+
+   <vectorParameter name="frame_axis">
+      <xmlVector>
+         <ele>0.353000</ele>
+         <ele>0.000000</ele>
+         <ele>0.049500</ele>
+      </xmlVector>
+   </vectorParameter>
+   <vectorParameter name="wheel_axis_rear">
+      <xmlVector>
+         <ele>-0.196000</ele>
+         <ele>0.000000</ele>
+         <ele>-0.014300</ele>
+      </xmlVector>
+   </vectorParameter>
+   <vectorParameter name="L0_spring_r">
+      <xmlVector>
+         <ele>0.313521</ele>
+      </xmlVector>
+   </vectorParameter>
+   <vectorParameter name="p20">
+      <xmlVector>
+         <ele>-0.044400</ele>
+         <ele>0.000000</ele>
+         <ele>-0.035600</ele>
+      </xmlVector>
+   </vectorParameter>
+   <vectorParameter name="p21">
+      <xmlVector>
+         <ele>-0.094700</ele>
+         <ele>0.000000</ele>
+         <ele>-0.009600</ele>
+      </xmlVector>
+   </vectorParameter>
+   <vectorParameter name="p22">
+      <xmlVector>
+         <ele>-0.176800</ele>
+         <ele>0.000000</ele>
+         <ele>-0.086000</ele>
+      </xmlVector>
+   </vectorParameter>
+   <scalarParameter name="m_swingarm">8.000000</scalarParameter>
+   <matrixParameter name="T_swingarm">
+      <xmlMatrix>
+         <row>
+            <ele>0.020000</ele>
             <ele>0.000000</ele>
-            <ele>0.049500</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="wheel_axis_rear">
-        <xmlVector>
-            <ele>-0.196000</ele>
             <ele>0.000000</ele>
-            <ele>-0.014300</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="L0_spring_r">
-        <xmlVector>
-            <ele>0.343500</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="p20">
-        <xmlVector>
-            <ele>-0.044400</ele>
+         </row>
+         <row>
             <ele>0.000000</ele>
-            <ele>-0.035600</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="p21">
-        <xmlVector>
-            <ele>-0.094700</ele>
+            <ele>0.259000</ele>
             <ele>0.000000</ele>
-            <ele>-0.009600</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="p22">
-        <xmlVector>
-            <ele>-0.176800</ele>
+         </row>
+         <row>
             <ele>0.000000</ele>
-            <ele>-0.086000</ele>
-        </xmlVector>
-    </vectorParameter>
-    <scalarParameter name="m_swingarm">8.000000</scalarParameter>
-    <matrixParameter name="T_swingarm">
-        <xmlMatrix>
-            <row>
-                <ele>0.020000</ele>
-                <ele>0.000000</ele>
-                <ele>0.000000</ele>
-            </row>
-            <row>
-                <ele>0.000000</ele>
-                <ele>0.259000</ele>
-                <ele>0.000000</ele>
-            </row>
-            <row>
-                <ele>0.000000</ele>
-                <ele>0.000000</ele>
-                <ele>0.259000</ele>
-            </row>
-        </xmlMatrix>
-    </matrixParameter>
-    <vectorParameter name="tors_swingarm">
-        <xmlVector>
-            <ele>63700.000000</ele>
-            <ele>20.000000</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="c_suspension_r">
-        <xmlVector>
-            <ele>58570.000000</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="Fd_compression_r">
-        <xmlVector>
-            <ele>9600.000000</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="Fd_rebound_r">
-        <xmlVector>
-            <ele>13700.000000</ele>
-        </xmlVector>
-    </vectorParameter>
-    <vectorParameter name="F0_suspension_r">
-        <xmlVector>
-            <ele>248.870000</ele>
-        </xmlVector>
-    </vectorParameter>
+            <ele>0.000000</ele>
+            <ele>0.259000</ele>
+         </row>
+      </xmlMatrix>
+   </matrixParameter>
+   <vectorParameter name="tors_swingarm">
+      <xmlVector>
+         <ele>63700.000000</ele>
+         <ele>20.000000</ele>
+      </xmlVector>
+   </vectorParameter>
+   <vectorParameter name="c_suspension_r">
+      <xmlVector>
+         <ele>58570.000000</ele>
+      </xmlVector>
+   </vectorParameter>
+   <vectorParameter name="Fd_compression_r">
+      <xmlVector>
+         <ele>9600.000000</ele>
+      </xmlVector>
+   </vectorParameter>
+   <vectorParameter name="Fd_rebound_r">
+      <xmlVector>
+         <ele>13700.000000</ele>
+      </xmlVector>
+   </vectorParameter>
 </Parameter>

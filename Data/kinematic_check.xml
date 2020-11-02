@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Parameter xmlns="http://www.mbsim-env.de/MBXMLUtils">
+
+
+   <scalarParameter name="m_Frame">153.716000</scalarParameter>
+   <scalarParameter name="m_lower_body">11.414000</scalarParameter>
+   <scalarParameter name="m_upper_body">33.680000</scalarParameter>
+   <scalarParameter name="m_trim_mass">0.000000</scalarParameter>
+   <scalarParameter name="m_pack_bag">0.000000</scalarParameter>
+   <scalarParameter name="m_upper_fork">9.300000</scalarParameter>
+   <scalarParameter name="m_lower_fork">6.500000</scalarParameter>
+   <scalarParameter name="m_FW">11.900000</scalarParameter>
+   <scalarParameter name="m_unbalance">0.000000</scalarParameter>
+   <scalarParameter name="m_swingarm">8.000000</scalarParameter>
+   <scalarParameter name="m_RW">14.700000</scalarParameter>
+</Parameter>
