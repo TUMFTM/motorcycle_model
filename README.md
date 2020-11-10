@@ -14,11 +14,10 @@ modelled. Set the parameter to 1 to activate the Dof, to 0 to deactivate it.
 There are two controllers: one for the longitudinal and one for the lateral dynamics. 
 They are present in the group: `Group_Controller`. This group is then spilt in lateral
 and longitudinal controller. The parameters relative to each controller are specified 
-in the parameter list definied within the controller itself. Only the switches `Steering_controller`
-and `Velocity_controller` are in the general parameter list. 
+in the parameter list definied within the controller itself. 
 * Lateral dynamics controller: PD controller which allows the motorcycle to reach 
 a speficied roll angle. The desired roll angle can be given with the parameter `Setval_roll_angle`.
-The controller receives the signals of actual roll angle and roll rotation speed and 
+The controller receives the signals of actual roll angle and 
 applies a steer moment. 
 * Longitudinal dynamics controller: PID controller which allows to perform a acceleration-braking
 maneuver. It acts with a drive moment on the rear wheel or with a brake moment on both wheels according to
