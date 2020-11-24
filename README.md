@@ -51,11 +51,11 @@ at the beginning of the script:<br />
 `javaaddpath ("/path/to/xerces-2_12_1/xercesImpl.jar");`<br />
 `javaaddpath ("/path/to/xerces-2_12_1/xml-apis.jar");`<br />
 Some errors have been encountered when executing these lines. A possible one is: `error: javaMethod: 
-could not find library or dependencies: C:\Program Files\Java\OpenJDK_11.0.2\bin/jvm.dll`.
+could not find library or dependencies: C:\Program Files\Java\OpenJDK_11.0.2\bin\jvm.dll`.
 In this case the solution was to change the system varible `JAVA_HOME` so that it 
 points to the folder containing the file `jvm.dll`.<br />
 Another error source could result if Octave is not able to find Java (JRE). In this case
-please make sure to actually have Java. If the error still remains a solution could 
+please make sure to actually have Java. If the error still remains a solution could be 
 to write the following line after `pkg load io`:<br />
 `pkg load windows`<br />
 
