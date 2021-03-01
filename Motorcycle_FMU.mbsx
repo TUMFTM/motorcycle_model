@@ -4052,26 +4052,26 @@ ret = - R_eff*Fx(1) </SymbolicFunction>
                 </function>
               </SignalOperation>  
                 <KineticExcitation name="My_Fx_f_W_exc" xmlns="http://www.mbsim-env.de/MBSim">
-                  <connect ref1="../../Group[Group_Front_fork]/Object[lower_fork]/Frame[Wheel_Center]" ref2="../Object[Front_wheel]/Frame[C]"/>
+                  <connect ref1="../../Frame[I]" ref2="../Object[Front_wheel]/Frame[C]"/>
                   <momentDirection unit="-">
                     <xmlMatrix xmlns="http://www.mbsim-env.de/MBXMLUtils">
                       <row>
                         <ele>0</ele>
-                    </row>
+                      </row>
                       <row>
                         <ele>1</ele>
-                    </row>
+                      </row>
                       <row>
                         <ele>0</ele>
-                    </row>
-                  </xmlMatrix>
-                </momentDirection>
+                      </row>
+                    </xmlMatrix>
+                  </momentDirection>
                   <momentFunction>
                     <SignalFunction xmlns="http://www.mbsim-env.de/MBSimControl">
                       <returnSignal ref="../../Link[My_Fx_f_W_sop]"/>
-                  </SignalFunction>
-                </momentFunction>
-              </KineticExcitation>  
+                    </SignalFunction>
+                  </momentFunction>
+                </KineticExcitation>  
                 <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="My_brake_f_W_sop">
                   <inputSignal ref="../../Group[Group_Controller]/Group[longitudinal]/Link[M_brake_f_stat]"/>
                   <inputSignal ref="../../Group[Group_Controller]/Group[longitudinal]/Link[M_brake]"/>
@@ -5383,26 +5383,26 @@ ret = -R_eff*Fx(1)</SymbolicFunction>
                 </function>
               </SignalOperation>  
                 <KineticExcitation name="My_Fx_r_W_exc" xmlns="http://www.mbsim-env.de/MBSim">
-                  <connect ref1="../../Group[Group_swingarm]/Object[Wheelaxis_rear]/Frame[C]" ref2="../Object[Rear_wheel]/Frame[C]"/>
+                  <connect ref1="../../Frame[I]" ref2="../Object[Rear_wheel]/Frame[C]"/>
                   <momentDirection unit="-">
                     <xmlMatrix xmlns="http://www.mbsim-env.de/MBXMLUtils">
                       <row>
                         <ele>0</ele>
-                    </row>
+                      </row>
                       <row>
                         <ele>1</ele>
-                    </row>
+                      </row>
                       <row>
                         <ele>0</ele>
-                    </row>
-                  </xmlMatrix>
-                </momentDirection>
+                      </row>
+                    </xmlMatrix>
+                  </momentDirection>
                   <momentFunction>
                     <SignalFunction xmlns="http://www.mbsim-env.de/MBSimControl">
                       <returnSignal ref="../../Link[My_Fx_r_W_sop]"/>
-                  </SignalFunction>
-                </momentFunction>
-              </KineticExcitation>  
+                    </SignalFunction>
+                  </momentFunction>
+                </KineticExcitation>  
                 <Multiplexer xmlns="http://www.mbsim-env.de/MBSimControl" name="My_drive_r_W_in">
                   <inputSignal ref="../../Group[Group_Controller]/Group[longitudinal]/Link[M_brake_r_stat]"/>
                   <inputSignal ref="../../Group[Group_Controller]/Group[longitudinal]/Link[M_brake]"/>
@@ -6311,6 +6311,7 @@ ret = [-MxG; -MyG; -MzG]  % Wirkung auf Fahrzeug ==&gt; neg. VZ!!!</SymbolicFunc
       <plotStepSize unit="s">1e-2</plotStepSize>
     </LSODEIntegrator>
   </MBSimProject>
+
 
 
 
