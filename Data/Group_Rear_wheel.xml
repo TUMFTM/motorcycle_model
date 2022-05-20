@@ -42,6 +42,7 @@
          </row>
       </xmlMatrix>
    </matrixParameter>
+   <scalarParameter name="Fz0_RW">1600.000000</scalarParameter>
    <scalarParameter name="rBx1">13.476000</scalarParameter>
    <scalarParameter name="rBx2">11.354000</scalarParameter>
    <scalarParameter name="Cxal">1.123100</scalarParameter>

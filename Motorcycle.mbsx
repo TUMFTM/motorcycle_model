@@ -44,8 +44,8 @@
         <scalarParameter name="n_road_waves">2                      % number of road waves [/]</scalarParameter>
         <scalarParameter name="T_start_road_waves">1                      % [sec]</scalarParameter>
         <scalarParameter name="_______________preload______________________________________________________________________">0%____________________________________________________________________</scalarParameter>
-        <scalarParameter name="Fz0_FW">1172.57              %[N]</scalarParameter>
-        <scalarParameter name="Fz0_RW">1272.19              %[N]</scalarParameter>
+        <scalarParameter name="FzPreload_FW">1172.57              %[N]</scalarParameter>
+        <scalarParameter name="FzPreload_RW">1272.19              %[N]</scalarParameter>
         <scalarParameter name="M0_rot_y_fork">111.73                % preload fork [Nm]</scalarParameter>
         <scalarParameter name="F0_suspension_f">906.30                %[N]</scalarParameter>
         <scalarParameter name="F0_suspension_r">1946.22              %[N]</scalarParameter>
@@ -560,7 +560,7 @@ ret = [Steering_controller*(P_Reg)]</SymbolicFunction>
               </function>
             </FunctionSensor>
                 <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="v_long">
-                  <inputSignal ref="../../Group[Group_Rear_wheel]/Link[v_cr_C]"/>
+                  <inputSignal ref="../../Group[Group_Rear_wheel]/Group[Kinematics]/Link[v_c_rc]"/>
                   <function>
                     <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="v" arg1Dim="3">
                       <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
@@ -3226,26 +3226,7 @@ ret=(gamma-delta)*rider_yaw_arms(1)+(gamma_p-delta_p)*rider_yaw_arms(2)</Symboli
                     <scaleLength>.1</scaleLength>
                     <scaleSize>.1</scaleSize>
                 </enableOpenMBV>
-              </KineticExcitation>  
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="fork_offset">
-                  <inputSignal ref="../../Group[Group_Kinematic_Observer]/Link[S_I_upperfork]"/>
-                  <inputSignal ref="../Link[r_st_wc_I]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="s" arg1Dim="9" arg2="r" arg2Dim="3">
-                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret = s(1)*r(1) + s(4)*r(2) + s(7)*r(3)</ele>
-                      </xmlVector>
-                    </SymbolicFunction>
-                  </function>
-                </SignalOperation>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="h_offset">
-                  <inputSignal ref="../../Group[Group_Controller]/Link[time]"/>
-                  <function>
-                    <ConstantFunction xmlns="http://www.mbsim-env.de/MBSim">
-                      <a0>joint_fork(3)-Wheel_Center(3)</a0>
-                    </ConstantFunction>
-                  </function>
-                </SignalOperation>
+              </KineticExcitation>
                 <PositionSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="r_steering_head_I">
                   <frame ref="../../Group[Group_Frame]/Object[Frame]/Frame[steering_head]"/>
                 </PositionSensor>
@@ -3319,7 +3300,215 @@ ret=(gamma-delta)*rider_yaw_arms(1)+(gamma_p-delta_p)*rider_yaw_arms(2)</Symboli
             <Group xmlns="http://www.mbsim-env.de/MBSim" name="Group_Front_wheel">
               <frames/>
               <contours/>
-              <groups/>
+              <groups>
+                <Group name="Kinematics">
+                  <frames/>
+                  <contours/>
+                  <groups/>
+                  <objects/>
+                  <links>
+                    <PositionSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="p_fw_I">
+                      <frame ref="../../Object[Front_wheel]/Frame[C]"/>
+                  </PositionSensor>
+                    <OrientationSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="S_fw_I">
+                      <frame ref="../../Object[Front_wheel]/Frame[C]"/>
+                  </OrientationSensor>
+                    <VelocitySensor xmlns="http://www.mbsim-env.de/MBSimControl" name="v_fw_I">
+                      <frame ref="../../Object[Front_wheel]/Frame[C]"/>
+                  </VelocitySensor>
+                    <AngularVelocitySensor xmlns="http://www.mbsim-env.de/MBSimControl" name="om_fw_I">
+                      <frame ref="../../Object[Front_wheel]/Frame[C]"/>
+                  </AngularVelocitySensor>
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="S_wc_I">
+                      <inputSignal ref="../Link[S_fw_I]"/>
+                      <function>
+                        <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="S" arg1Dim="9">ny = [S(2); S(5); S(8)]; % y-vector of rear wheel
+nx = [ny(2); -ny(1); 0]; % cross with [0,0,1] to maintain x-vector parallel with ground
+nx = nx/sqrt(nx(1)*nx(1)+nx(2)*nx(2)+nx(3)*nx(3)); % normalize
+nz = [nx(2)*ny(3)-nx(3)*ny(2); nx(3)*ny(1)-nx(1)*ny(3); nx(1)*ny(2)-nx(2)*ny(1)]; % cross x and y
+ret = [nx(1); ny(1); nz(1); nx(2); ny(2); nz(2); nx(3); ny(3); nz(3)]; % output in S-orentiation order</SymbolicFunction>
+                    </function>
+                  </SignalOperation>
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="S_fc_I">
+                      <inputSignal ref="../Link[S_wc_I]"/>
+                      <function>
+                        <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="S" arg1Dim="9">nx = [S(1); S(4); S(7)]; % x vector of wheel carrier frame
+nz = [0; 0; 1]; % z straight up
+ny = [nz(2)*nx(3)-nz(3)*nx(2); nz(3)*nx(1)-nz(1)*nx(3); nz(1)*nx(2)-nz(2)*nx(1)]; % y = cross of z and x
+ret = [nx(1); ny(1); nz(1); nx(2); ny(2); nz(2); nx(3); ny(3); nz(3)]; % output in S-orientation order</SymbolicFunction>
+                    </function>
+                  </SignalOperation>
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="sinphi_f">
+                      <inputSignal ref="../Link[S_wc_I]"/>
+                      <inputSignal ref="../Link[S_fc_I]"/>
+                      <function>
+                        <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="Swc" arg1Dim="9" arg2="Sfc" arg2Dim="9">ret = Swc(2)*Sfc(3)+Swc(5)*Sfc(6)+Swc(8)*Sfc(9); % cos(phi) of wc and fc rotation matrices</SymbolicFunction>
+                    </function>
+                  </SignalOperation>
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="sinphi_f_lim">
+                      <inputSignal ref="../Link[sinphi_f]"/>
+                      <function>
+                        <BoundedFunction xmlns="http://www.mbsim-env.de/MBSim">
+                          <lowerBound>-1</lowerBound>
+                          <upperBound>1</upperBound>
+                      </BoundedFunction>
+                    </function>
+                  </SignalOperation>
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="phi_f">
+                      <inputSignal ref="../Link[sinphi_f_lim]"/>
+                      <function>
+                        <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="phi" arg1Dim="1">ret = asin(phi(1)); % after limiting to -1 to 1, acos</SymbolicFunction>
+                    </function>
+                  </SignalOperation>  
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="phi_f_lim">
+                      <inputSignal ref="../Link[phi_f]"/>
+                      <function>
+                        <BoundedFunction xmlns="http://www.mbsim-env.de/MBSim">
+                          <lowerBound>-pi</lowerBound>
+                          <upperBound>pi</upperBound>
+                      </BoundedFunction>
+                    </function>
+                  </SignalOperation>
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="road_excitation_f">
+                      <inputSignal ref="../../../Group[Group_Controller]/Link[time]"/>
+                      <function>
+                        <PiecewiseDefinedFunction xmlns="http://www.mbsim-env.de/MBSim">
+                          <limitedFunctions>
+                            <LimitedFunction>
+                              <function>
+                                <ConstantFunction>
+                                  <a0>0</a0>
+                              </ConstantFunction>
+                            </function>
+                              <limit>T_start_road_waves</limit>
+                          </LimitedFunction>
+                            <LimitedFunction>
+                              <function>
+                                <SymbolicFunction arg1="t" arg1Dim="1">
+                                  <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                                    <ele>ret = h_road_waves/2*( 1-cos (2*pi*  v0/(3.6*l_road_waves)*       (t(1)-T_start_road_waves))       )</ele>
+                                </xmlVector>
+                              </SymbolicFunction>
+                            </function>
+                              <limit>T_start_road_waves + n_road_waves*l_road_waves/v0*3.6</limit>
+                          </LimitedFunction>
+                            <LimitedFunction>
+                              <function>
+                                <ConstantFunction>
+                                  <a0>0</a0>
+                              </ConstantFunction>
+                            </function>
+                              <limit>1000</limit>
+                          </LimitedFunction>
+                        </limitedFunctions>
+                      </PiecewiseDefinedFunction>
+                    </function>
+                  </SignalOperation>  
+                    <Multiplexer xmlns="http://www.mbsim-env.de/MBSimControl" name="r_c_fc_inputs">
+                      <inputSignal ref="../Link[phi_f]"/>
+                      <inputSignal ref="../Link[p_fw_I]"/>
+                      <inputSignal ref="../Link[road_excitation_f]"/>
+                  </Multiplexer>  
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="r_c_fc">
+                      <inputSignal ref="../Link[r_c_fc_inputs]"/>
+                      <function>
+                        <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="i" arg1Dim="5">phi = i(1);
+p = [i(2);i(3);i(4)];
+z_road = i(5);
+%ret = [0; r_rim_FW*sin(phi); -(r_rim_FW*cos(phi)+rc_FW )]; % (undeformed)
+ret = [0; r_rim_FW*sin(phi); -(p(3)-z0_I_Road-z_road)]; % vector from wheel center to contact point, in fc frame</SymbolicFunction>
+                      </function>
+                    </SignalOperation>
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="z_Tyre_f">
+                      <inputSignal ref="../Link[r_c_fc_inputs]"/>
+                      <function>
+                        <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="i" arg1Dim="5">phi = i(1);
+p = [i(2);i(3);i(4)];
+z_road = i(5);
+%ret = [0; r_rim_FW*sin(phi(1)); -(r_rim_FW*cos(phi(1))+rc_FW)]; % (undeformed)
+%ret = [0; r_rim_FW*sin(phi(1)); -(p(3)-z0_I_Road)]; % vector from wheel center to contact point, in fc frame
+ret =(p(3)-z0_I_Road-z_road)- (r_rim_FW*cos(phi)+rc_FW);</SymbolicFunction>
+                    </function>
+                  </SignalOperation>  
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="v_fw_fc">
+                      <inputSignal ref="../Link[v_fw_I]"/>
+                      <inputSignal ref="../Link[S_fc_I]"/>
+                      <function>
+                        <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="v" arg1Dim="3" arg2="S" arg2Dim="9">ret = [S(1)*v(1)+S(4)*v(2)+S(7)*v(3); S(2)*v(1)+S(5)*v(2)+S(8)*v(3); S(3)*v(1)+S(6)*v(2)+S(9)*v(3)]; % standard rotation application R*v</SymbolicFunction>
+                    </function>
+                  </SignalOperation>  
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="om_fw_wc">
+                      <inputSignal ref="../Link[om_fw_I]"/>
+                      <inputSignal ref="../Link[S_wc_I]"/>
+                      <function>
+                        <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="om" arg1Dim="3" arg2="S" arg2Dim="9">ret = [S(1)*om(1) + S(4)*om(2) + S(7)*om(3); S(2)*om(1) + S(5)*om(2) + S(8)*om(3); S(3)*om(1) + S(6)*om(2) + S(9)*om(3)]; % standard rotation application R*om</SymbolicFunction>
+                    </function>
+                  </SignalOperation>  
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="om_fw_y">
+                      <inputSignal ref="../Link[om_fw_wc]"/>
+                      <function>
+                        <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="om" arg1Dim="3">ret = om(2); % wheel spin</SymbolicFunction>
+                    </function>
+                  </SignalOperation>  
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="om_wc_wc">
+                      <inputSignal ref="../Link[om_fw_wc]"/>
+                      <function>
+                        <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="om" arg1Dim="3">ret = [om(1); 0; om(3)]; % remove wheel spin</SymbolicFunction>
+                    </function>
+                  </SignalOperation>  
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="om_wc_I">
+                      <inputSignal ref="../Link[om_wc_wc]"/>
+                      <inputSignal ref="../Link[S_wc_I]"/>
+                      <function>
+                        <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="om" arg1Dim="3" arg2="S" arg2Dim="9">ret = [S(1)*om(1) + S(2)*om(2) + S(3)*om(3); S(4)*om(1) + S(5)*om(2) + S(6)*om(3); S(7)*om(1) + S(8)*om(2) + S(9)*om(3)];  % reverse rotation application R'*om</SymbolicFunction>
+                    </function>
+                  </SignalOperation>  
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="om_wc_fc">
+                      <inputSignal ref="../Link[om_wc_I]"/>
+                      <inputSignal ref="../Link[S_fc_I]"/>
+                      <function>
+                        <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="om" arg1Dim="3" arg2="S" arg2Dim="9">ret = [S(1)*om(1) + S(4)*om(2) + S(7)*om(3); S(2)*om(1) + S(5)*om(2) + S(8)*om(3); S(3)*om(1) + S(6)*om(2) + S(9)*om(3)]; % standard rotation application R*om</SymbolicFunction>
+                    </function>
+                  </SignalOperation>  
+                    <Multiplexer xmlns="http://www.mbsim-env.de/MBSimControl" name="v_c_fc_inputs">
+                      <inputSignal ref="../Link[v_fw_fc]"/>
+                      <inputSignal ref="../Link[om_wc_fc]"/>
+                      <inputSignal ref="../Link[r_c_fc]"/>
+                  </Multiplexer>  
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="v_c_fc">
+                      <inputSignal ref="../Link[v_c_fc_inputs]"/>
+                      <function>
+                        <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="i" arg1Dim="9">v = [i(1);i(2);i(3)]; % v_rw_rc
+om = [i(4);i(5);i(6)]; % om_wc_rc
+r =[i(7);i(8);i(9)]; % r_c_rc
+ret = [v(1) + om(2)*r(3) - om(3)*r(2); v(2) + om(3)*r(1) - om(1)*r(3); v(3) + om(1)*r(2) - om(2)*r(1)]; % v1 = v0 + cross(om,r)</SymbolicFunction>
+                    </function>
+                  </SignalOperation>  
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="r_c_I">
+                      <inputSignal ref="../Link[r_c_fc]"/>
+                      <inputSignal ref="../Link[S_fc_I]"/>
+                      <function>
+                        <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="r" arg1Dim="3" arg2="S" arg2Dim="9">ret = [S(1)*r(1) + S(2)*r(2) + S(3)*r(3); S(4)*r(1) + S(5)*r(2) + S(6)*r(3); S(7)*r(1) + S(8)*r(2) + S(9)*r(3)];  % reverse rotation application R'*r</SymbolicFunction>
+                    </function>
+                  </SignalOperation>  
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="r_c_wc">
+                      <inputSignal ref="../Link[r_c_I]"/>
+                      <inputSignal ref="../Link[S_wc_I]"/>
+                      <function>
+                        <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="r" arg1Dim="3" arg2="S" arg2Dim="9">ret = [S(1)*r(1) + S(4)*r(2) + S(7)*r(3); S(2)*r(1) + S(5)*r(2) + S(8)*r(3); S(3)*r(1) + S(6)*r(2) + S(9)*r(3)]; % standard rotation application R*r</SymbolicFunction>
+                    </function>
+                  </SignalOperation>  
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="v_f_rot">
+                      <inputSignal ref="../Link[om_fw_y]"/>
+                      <inputSignal ref="../Link[r_c_wc]"/>
+                      <function>
+                        <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="om" arg1Dim="1" arg2="r" arg2Dim="3">ret = om(1) * r(3); % wheelspeed at contact patch</SymbolicFunction>
+                    </function>
+                  </SignalOperation></links>
+                  <constraints/>
+                  <observers/>
+                </Group>
+              </groups>
               <objects>
                 <RigidBody name="Front_wheel">
                   <generalizedInitialVelocity>
@@ -3433,93 +3622,19 @@ ret=(gamma-delta)*rider_yaw_arms(1)+(gamma_p-delta_p)*rider_yaw_arms(2)</Symboli
                   </openMBVRigidBody>
                 </RigidBody>
               </objects>
-              <links>
-                <OrientationSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="S_I_Waf">
-                  <frame ref="../../Group[Group_Front_fork]/Object[lower_fork]/Frame[Wheel_Center]"/>
-            </OrientationSensor>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="S_I_Wf">
-                  <inputSignal ref="../Link[S_I_Waf]"/>
+               <links>
+                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Long_slip_f">
+                  <inputSignal ref="../Group[Kinematics]/Link[v_f_rot]"/>
+                  <inputSignal ref="../Group[Kinematics]/Link[v_c_fc]"/>
                   <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="s" arg1Dim="9">x=sqrt( s(5)*s(5)+s(2)*s(2) )
-sx=s(5)/x
-sy=s(2)/x
-ret = [ sx;   s(2);  -sy*s(8); 
-         -sy;   s(5);  -sx*s(8);  
-           0;   s(8);    sx*s(5)+sy*s(2)] % Drehmatrix Inertial =&gt; W-System (x-Achse parallel zur Fahrbahn, y-Achse in Richtung Radachse)</SymbolicFunction>
-              </function>
-            </SignalOperation>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="S_I_Cf">
-                  <inputSignal ref="../Link[S_I_Wf]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="s" arg1Dim="9">ret = [ s(1); -s(4);  0 ; 
-          s(4);   s(1);  0 ;  
-          s(7);   0    ;  1  ]    % Drehmatrix Inertial =&gt; C-System (x-Achse parallel zur Fahrbahn, z-Achse normal zur Fahrbahn</SymbolicFunction>
-              </function>
-            </SignalOperation>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Rollangle_f">
-                  <inputSignal ref="../Link[S_I_Cf]"/>
-                  <inputSignal ref="../Link[S_I_Wf]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="sc" arg1Dim="9" arg2="sw" arg2Dim="9">
-                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret = asin(sc(3)*sw(2)+sc(6)*sw(5)+sc(9)*sw(8))</ele>
-                  </xmlVector>
-                </SymbolicFunction>
-              </function>
-            </SignalOperation>
-                <AngularVelocitySensor xmlns="http://www.mbsim-env.de/MBSimControl" name="om_Wcf_I">
-                  <frame ref="../../Group[Group_Front_fork]/Object[lower_fork]/Frame[Wheel_Center]"/>
-            </AngularVelocitySensor>  
-                <VelocitySensor xmlns="http://www.mbsim-env.de/MBSimControl" name="v_Wcf_I">
-                  <frame ref="../../Group[Group_Front_fork]/Object[lower_fork]/Frame[Wheel_Center]"/>
-            </VelocitySensor>
-                <Multiplexer xmlns="http://www.mbsim-env.de/MBSimControl" name="contact_f_input">
-                  <inputSignal ref="../Link[om_Wcf_I]"/>
-                  <inputSignal ref="../Link[S_I_Wf]"/>
-                  <inputSignal ref="../Link[v_Wcf_I]"/>
-                  <inputSignal ref="../Link[Rollangle_f]"/>
-                  <inputSignal ref="../Link[S_I_Cf]"/>
-                  <inputSignal ref="../../Group[Group_Front_fork]/Group[Dof_fork_rot_x]/Link[alp_fork]"/>
-                  <inputSignal ref="../../Group[Group_Front_fork]/Link[h_offset]"/>
-                </Multiplexer>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="v_cf_C">
-                  <inputSignal ref="../Link[contact_f_input]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="i" arg1Dim="27">om_Wc_I      = [i(1); i(2); i(3)];
-S_I_w           = [i(4);i(5);i(6);i(7);i(8);i(9);i(10);i(11);i(12)];
-om_Wc_W     =  [S_I_w(1)*om_Wc_I(1) + S_I_w(4)*om_Wc_I(2) + S_I_w(7)*om_Wc_I(3);...
-                          S_I_w(2)*om_Wc_I(1) + S_I_w(5)*om_Wc_I(2) + S_I_w(8)*om_Wc_I(3);...
-                          S_I_w(3)*om_Wc_I(1) + S_I_w(6)*om_Wc_I(2) + S_I_w(9)*om_Wc_I(3)];
-v_Wc_I        = [i(13); i(14); i(15)];
-v_Wc_W      =  [S_I_w(1)*v_Wc_I(1) + S_I_w(4)*v_Wc_I(2) + S_I_w(7)*v_Wc_I(3);...
-                        S_I_w(2)*v_Wc_I(1) + S_I_w(5)*v_Wc_I(2) + S_I_w(8)*v_Wc_I(3);...
-                        S_I_w(3)*v_Wc_I(1) + S_I_w(6)*v_Wc_I(2) + S_I_w(9)*v_Wc_I(3)];
-al                 = i(16);
-r_w_c_W      = [0; - rc_FW*sin(al);  - r_rim_FW - rc_FW*cos(al)];
+                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="v_rot" arg1Dim="1" arg2="v_C" arg2Dim="3">ret=-(v_C(1)+v_rot(1))/v_C(1)
 
-alp_Gabel    = i(26);
-v_cos          = alp_Gabel*(i(27)+r_FW)/cos(caster_angle)*Switch_Komp_vy;
-
-v_c_W          = [v_Wc_W(1) + om_Wc_W(2)*r_w_c_W(3) -  om_Wc_W(3)*r_w_c_W(2);...
-                        v_Wc_W(2) -  om_Wc_W(1)*r_w_c_W(3) + om_Wc_W(3)*r_w_c_W(1) - v_cos;...
-                        v_Wc_W(3) + om_Wc_W(1)*r_w_c_W(2)  - om_Wc_W(2)*r_w_c_W(1)];
-
-v_c_I           =  [S_I_w(1)*v_c_W(1) + S_I_w(2)*v_c_W(2) + S_I_w(3)*v_c_W(3);...
-                        S_I_w(4)*v_c_W(1) + S_I_w(5)*v_c_W(2) + S_I_w(6)*v_c_W(3);...
-                        S_I_w(7)*v_c_W(1) + S_I_w(8)*v_c_W(2) + S_I_w(9)*v_c_W(3)];
-
-S_I_c           = [i(17); i(18); i(19); i(20); i(21); i(22); i(23); i(24); i(25)];
-v_c_C          =  [S_I_c(1)*v_c_I(1) + S_I_c(4)*v_c_I(2) + S_I_c(7)*v_c_I(3);...
-                        S_I_c(2)*v_c_I(1) + S_I_c(5)*v_c_I(2) + S_I_c(8)*v_c_I(3);...
-                        S_I_c(3)*v_c_I(1) + S_I_c(6)*v_c_I(2) + S_I_c(9)*v_c_I(3)];
-
-ret=[v_c_C(1);v_c_C(2);v_c_C(3)]
 </SymbolicFunction>
-                  </function>
-                </SignalOperation>
+                </function>
+              </SignalOperation>  
                 <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Kyal_f">
                   <inputSignal ref="../Link[Fz_Tyre_f_C]"/>
-                  <inputSignal ref="../Link[Rollangle_f]"/>
+                  <inputSignal ref="../Group[Kinematics]/Link[phi_f_lim]"/>
                   <function>
                     <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="Fz" arg1Dim="1" arg2="ga" arg2Dim="1">
                       <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
@@ -3527,10 +3642,10 @@ ret=[v_c_C(1);v_c_C(2);v_c_C(3)]
                     </xmlVector>
                   </SymbolicFunction>
                 </function>
-              </SignalOperation>
+              </SignalOperation>  
                 <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="s_relax_f">
                   <inputSignal ref="../Link[Kyal_f]"/>
-                  <inputSignal ref="../Link[v_cf_C]"/>
+                  <inputSignal ref="../Group[Kinematics]/Link[v_c_fc]"/>
                   <function>
                     <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="Kyal" arg1Dim="1" arg2="v" arg2Dim="3">
                       <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
@@ -3538,31 +3653,22 @@ ret=[v_c_C(1);v_c_C(2);v_c_C(3)]
                     </xmlVector>
                   </SymbolicFunction>
                 </function>
-              </SignalOperation>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Long_slip_f">
-                  <inputSignal ref="../Link[v_rot_f]"/>
-                  <inputSignal ref="../Link[v_cf_C]"/>
+              </SignalOperation>  
+                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Slipangle_f">
+                  <inputSignal ref="../Group[Kinematics]/Link[v_c_fc]"/>
                   <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="v_rot" arg1Dim="1" arg2="v_C" arg2Dim="3">ret=-(v_C(1)+v_rot(1))/v_C(1)
-
-</SymbolicFunction>
+                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="v" arg1Dim="3">
+                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                        <ele>ret=atan(v(2)/v(1))</ele>
+                    </xmlVector>
+                  </SymbolicFunction>
                 </function>
               </SignalOperation>  
                 <Multiplexer xmlns="http://www.mbsim-env.de/MBSimControl" name="Slipangle_f_input">
                   <inputSignal ref="../Link[Slipangle_f]"/>
                   <inputSignal ref="../Link[s_relax_f]"/>
-                  <inputSignal ref="../Link[v_cf_C]"/>
-              </Multiplexer>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Slipangle_f">
-                  <inputSignal ref="../Link[v_cf_C]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="v" arg1Dim="3">
-                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret=atan(v(2)/v(1))</ele>
-                  </xmlVector>
-                </SymbolicFunction>
-              </function>
-            </SignalOperation>  
+                  <inputSignal ref="../Group[Kinematics]/Link[v_c_fc]"/>
+              </Multiplexer>  
                 <NonlinearTransferSystem xmlns="http://www.mbsim-env.de/MBSimControl" name="Slipangle_f_pt1">
                   <inputSignal ref="../Link[Slipangle_f_input]"/>
                   <systemFunction>
@@ -3579,77 +3685,14 @@ ret=[v_c_C(1);v_c_C(2);v_c_C(3)]
                     </xmlVector>
                   </SymbolicFunction>
                 </outputFunction>
-              </NonlinearTransferSystem>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="r_cf_C">
-                  <inputSignal ref="../Link[Rollangle_f]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="al" arg1Dim="1">
-                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret = 0</ele>
-                        <ele>ret = - r_rim_FW*sin(al(1))</ele>
-                        <ele>ret =   r_rim_FW*cos(al(1)) + rc_FW</ele>
-                      </xmlVector>
-                    </SymbolicFunction>
-                  </function>
-                </SignalOperation>  
-                <PositionSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="r_Wcf_I">
-                  <frame ref="../../Group[Group_Front_fork]/Object[lower_fork]/Frame[Wheel_Center]"/>
-            </PositionSensor>  
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="road_excitation_f">
-                  <inputSignal ref="../../Group[Group_Controller]/Link[time]"/>
-                  <function>
-                    <PiecewiseDefinedFunction xmlns="http://www.mbsim-env.de/MBSim">
-                      <limitedFunctions>
-                        <LimitedFunction>
-                          <function>
-                            <ConstantFunction>
-                              <a0>0</a0>
-                            </ConstantFunction>
-                          </function>
-                          <limit>T_start_road_waves</limit>
-                        </LimitedFunction>
-                        <LimitedFunction>
-                          <function>
-                            <SymbolicFunction arg1="t" arg1Dim="1">
-                              <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                                <ele>ret = h_road_waves/2*( 1-cos (2*pi*  v0/(3.6*l_road_waves)*       (t(1)-T_start_road_waves))       )</ele>
-                              </xmlVector>
-                            </SymbolicFunction>
-                          </function>
-                          <limit>T_start_road_waves + n_road_waves*l_road_waves/v0*3.6</limit>
-                        </LimitedFunction>
-                        <LimitedFunction>
-                          <function>
-                            <ConstantFunction>
-                              <a0>0</a0>
-                            </ConstantFunction>
-                          </function>
-                          <limit>100</limit>
-                        </LimitedFunction>
-                      </limitedFunctions>
-                    </PiecewiseDefinedFunction>
-                  </function>
-                </SignalOperation>
-                <Multiplexer xmlns="http://www.mbsim-env.de/MBSimControl" name="z_tyre_f_input">
-                  <inputSignal ref="../Link[r_Wcf_I]"/>
-                  <inputSignal ref="../Link[r_cf_C]"/>
-                  <inputSignal ref="../Link[road_excitation_f]"/>
-                </Multiplexer><SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="z_Tyre_f">
-                  <inputSignal ref="../Link[z_tyre_f_input]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="i" arg1Dim="7">rI  = i(3)
-rC = i(6)
-zR   = i(7)
-
-ret = -rC -z0_I_Road + rI - zR</SymbolicFunction>
-                  </function>
-                </SignalOperation><Multiplexer xmlns="http://www.mbsim-env.de/MBSimControl" name="Tyre_f_input">
-                  <inputSignal ref="../Link[Rollangle_f]"/>
+              </NonlinearTransferSystem>  
+                <Multiplexer xmlns="http://www.mbsim-env.de/MBSimControl" name="Tyre_f_input">
+                  <inputSignal ref="../Group[Kinematics]/Link[phi_f_lim]"/>
                   <inputSignal ref="../Link[Long_slip_f]"/>
                   <inputSignal ref="../Link[Slipangle_f_pt1]"/>
                   <inputSignal ref="../Link[Kyal_f]"/>
-              </Multiplexer>  
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Fx_Tyre_f_C">
+                  <inputSignal ref="../../Group[Group_Controller]/Link[time]"/>
+                </Multiplexer><SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Fx_Tyre_f_C">
                   <inputSignal ref="../Link[Tyre_f_input]"/>
                   <inputSignal ref="../Link[Fz_Tyre_f_C]"/>
                   <function>
@@ -3670,11 +3713,12 @@ Fx=cos(Cxal*atan(Bxal*als))*Fx0
 
 ret=Fx</SymbolicFunction>
                   </function>
-                </SignalOperation><SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Fy_Tyre_f_C">
+                </SignalOperation>  
+                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Fy_Tyre_f_C">
                   <inputSignal ref="../Link[Tyre_f_input]"/>
                   <inputSignal ref="../Link[Fz_Tyre_f_C]"/>
                   <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="i" arg1Dim="4" arg2="FzV" arg2Dim="1">Fz0   = Fz0_FW
+                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="i" arg1Dim="5" arg2="FzV" arg2Dim="1">Fz0   = Fz0_FW
 Fz     = FzV(1)
 ga     = i(1)
 ka     = i(2)
@@ -3697,16 +3741,16 @@ ret=-Fy</SymbolicFunction>
                   </function>
                 </SignalOperation>
                 <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Fz_Tyre_f_unlim">
-                  <inputSignal ref="../Link[z_Tyre_f]"/>
-                  <inputSignal ref="../Link[v_cf_C]"/>
+                  <inputSignal ref="../Group[Kinematics]/Link[z_Tyre_f]"/>
+                  <inputSignal ref="../Group[Kinematics]/Link[v_c_fc]"/>
                   <function>
                     <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="z" arg1Dim="1" arg2="v" arg2Dim="3">
                       <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret =-c_z_FW*z(1) - d_z_FW*v(3) + Fz0_FW</ele>
-                    </xmlVector>
-                  </SymbolicFunction>
-                </function>
-              </SignalOperation>  
+                        <ele>ret =-c_z_FW*z(1) - d_z_FW*v(3) + FzPreload_FW;</ele>
+                      </xmlVector>
+                    </SymbolicFunction>
+                  </function>
+                </SignalOperation>
                 <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Fz_Tyre_f_C">
                   <inputSignal ref="../Link[Fz_Tyre_f_unlim]"/>
                   <function>
@@ -3716,20 +3760,21 @@ ret=-Fy</SymbolicFunction>
                     </BoundedFunction>
                   </function>
                 </SignalOperation><SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="scrub_radius_f">
-                  <inputSignal ref="../Link[Rollangle_f]"/>
+                  <inputSignal ref="../Group[Kinematics]/Link[phi_f_lim]"/>
+                  <inputSignal ref="../Group[Kinematics]/Link[z_Tyre_f]"/>
                   <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="ga" arg1Dim="1">
+                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="ga" arg1Dim="1" arg2="z" arg2Dim="1">
                       <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret=rc_FW*sin(ga(1))</ele>
+                        <ele>ret=(rc_FW+z(1))*sin(ga(1))</ele>
                     </xmlVector>
                   </SymbolicFunction>
                 </function>
-              </SignalOperation>  
+              </SignalOperation>
                 <Multiplexer xmlns="http://www.mbsim-env.de/MBSimControl" name="M_Fx_f_Input">
                   <inputSignal ref="../Link[Fx_Tyre_f_C]"/>
                   <inputSignal ref="../Link[scrub_radius_f]"/>
-                  <inputSignal ref="../Link[Rollangle_f]"/>
-              </Multiplexer>  
+                  <inputSignal ref="../Group[Kinematics]/Link[phi_f_lim]"/>
+              </Multiplexer>
                 <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="M_Fx_Tyre_f_C">
                   <inputSignal ref="../Link[M_Fx_f_Input]"/>
                   <function>
@@ -3742,30 +3787,29 @@ My_C  = -Mz_W*sin(ga)  %in C system
 Mz_C  =  Mz_W*cos(ga)
 ret=[0;My_C;Mz_C]
 </SymbolicFunction>
-                </function>
-              </SignalOperation>  
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Mx_Fz_Tyre_f_C">
+                  </function>
+                </SignalOperation><SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Mx_Fz_Tyre_f_C">
                   <inputSignal ref="../Link[Fz_Tyre_f_C]"/>
-                  <inputSignal ref="../Link[r_cf_C]"/>
+                  <inputSignal ref="../Group[Kinematics]/Link[r_c_fc]"/>
                   <function>
                     <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="F" arg1Dim="1" arg2="ry" arg2Dim="3">
                       <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret=-F(1)*ry(2)</ele>
+                        <ele>ret=F(1)*ry(2)</ele>
                     </xmlVector>
                   </SymbolicFunction>
                 </function>
-              </SignalOperation>  
+              </SignalOperation>
                 <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Mx_Fy_Tyre_f_C">
                   <inputSignal ref="../Link[Fy_Tyre_f_C]"/>
-                  <inputSignal ref="../Link[r_cf_C]"/>
+                  <inputSignal ref="../Group[Kinematics]/Link[r_c_fc]"/>
                   <function>
                     <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="F" arg1Dim="1" arg2="rz" arg2Dim="3">
                       <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret=F(1)*rz(3)</ele>
+                        <ele>ret=-F(1)*rz(3)</ele>
                     </xmlVector>
                   </SymbolicFunction>
                 </function>
-              </SignalOperation>  
+              </SignalOperation>
                 <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Mz_Tyre_f_C">
                   <inputSignal ref="../Link[Tyre_f_input]"/>
                   <inputSignal ref="../Link[Fz_Tyre_f_C]"/>
@@ -3781,7 +3825,7 @@ Dy=Fz*pDy1*exp(pDy2*dfz)/(1+pDy3*ga^2)
 Ey=pEy1+pEy2*ga^2+pEy4*ga*sign(als)
 Kyal=pKy1*Fz0*sin(pKy2*atan(Fz/((pKy3+pKy4*ga^2)*Fz0)))/(1+pKy5*ga^2)
 By=Kyal/(Cy*Dy)
-Kyga=(pKy6+pKy7*dfz)*Fz
+Kyga=(pKy6+pKy7*dfz)*Fz*0.8 %scaling camber stiffness for physically correct camber force
 Bga=Kyga/(Cga*Dy)
 Fy0=Dy*sin(Cy*atan(By*als-Ey*(By*als-atan(By*als)))+Cga*atan(Bga*ga-Ega*(Bga*ga-atan(Bga*ga))))
 
@@ -3808,19 +3852,20 @@ Mz=-Dt*cos(Ct*atan(Bt*lat-Et*(Bt*lat-atan(Bt*lat))))/sqrt(1+als^2)*Fy+Mzr
 
 ret=-Mz</SymbolicFunction>
                   </function>
-                </SignalOperation><Multiplexer xmlns="http://www.mbsim-env.de/MBSimControl" name="F_Tyre_f_input">
-                  <inputSignal ref="../Link[S_I_Cf]"/>
+                </SignalOperation>
+                <Multiplexer xmlns="http://www.mbsim-env.de/MBSimControl" name="F_Tyre_f_input">
+                  <inputSignal ref="../Group[Kinematics]/Link[S_fc_I]"/>
                   <inputSignal ref="../Link[Fx_Tyre_f_C]"/>
                   <inputSignal ref="../Link[Fy_Tyre_f_C]"/>
                   <inputSignal ref="../Link[Fz_Tyre_f_C]"/>
-              </Multiplexer>  
+              </Multiplexer>
                 <Multiplexer xmlns="http://www.mbsim-env.de/MBSimControl" name="M_Tyre_f_input">
-                  <inputSignal ref="../Link[S_I_Cf]"/>
+                  <inputSignal ref="../Group[Kinematics]/Link[S_fc_I]"/>
                   <inputSignal ref="../Link[Mx_Fy_Tyre_f_C]"/>
                   <inputSignal ref="../Link[Mx_Fz_Tyre_f_C]"/>
                   <inputSignal ref="../Link[Mz_Tyre_f_C]"/>
                   <inputSignal ref="../Link[M_Fx_Tyre_f_C]"/>
-              </Multiplexer>  
+              </Multiplexer>
                 <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="F_Tyre_f_I">
                   <inputSignal ref="../Link[F_Tyre_f_input]"/>
                   <function>
@@ -3861,7 +3906,7 @@ ret =[MIx;MIy;MIz]</SymbolicFunction>
                   </xmlVector>
                 </SymbolicFunction>
               </function>
-            </SignalOperation>    
+            </SignalOperation>  
                 <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Fz_Tyre_f_I">
                   <inputSignal ref="../Link[F_Tyre_f_I]"/>
                   <function>
@@ -3871,7 +3916,7 @@ ret =[MIx;MIy;MIz]</SymbolicFunction>
                   </xmlVector>
                 </SymbolicFunction>
               </function>
-            </SignalOperation>    
+            </SignalOperation>  
                 <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Mxy_Tyre_f_I">
                   <inputSignal ref="../Link[M_Tyre_f_I]"/>
                   <function>
@@ -3882,7 +3927,7 @@ ret =[MIx;MIy;MIz]</SymbolicFunction>
                   </xmlVector>
                 </SymbolicFunction>
               </function>
-            </SignalOperation>    
+            </SignalOperation>  
                 <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Mz_Tyre_f_I">
                   <inputSignal ref="../Link[M_Tyre_f_I]"/>
                   <function>
@@ -3892,7 +3937,7 @@ ret =[MIx;MIy;MIz]</SymbolicFunction>
                   </xmlVector>
                 </SymbolicFunction>
               </function>
-            </SignalOperation>    
+            </SignalOperation>  
                 <KineticExcitation name="Fxy_Tyre_f_I_exc">
                   <connect ref2="../../Group[Group_Front_fork]/Object[lower_fork]/Frame[Wheel_Center]"/>
                   <frameOfReference>"firstFrame"</frameOfReference>
@@ -3960,7 +4005,7 @@ ret =[MIx;MIy;MIz]</SymbolicFunction>
                     <scaleLength>.0005</scaleLength>
                     <scaleSize>.1</scaleSize>
               </enableOpenMBV>
-            </KineticExcitation>    
+            </KineticExcitation>  
                 <KineticExcitation name="Mxy_Tyre_f_I_exc">
                   <connect ref2="../../Group[Group_Front_fork]/Object[lower_fork]/Frame[Wheel_Center]"/>
                   <frameOfReference>"firstFrame"</frameOfReference>
@@ -4028,29 +4073,14 @@ ret =[MIx;MIy;MIz]</SymbolicFunction>
                     <scaleLength>.01</scaleLength>
                     <scaleSize>.1</scaleSize>
               </enableOpenMBV>
-            </KineticExcitation>    
-                <GeneralizedVelocitySensor xmlns="http://www.mbsim-env.de/MBSimControl" name="om_y_f">
-                  <object ref="../Object[Front_wheel]"/>
-            </GeneralizedVelocitySensor>    
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="v_rot_f">
-                  <inputSignal ref="../Link[om_y_f]"/>
-                  <inputSignal ref="../Link[Rollangle_f]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="om" arg1Dim="1" arg2="al" arg2Dim="1">
-                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret = -om(1)*(r_rim_FW + rc_FW*cos(al(1)))</ele>
-                    </xmlVector>
-                  </SymbolicFunction>
-                </function>
-              </SignalOperation>  
+            </KineticExcitation>  
                 <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="My_Fx_f_W_sop">
                   <inputSignal ref="../Link[Fx_Tyre_f_C]"/>
-                  <inputSignal ref="../Link[Rollangle_f]"/>
+                  <inputSignal ref="../Group[Kinematics]/Link[r_c_wc]"/>
                   <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="Fx" arg1Dim="1" arg2="ga" arg2Dim="1">R_eff =  r_rim_FW + rc_FW*cos(ga(1))
-ret = - R_eff*Fx(1) </SymbolicFunction>
+                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="Fx" arg1Dim="1" arg2="r" arg2Dim="3">ret = r(3)*Fx(1) </SymbolicFunction>
                 </function>
-              </SignalOperation>  
+              </SignalOperation>
                 <KineticExcitation name="My_Fx_f_W_exc" xmlns="http://www.mbsim-env.de/MBSim">
                   <connect ref1="../../Frame[I]" ref2="../Object[Front_wheel]/Frame[C]"/>
                   <momentDirection unit="-">
@@ -4071,50 +4101,49 @@ ret = - R_eff*Fx(1) </SymbolicFunction>
                       <returnSignal ref="../../Link[My_Fx_f_W_sop]"/>
                     </SignalFunction>
                   </momentFunction>
-                </KineticExcitation>  
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="My_brake_f_W_sop">
-                  <inputSignal ref="../../Group[Group_Controller]/Group[longitudinal]/Link[M_brake_f_stat]"/>
+                </KineticExcitation><SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="My_brake_f_W_sop">
                   <inputSignal ref="../../Group[Group_Controller]/Group[longitudinal]/Link[M_brake]"/>
+                  <inputSignal ref="../../Group[Group_Controller]/Group[longitudinal]/Link[M_brake_f_stat]"/>
                   <function>
                     <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="Mbr_st" arg1Dim="1" arg2="Mbr_dyn" arg2Dim="1">
                       <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
                         <ele>ret = Mbr_st(1)*(1-Velocity_controller) + Brake_distribution*Mbr_dyn(1)</ele>
-                    </xmlVector>
-                  </SymbolicFunction>
-                </function>
-              </SignalOperation>  
+                      </xmlVector>
+                    </SymbolicFunction>
+                  </function>
+                </SignalOperation>
                 <KineticExcitation name="My_brake_f_W_exc" xmlns="http://www.mbsim-env.de/MBSim">
                   <connect ref1="../../Group[Group_Front_fork]/Object[lower_fork]/Frame[Wheel_Center]" ref2="../Object[Front_wheel]/Frame[C]"/>
                   <momentDirection unit="-">
                     <xmlMatrix xmlns="http://www.mbsim-env.de/MBXMLUtils">
                       <row>
                         <ele>0</ele>
-                    </row>
+                      </row>
                       <row>
                         <ele>1</ele>
-                    </row>
+                      </row>
                       <row>
                         <ele>0</ele>
-                    </row>
-                  </xmlMatrix>
-                </momentDirection>
+                      </row>
+                    </xmlMatrix>
+                  </momentDirection>
                   <momentFunction>
                     <SignalFunction xmlns="http://www.mbsim-env.de/MBSimControl">
                       <returnSignal ref="../../Link[My_brake_f_W_sop]"/>
-                  </SignalFunction>
-                </momentFunction>
+                    </SignalFunction>
+                  </momentFunction>
                   <enableOpenMBV>
                     <diffuseColor>
                       <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
                         <ele>0.111111</ele>
                         <ele>1</ele>
                         <ele>1</ele>
-                    </xmlVector>
-                  </diffuseColor>
+                      </xmlVector>
+                    </diffuseColor>
                     <scaleLength>.01</scaleLength>
                     <scaleSize>.1</scaleSize>
-                </enableOpenMBV>
-              </KineticExcitation>
+                  </enableOpenMBV>
+                </KineticExcitation>
               </links>
               <constraints/>
               <observers/>
@@ -4720,7 +4749,216 @@ ret = - R_eff*Fx(1) </SymbolicFunction>
             <Group xmlns="http://www.mbsim-env.de/MBSim" name="Group_Rear_wheel">
               <frames/>
               <contours/>
-              <groups/>
+              <groups>
+                <Group name="Kinematics">
+                  <frames/>
+                  <contours/>
+                  <groups/>
+                  <objects/>
+                  <links>
+                    <PositionSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="p_rw_I">
+                      <frame ref="../../Object[Rear_wheel]/Frame[C]"/>
+                  </PositionSensor>
+                    <OrientationSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="S_rw_I">
+                      <frame ref="../../Object[Rear_wheel]/Frame[C]"/>
+                  </OrientationSensor>
+                    <VelocitySensor xmlns="http://www.mbsim-env.de/MBSimControl" name="v_rw_I">
+                      <frame ref="../../Object[Rear_wheel]/Frame[C]"/>
+                  </VelocitySensor>
+                    <AngularVelocitySensor xmlns="http://www.mbsim-env.de/MBSimControl" name="om_rw_I">
+                      <frame ref="../../Object[Rear_wheel]/Frame[C]"/>
+                  </AngularVelocitySensor>
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="S_wc_I">
+                      <inputSignal ref="../Link[S_rw_I]"/>
+                      <function>
+                        <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="S" arg1Dim="9">ny = [S(2); S(5); S(8)]; % y-vector of rear wheel
+nx = [ny(2); -ny(1); 0]; % cross with [0,0,1] to maintain x-vector parallel with ground
+nx = nx/sqrt(nx(1)*nx(1)+nx(2)*nx(2)+nx(3)*nx(3)); % normalize
+nz = [nx(2)*ny(3)-nx(3)*ny(2); nx(3)*ny(1)-nx(1)*ny(3); nx(1)*ny(2)-nx(2)*ny(1)]; % cross x and y
+ret = [nx(1); ny(1); nz(1); nx(2); ny(2); nz(2); nx(3); ny(3); nz(3)]; % output in S-orentiation order</SymbolicFunction>
+                </function>
+              </SignalOperation>    
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="S_rc_I">
+                      <inputSignal ref="../Link[S_wc_I]"/>
+                      <function>
+                        <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="S" arg1Dim="9">nx = [S(1); S(4); S(7)]; % x vector of wheel carrier frame
+nz = [0; 0; 1]; % z straight up
+ny = [nz(2)*nx(3)-nz(3)*nx(2); nz(3)*nx(1)-nz(1)*nx(3); nz(1)*nx(2)-nz(2)*nx(1)]; % y = cross of z and x
+ret = [nx(1); ny(1); nz(1); nx(2); ny(2); nz(2); nx(3); ny(3); nz(3)]; % output in S-orientation order</SymbolicFunction>
+                </function>
+              </SignalOperation>    
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="sinphi_r">
+                      <inputSignal ref="../Link[S_wc_I]"/>
+                      <inputSignal ref="../Link[S_rc_I]"/>
+                      <function>
+                        <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="Swc" arg1Dim="9" arg2="Src" arg2Dim="9">ret = Swc(2)*Src(3)+Swc(5)*Src(6)+Swc(8)*Src(9); % cos(phi) of wc and rc rotation matrices</SymbolicFunction>
+                    </function>
+                  </SignalOperation>
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="sinphi_r_lim">
+                      <inputSignal ref="../Link[sinphi_r]"/>
+                      <function>
+                        <BoundedFunction xmlns="http://www.mbsim-env.de/MBSim">
+                          <lowerBound>-1</lowerBound>
+                          <upperBound>1</upperBound>
+                      </BoundedFunction>
+                    </function>
+                  </SignalOperation>
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="phi_r">
+                      <inputSignal ref="../Link[sinphi_r_lim]"/>
+                      <function>
+                        <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="phi" arg1Dim="1">ret = asin(phi(1)); % after limiting to -1 to 1, acos</SymbolicFunction>
+                    </function>
+                  </SignalOperation>
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="phi_r_lim">
+                      <inputSignal ref="../Link[phi_r]"/>
+                      <function>
+                        <BoundedFunction xmlns="http://www.mbsim-env.de/MBSim">
+                          <lowerBound>-pi</lowerBound>
+                          <upperBound>pi</upperBound>
+                      </BoundedFunction>
+                    </function>
+                  </SignalOperation>
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="road_excitation_r">
+                      <inputSignal ref="../../../Group[Group_Controller]/Link[time]"/>
+                      <function>
+                        <PiecewiseDefinedFunction xmlns="http://www.mbsim-env.de/MBSim">
+                          <limitedFunctions>
+                            <LimitedFunction>
+                              <function>
+                                <ConstantFunction>
+                                  <a0>0</a0>
+                              </ConstantFunction>
+                            </function>
+                              <limit>T_start_road_waves + wheelbase/v0*3.6</limit>
+                          </LimitedFunction>
+                            <LimitedFunction>
+                              <function>
+                                <SymbolicFunction arg1="t" arg1Dim="1">
+                                  <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                                    <ele>ret = h_road_waves/2*( 1-cos (2*pi*  v0/(3.6*l_road_waves)*(t(1)-(T_start_road_waves + wheelbase/v0*3.6) )  )      )</ele>
+                                </xmlVector>
+                              </SymbolicFunction>
+                            </function>
+                              <limit>T_start_road_waves + wheelbase/v0*3.6 + n_road_waves*l_road_waves/v0*3.6</limit>
+                          </LimitedFunction>
+                            <LimitedFunction>
+                              <function>
+                                <ConstantFunction>
+                                  <a0>0</a0>
+                              </ConstantFunction>
+                            </function>
+                              <limit>1000</limit>
+                          </LimitedFunction>
+                        </limitedFunctions>
+                      </PiecewiseDefinedFunction>
+                    </function>
+                  </SignalOperation>  
+                    <Multiplexer xmlns="http://www.mbsim-env.de/MBSimControl" name="r_c_rc_inputs">
+                      <inputSignal ref="../Link[phi_r]"/>
+                      <inputSignal ref="../Link[p_rw_I]"/>
+                      <inputSignal ref="../Link[road_excitation_r]"/>
+                  </Multiplexer>  
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="r_c_rc">
+                      <inputSignal ref="../Link[r_c_rc_inputs]"/>
+                      <function>
+                        <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="i" arg1Dim="5">phi = i(1);
+p = [i(2);i(3);i(4)];
+z_road = i(5);
+%ret = [0; r_rim_RW*sin(phi); -(r_rim_RW*cos(phi)+rc_RW )]; % (undeformed)
+ret = [0; r_rim_RW*sin(phi); -(p(3)-z0_I_Road-z_road)]; % vector from wheel center to contact point, in rc frame</SymbolicFunction>
+                      </function>
+                    </SignalOperation>  
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="z_Tyre_r">
+                      <inputSignal ref="../Link[r_c_rc_inputs]"/>
+                      <function>
+                        <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="i" arg1Dim="5">phi = i(1);
+p = [i(2);i(3);i(4)];
+z_road = i(5);
+%ret = [0; r_rim_RW*sin(phi(1)); -(r_rim_RW*cos(phi(1))+rc_RW)]; % (undeformed)
+%ret = [0; r_rim_RW*sin(phi(1)); -(p(3)-z0_I_Road)]; % vector from wheel center to contact point, in rc frame
+ret =(p(3)-z0_I_Road-z_road)- (r_rim_RW*cos(phi)+rc_RW);</SymbolicFunction>
+                    </function>
+                  </SignalOperation>  
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="v_rw_rc">
+                      <inputSignal ref="../Link[v_rw_I]"/>
+                      <inputSignal ref="../Link[S_rc_I]"/>
+                      <function>
+                        <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="v" arg1Dim="3" arg2="S" arg2Dim="9">ret = [S(1)*v(1)+S(4)*v(2)+S(7)*v(3); S(2)*v(1)+S(5)*v(2)+S(8)*v(3); S(3)*v(1)+S(6)*v(2)+S(9)*v(3)]; % standard rotation application R*v</SymbolicFunction>
+                </function>
+              </SignalOperation>    
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="om_rw_wc">
+                      <inputSignal ref="../Link[om_rw_I]"/>
+                      <inputSignal ref="../Link[S_wc_I]"/>
+                      <function>
+                        <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="om" arg1Dim="3" arg2="S" arg2Dim="9">ret = [S(1)*om(1) + S(4)*om(2) + S(7)*om(3); S(2)*om(1) + S(5)*om(2) + S(8)*om(3); S(3)*om(1) + S(6)*om(2) + S(9)*om(3)]; % standard rotation application R*om</SymbolicFunction>
+                </function>
+              </SignalOperation>    
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="om_rw_y">
+                      <inputSignal ref="../Link[om_rw_wc]"/>
+                      <function>
+                        <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="om" arg1Dim="3">ret = om(2); % wheel spin</SymbolicFunction>
+                </function>
+              </SignalOperation>    
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="om_wc_wc">
+                      <inputSignal ref="../Link[om_rw_wc]"/>
+                      <function>
+                        <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="om" arg1Dim="3">ret = [om(1); 0; om(3)]; % remove wheel spin</SymbolicFunction>
+                </function>
+              </SignalOperation>    
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="om_wc_I">
+                      <inputSignal ref="../Link[om_wc_wc]"/>
+                      <inputSignal ref="../Link[S_wc_I]"/>
+                      <function>
+                        <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="om" arg1Dim="3" arg2="S" arg2Dim="9">ret = [S(1)*om(1) + S(2)*om(2) + S(3)*om(3); S(4)*om(1) + S(5)*om(2) + S(6)*om(3); S(7)*om(1) + S(8)*om(2) + S(9)*om(3)];  % reverse rotation application R'*om</SymbolicFunction>
+                </function>
+              </SignalOperation>    
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="om_wc_rc">
+                      <inputSignal ref="../Link[om_wc_I]"/>
+                      <inputSignal ref="../Link[S_rc_I]"/>
+                      <function>
+                        <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="om" arg1Dim="3" arg2="S" arg2Dim="9">ret = [S(1)*om(1) + S(4)*om(2) + S(7)*om(3); S(2)*om(1) + S(5)*om(2) + S(8)*om(3); S(3)*om(1) + S(6)*om(2) + S(9)*om(3)]; % standard rotation application R*om</SymbolicFunction>
+                </function>
+              </SignalOperation>    
+                    <Multiplexer xmlns="http://www.mbsim-env.de/MBSimControl" name="v_c_rc_inputs">
+                      <inputSignal ref="../Link[v_rw_rc]"/>
+                      <inputSignal ref="../Link[om_wc_rc]"/>
+                      <inputSignal ref="../Link[r_c_rc]"/>
+              </Multiplexer>    
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="v_c_rc">
+                      <inputSignal ref="../Link[v_c_rc_inputs]"/>
+                      <function>
+                        <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="i" arg1Dim="9">v = [i(1);i(2);i(3)]; % v_rw_rc
+om = [i(4);i(5);i(6)]; % om_wc_rc
+r =[i(7);i(8);i(9)]; % r_c_rc
+ret = [v(1) + om(2)*r(3) - om(3)*r(2); v(2) + om(3)*r(1) - om(1)*r(3); v(3) + om(1)*r(2) - om(2)*r(1)]; % v1 = v0 + cross(om,r)</SymbolicFunction>
+                </function>
+              </SignalOperation>    
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="r_c_I">
+                      <inputSignal ref="../Link[r_c_rc]"/>
+                      <inputSignal ref="../Link[S_rc_I]"/>
+                      <function>
+                        <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="r" arg1Dim="3" arg2="S" arg2Dim="9">ret = [S(1)*r(1) + S(2)*r(2) + S(3)*r(3); S(4)*r(1) + S(5)*r(2) + S(6)*r(3); S(7)*r(1) + S(8)*r(2) + S(9)*r(3)];  % reverse rotation application R'*r</SymbolicFunction>
+                </function>
+              </SignalOperation>    
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="r_c_wc">
+                      <inputSignal ref="../Link[r_c_I]"/>
+                      <inputSignal ref="../Link[S_wc_I]"/>
+                      <function>
+                        <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="r" arg1Dim="3" arg2="S" arg2Dim="9">ret = [S(1)*r(1) + S(4)*r(2) + S(7)*r(3); S(2)*r(1) + S(5)*r(2) + S(8)*r(3); S(3)*r(1) + S(6)*r(2) + S(9)*r(3)]; % standard rotation application R*r</SymbolicFunction>
+                </function>
+              </SignalOperation>    
+                    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="v_r_rot">
+                      <inputSignal ref="../Link[om_rw_y]"/>
+                      <inputSignal ref="../Link[r_c_wc]"/>
+                      <function>
+                        <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="om" arg1Dim="1" arg2="r" arg2Dim="3">ret = om(1) * r(3); % wheelspeed at contact patch</SymbolicFunction>
+                </function>
+              </SignalOperation>  
+                  </links>
+                  <constraints/>
+                  <observers/>
+                </Group>
+              </groups>
               <objects>
                 <RigidBody name="Rear_wheel">
                   <generalizedInitialVelocity>
@@ -4769,89 +5007,17 @@ ret = - R_eff*Fx(1) </SymbolicFunction>
                     <size unit="m">.4</size>
                 </enableOpenMBVFrameC></RigidBody>
               </objects>
-              <links>
-                <OrientationSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="S_I_War">
-                  <frame ref="../../Group[Group_swingarm]/Object[Wheelaxis_rear]/Frame[C]"/>
-            </OrientationSensor>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="S_I_Wr">
-                  <inputSignal ref="../Link[S_I_War]"/>
+               <links>
+                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Long_slip_r">
+                  <inputSignal ref="../Group[Kinematics]/Link[v_r_rot]"/>
+                  <inputSignal ref="../Group[Kinematics]/Link[v_c_rc]"/>
                   <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="s" arg1Dim="9">x=sqrt( s(5)*s(5)+s(2)*s(2) )
-sx=s(5)/x
-sy=s(2)/x
-ret = [ sx;   s(2);  -sy*s(8); 
-         -sy;   s(5);  -sx*s(8);  
-           0;   s(8);    sx*s(5)+sy*s(2)] % Drehmatrix Inertial =&gt; W-System (x-Achse parallel zur Fahrbahn, y-Achse in Richtung Radachse)</SymbolicFunction>
-              </function>
-            </SignalOperation>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="S_I_Cr">
-                  <inputSignal ref="../Link[S_I_Wr]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="s" arg1Dim="9">ret = [ s(1); -s(4);  0 ; 
-          s(4);   s(1);  0 ;  
-          s(7);   0    ;  1  ]    % Drehmatrix Inertial =&gt; C-System (x-Achse parallel zur Fahrbahn, z-Achse normal zur Fahrbahn</SymbolicFunction>
-              </function>
-            </SignalOperation>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Rollangle_r">
-                  <inputSignal ref="../Link[S_I_Cr]"/>
-                  <inputSignal ref="../Link[S_I_Wr]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="sc" arg1Dim="9" arg2="sw" arg2Dim="9">
-                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret = asin(sc(3)*sw(2)+sc(6)*sw(5)+sc(9)*sw(8))</ele>
-                  </xmlVector>
-                </SymbolicFunction>
-              </function>
-            </SignalOperation>
-                <AngularVelocitySensor xmlns="http://www.mbsim-env.de/MBSimControl" name="om_Wcr_I">
-                  <frame ref="../../Group[Group_swingarm]/Object[Wheelaxis_rear]/Frame[C]"/>
-            </AngularVelocitySensor>
-                <VelocitySensor xmlns="http://www.mbsim-env.de/MBSimControl" name="v_Wcr_I">
-                  <frame ref="../../Group[Group_swingarm]/Object[Wheelaxis_rear]/Frame[C]"/>
-            </VelocitySensor>
-                <Multiplexer xmlns="http://www.mbsim-env.de/MBSimControl" name="contact_r_input">
-                  <inputSignal ref="../Link[om_Wcr_I]"/>
-                  <inputSignal ref="../Link[S_I_Wr]"/>
-                  <inputSignal ref="../Link[v_Wcr_I]"/>
-                  <inputSignal ref="../Link[Rollangle_r]"/>
-                  <inputSignal ref="../Link[S_I_Cr]"/>
-            </Multiplexer>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="v_cr_C">
-                  <inputSignal ref="../Link[contact_r_input]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="i" arg1Dim="25">om_Wc_I      = [i(1); i(2); i(3)];
-S_I_w           = [i(4);i(5);i(6);i(7);i(8);i(9);i(10);i(11);i(12)];
-om_Wc_W     =  [S_I_w(1)*om_Wc_I(1) + S_I_w(4)*om_Wc_I(2) + S_I_w(7)*om_Wc_I(3);...
-                          S_I_w(2)*om_Wc_I(1) + S_I_w(5)*om_Wc_I(2) + S_I_w(8)*om_Wc_I(3);...
-                          S_I_w(3)*om_Wc_I(1) + S_I_w(6)*om_Wc_I(2) + S_I_w(9)*om_Wc_I(3)];
-v_Wc_I        = [i(13); i(14); i(15)];
-v_Wc_W      =  [S_I_w(1)*v_Wc_I(1) + S_I_w(4)*v_Wc_I(2) + S_I_w(7)*v_Wc_I(3);...
-                        S_I_w(2)*v_Wc_I(1) + S_I_w(5)*v_Wc_I(2) + S_I_w(8)*v_Wc_I(3);...
-                        S_I_w(3)*v_Wc_I(1) + S_I_w(6)*v_Wc_I(2) + S_I_w(9)*v_Wc_I(3)];
-al                 = i(16);
-r_w_c_W      = [0; - rc_RW*sin(al);  - r_rim_RW - rc_RW*cos(al)];
-
-
-v_c_W          = [v_Wc_W(1) + om_Wc_W(2)*r_w_c_W(3) -  om_Wc_W(3)*r_w_c_W(2);...
-                        v_Wc_W(2) -  om_Wc_W(1)*r_w_c_W(3) + om_Wc_W(3)*r_w_c_W(1);...
-                        v_Wc_W(3) + om_Wc_W(1)*r_w_c_W(2)  - om_Wc_W(2)*r_w_c_W(1)];
-
-v_c_I           =  [S_I_w(1)*v_c_W(1) + S_I_w(2)*v_c_W(2) + S_I_w(3)*v_c_W(3);...
-                        S_I_w(4)*v_c_W(1) + S_I_w(5)*v_c_W(2) + S_I_w(6)*v_c_W(3);...
-                        S_I_w(7)*v_c_W(1) + S_I_w(8)*v_c_W(2) + S_I_w(9)*v_c_W(3)];
-
-S_I_c           = [i(17);i(18);i(19);i(20);i(21);i(22);i(23);i(24);i(25)];
-v_c_C          =  [S_I_c(1)*v_c_I(1) + S_I_c(4)*v_c_I(2) + S_I_c(7)*v_c_I(3);...
-                        S_I_c(2)*v_c_I(1) + S_I_c(5)*v_c_I(2) + S_I_c(8)*v_c_I(3);...
-                        S_I_c(3)*v_c_I(1) + S_I_c(6)*v_c_I(2) + S_I_c(9)*v_c_I(3)];
-
-ret=[v_c_C(1);v_c_C(2);v_c_C(3)]
-</SymbolicFunction>
-              </function>
-            </SignalOperation>
+                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="v_rot" arg1Dim="1" arg2="v_C" arg2Dim="3">ret=-(v_C(1)+v_rot(1))/v_C(1)</SymbolicFunction>
+                </function>
+              </SignalOperation>  
                 <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Kyal_r">
                   <inputSignal ref="../Link[Fz_Tyre_r_C]"/>
-                  <inputSignal ref="../Link[Rollangle_r]"/>
+                  <inputSignal ref="../Group[Kinematics]/Link[phi_r_lim]"/>
                   <function>
                     <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="Fz" arg1Dim="1" arg2="ga" arg2Dim="1">
                       <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
@@ -4859,10 +5025,10 @@ ret=[v_c_C(1);v_c_C(2);v_c_C(3)]
                     </xmlVector>
                   </SymbolicFunction>
                 </function>
-              </SignalOperation>
+              </SignalOperation>  
                 <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="s_relax_r">
                   <inputSignal ref="../Link[Kyal_r]"/>
-                  <inputSignal ref="../Link[v_cr_C]"/>
+                  <inputSignal ref="../Group[Kinematics]/Link[v_c_rc]"/>
                   <function>
                     <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="Kyal" arg1Dim="1" arg2="v" arg2Dim="3">
                       <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
@@ -4870,29 +5036,22 @@ ret=[v_c_C(1);v_c_C(2);v_c_C(3)]
                     </xmlVector>
                   </SymbolicFunction>
                 </function>
-              </SignalOperation>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Long_slip_r">
-                  <inputSignal ref="../Link[v_rot_r]"/>
-                  <inputSignal ref="../Link[v_cr_C]"/>
+              </SignalOperation>  
+                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Slipangle_r">
+                  <inputSignal ref="../Group[Kinematics]/Link[v_c_rc]"/>
                   <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="v_rot" arg1Dim="1" arg2="v_C" arg2Dim="3">ret=-(v_C(1)+v_rot(1))/v_C(1)</SymbolicFunction>
+                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="v" arg1Dim="3">
+                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                        <ele>ret=atan(v(2)/v(1))</ele>
+                    </xmlVector>
+                  </SymbolicFunction>
                 </function>
               </SignalOperation>  
                 <Multiplexer xmlns="http://www.mbsim-env.de/MBSimControl" name="Slipangle_r_input">
                   <inputSignal ref="../Link[Slipangle_r]"/>
                   <inputSignal ref="../Link[s_relax_r]"/>
-                  <inputSignal ref="../Link[v_cr_C]"/>
-              </Multiplexer>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Slipangle_r">
-                  <inputSignal ref="../Link[v_cr_C]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="v" arg1Dim="3">
-                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret=atan(v(2)/v(1))</ele>
-                  </xmlVector>
-                </SymbolicFunction>
-              </function>
-            </SignalOperation>  
+                  <inputSignal ref="../Group[Kinematics]/Link[v_c_rc]"/>
+              </Multiplexer>  
                 <NonlinearTransferSystem xmlns="http://www.mbsim-env.de/MBSimControl" name="Slipangle_r_pt1">
                   <inputSignal ref="../Link[Slipangle_r_input]"/>
                   <systemFunction>
@@ -4909,86 +5068,23 @@ ret=[v_c_C(1);v_c_C(2);v_c_C(3)]
                     </xmlVector>
                   </SymbolicFunction>
                 </outputFunction>
-              </NonlinearTransferSystem>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="r_cr_C">
-                  <inputSignal ref="../Link[Rollangle_r]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="al" arg1Dim="1">
-                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret = 0</ele>
-                        <ele>ret = - r_rim_RW*sin(al(1))</ele>
-                        <ele>ret =   r_rim_RW*cos(al(1)) + rc_RW</ele>
-                  </xmlVector>
-                </SymbolicFunction>
-              </function>
-            </SignalOperation>  
-                <PositionSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="r_Wcr_I">
-                  <frame ref="../../Group[Group_swingarm]/Object[Wheelaxis_rear]/Frame[C]"/>
-              </PositionSensor>  
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="road_excitation_r">
-                  <inputSignal ref="../../Group[Group_Controller]/Link[time]"/>
-                  <function>
-                    <PiecewiseDefinedFunction xmlns="http://www.mbsim-env.de/MBSim">
-                      <limitedFunctions>
-                        <LimitedFunction>
-                          <function>
-                            <ConstantFunction>
-                              <a0>0</a0>
-                            </ConstantFunction>
-                          </function>
-                          <limit>T_start_road_waves + wheelbase/v0*3.6</limit>
-                        </LimitedFunction>
-                        <LimitedFunction>
-                          <function>
-                            <SymbolicFunction arg1="t" arg1Dim="1">
-                              <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                                <ele>ret = h_road_waves/2*( 1-cos (2*pi*  v0/(3.6*l_road_waves)*(t(1)-(T_start_road_waves + wheelbase/v0*3.6) )  )      )</ele>
-                              </xmlVector>
-                            </SymbolicFunction>
-                          </function>
-                          <limit>T_start_road_waves + wheelbase/v0*3.6 + n_road_waves*l_road_waves/v0*3.6</limit>
-                        </LimitedFunction>
-                        <LimitedFunction>
-                          <function>
-                            <ConstantFunction>
-                              <a0>0</a0>
-                            </ConstantFunction>
-                          </function>
-                          <limit>100</limit>
-                        </LimitedFunction>
-                      </limitedFunctions>
-                    </PiecewiseDefinedFunction>
-                  </function>
-                </SignalOperation>
-                <Multiplexer xmlns="http://www.mbsim-env.de/MBSimControl" name="z_tyre_r_input">
-                  <inputSignal ref="../Link[r_Wcr_I]"/>
-                  <inputSignal ref="../Link[r_cr_C]"/>
-                  <inputSignal ref="../Link[road_excitation_r]"/>
-                </Multiplexer>
+              </NonlinearTransferSystem>  
                 <Multiplexer xmlns="http://www.mbsim-env.de/MBSimControl" name="Tyre_r_input">
-                  <inputSignal ref="../Link[Rollangle_r]"/>
+                  <inputSignal ref="../Group[Kinematics]/Link[phi_r_lim]"/>
                   <inputSignal ref="../Link[Long_slip_r]"/>
                   <inputSignal ref="../Link[Slipangle_r_pt1]"/>
                   <inputSignal ref="../Link[Kyal_r]"/>
+                  <inputSignal ref="../../Group[Group_Controller]/Link[time]"/>
               </Multiplexer>  
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="z_Tyre_r">
-                  <inputSignal ref="../Link[z_tyre_r_input]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="i" arg1Dim="7">rI  = i(3)
-rC = i(6)
-zR   = i(7)
-
-ret = -rC -z0_I_Road + rI - zR</SymbolicFunction>
-                  </function>
-                </SignalOperation>
                 <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Fx_Tyre_r_C">
                   <inputSignal ref="../Link[Tyre_r_input]"/>
                   <inputSignal ref="../Link[Fz_Tyre_r_C]"/>
                   <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="i" arg1Dim="4" arg2="FzH" arg2Dim="1">ka = i(2)
-als = i(3)
-Fz = FzH(1)
+                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="i" arg1Dim="5" arg2="FzH" arg2Dim="1">ka  = i(2)
+als  = i(3)
+Fz   = FzH(1)
 Fz0 = Fz0_RW
+t     = i(4)
 
 dfz=(Fz-Fz0)/Fz0
 Dx=(pDx1+pDx2*dfz)*Fz
@@ -5002,11 +5098,12 @@ Fx=cos(Cxal*atan(Bxal*als))*Fx0
 
 ret=Fx</SymbolicFunction>
                   </function>
-                </SignalOperation><SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Fy_Tyre_r_C">
+                </SignalOperation>
+                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Fy_Tyre_r_C">
                   <inputSignal ref="../Link[Tyre_r_input]"/>
                   <inputSignal ref="../Link[Fz_Tyre_r_C]"/>
                   <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="i" arg1Dim="4" arg2="FzH" arg2Dim="1">Fz0    = Fz0_RW
+                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="i" arg1Dim="5" arg2="FzH" arg2Dim="1">Fz0    = Fz0_RW
 Fz     = FzH(1)
 ga     = i(1)
 ka     = i(2)
@@ -5027,13 +5124,14 @@ Fy=cos(Cyka*atan(Byka*ka))*Fy0
 
 ret=-Fy</SymbolicFunction>
                   </function>
-                </SignalOperation><SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Fz_Tyre_r_C_unlim">
-                  <inputSignal ref="../Link[z_Tyre_r]"/>
-                  <inputSignal ref="../Link[v_cr_C]"/>
+                </SignalOperation>
+                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Fz_Tyre_r_C_unlim">
+                  <inputSignal ref="../Group[Kinematics]/Link[z_Tyre_r]"/>
+                  <inputSignal ref="../Group[Kinematics]/Link[v_c_rc]"/>
                   <function>
                     <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="z" arg1Dim="1" arg2="v" arg2Dim="3">
                       <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret=-c_z_RW*z(1) - d_z_RW*v(3) + Fz0_RW</ele>
+                        <ele>ret=-c_z_RW*z(1) - d_z_RW*v(3) + FzPreload_RW;</ele>
                     </xmlVector>
                   </SymbolicFunction>
                 </function>
@@ -5044,23 +5142,25 @@ ret=-Fy</SymbolicFunction>
                     <BoundedFunction xmlns="http://www.mbsim-env.de/MBSim">
                       <lowerBound>1</lowerBound>
                       <upperBound>5000</upperBound>
-                    </BoundedFunction>
-                  </function>
-                </SignalOperation><SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="scrub_radius_r">
-                  <inputSignal ref="../Link[Rollangle_r]"/>
+                  </BoundedFunction>
+                </function>
+              </SignalOperation>  
+                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="scrub_radius_r">
+                  <inputSignal ref="../Group[Kinematics]/Link[phi_r_lim]"/>
+                  <inputSignal ref="../Group[Kinematics]/Link[z_Tyre_r]"/>
                   <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="ga" arg1Dim="1">
+                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="ga" arg1Dim="1" arg2="z" arg2Dim="1">
                       <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret=rc_RW*sin(ga(1))</ele>
+                        <ele>ret=(rc_RW+z(1))*sin(ga(1))</ele>
                     </xmlVector>
                   </SymbolicFunction>
                 </function>
-              </SignalOperation>  
+              </SignalOperation>
                 <Multiplexer xmlns="http://www.mbsim-env.de/MBSimControl" name="M_Fx_r_Input">
                   <inputSignal ref="../Link[Fx_Tyre_r_C]"/>
                   <inputSignal ref="../Link[scrub_radius_r]"/>
-                  <inputSignal ref="../Link[Rollangle_r]"/>
-              </Multiplexer>  
+                  <inputSignal ref="../Group[Kinematics]/Link[phi_r_lim]"/>
+              </Multiplexer>
                 <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="M_Fx_Tyre_r_C">
                   <inputSignal ref="../Link[M_Fx_r_Input]"/>
                   <function>
@@ -5073,30 +5173,29 @@ My_C = -Mz_W*sin(ga)  %in C system
 Mz_C = Mz_W*cos(ga)
 ret=[0;My_C;Mz_C]
 </SymbolicFunction>
-                </function>
-              </SignalOperation>  
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Mx_Fz_Tyre_r_C">
+                  </function>
+                </SignalOperation><SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Mx_Fz_Tyre_r_C">
                   <inputSignal ref="../Link[Fz_Tyre_r_C]"/>
-                  <inputSignal ref="../Link[r_cr_C]"/>
+                  <inputSignal ref="../Group[Kinematics]/Link[r_c_rc]"/>
                   <function>
                     <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="F" arg1Dim="1" arg2="ry" arg2Dim="3">
                       <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret=-F(1)*ry(2)</ele>
+                        <ele>ret=F(1)*ry(2)</ele>
                     </xmlVector>
                   </SymbolicFunction>
                 </function>
-              </SignalOperation>  
+              </SignalOperation>
                 <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Mx_Fy_Tyre_r_C">
                   <inputSignal ref="../Link[Fy_Tyre_r_C]"/>
-                  <inputSignal ref="../Link[r_cr_C]"/>
+                  <inputSignal ref="../Group[Kinematics]/Link[r_c_rc]"/>
                   <function>
                     <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="F" arg1Dim="1" arg2="rz" arg2Dim="3">
                       <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret=F(1)*rz(3)</ele>
+                        <ele>ret=-F(1)*rz(3)</ele>
                     </xmlVector>
                   </SymbolicFunction>
                 </function>
-              </SignalOperation>  
+              </SignalOperation>
                 <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Mz_Tyre_r_C">
                   <inputSignal ref="../Link[Tyre_r_input]"/>
                   <inputSignal ref="../Link[Fz_Tyre_r_C]"/>
@@ -5138,12 +5237,13 @@ Mz=-Dt*cos(Ct*atan(Bt*lat-Et*(Bt*lat-atan(Bt*lat))))/sqrt(1+als^2)*Fy+Mzr
 
 ret=-Mz</SymbolicFunction>
                   </function>
-                </SignalOperation><Multiplexer xmlns="http://www.mbsim-env.de/MBSimControl" name="F_Tyre_r_input">
-                  <inputSignal ref="../Link[S_I_Cr]"/>
+                </SignalOperation>
+                <Multiplexer xmlns="http://www.mbsim-env.de/MBSimControl" name="F_Tyre_r_input">
+                  <inputSignal ref="../Group[Kinematics]/Link[S_rc_I]"/>
                   <inputSignal ref="../Link[Fx_Tyre_r_C]"/>
                   <inputSignal ref="../Link[Fy_Tyre_r_C]"/>
                   <inputSignal ref="../Link[Fz_Tyre_r_C]"/>
-              </Multiplexer>  
+              </Multiplexer>
                 <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="F_Tyre_r_I">
                   <inputSignal ref="../Link[F_Tyre_r_input]"/>
                   <function>
@@ -5160,12 +5260,12 @@ ret =[FIx;FIy;FIz]</SymbolicFunction>
                 </function>
               </SignalOperation>  
                 <Multiplexer xmlns="http://www.mbsim-env.de/MBSimControl" name="M_Tyre_r_input">
-                  <inputSignal ref="../Link[S_I_Cr]"/>
+                  <inputSignal ref="../Group[Kinematics]/Link[S_rc_I]"/>
                   <inputSignal ref="../Link[Mx_Fy_Tyre_r_C]"/>
                   <inputSignal ref="../Link[Mx_Fz_Tyre_r_C]"/>
                   <inputSignal ref="../Link[Mz_Tyre_r_C]"/>
                   <inputSignal ref="../Link[M_Fx_Tyre_r_C]"/>
-              </Multiplexer>  
+              </Multiplexer>
                 <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="M_Tyre_r_I">
                   <inputSignal ref="../Link[M_Tyre_r_input]"/>
                   <function>
@@ -5191,7 +5291,7 @@ ret =[MIx;MIy;MIz]</SymbolicFunction>
                   </xmlVector>
                 </SymbolicFunction>
               </function>
-            </SignalOperation>    
+            </SignalOperation>  
                 <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Fz_Tyre_r_I">
                   <inputSignal ref="../Link[F_Tyre_r_I]"/>
                   <function>
@@ -5201,7 +5301,7 @@ ret =[MIx;MIy;MIz]</SymbolicFunction>
                   </xmlVector>
                 </SymbolicFunction>
               </function>
-            </SignalOperation>    
+            </SignalOperation>  
                 <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Mxy_Tyre_r_I">
                   <inputSignal ref="../Link[M_Tyre_r_I]"/>
                   <function>
@@ -5212,7 +5312,7 @@ ret =[MIx;MIy;MIz]</SymbolicFunction>
                   </xmlVector>
                 </SymbolicFunction>
               </function>
-            </SignalOperation>    
+            </SignalOperation>  
                 <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Mz_Tyre_r_I">
                   <inputSignal ref="../Link[M_Tyre_r_I]"/>
                   <function>
@@ -5222,7 +5322,7 @@ ret =[MIx;MIy;MIz]</SymbolicFunction>
                   </xmlVector>
                 </SymbolicFunction>
               </function>
-            </SignalOperation>    
+            </SignalOperation>  
                 <KineticExcitation name="Fxy_Tyre_r_I_exc">
                   <connect ref2="../../Group[Group_swingarm]/Object[Wheelaxis_rear]/Frame[C]"/>
                   <frameOfReference>"firstFrame"</frameOfReference>
@@ -5290,7 +5390,7 @@ ret =[MIx;MIy;MIz]</SymbolicFunction>
                     <scaleLength>.0005</scaleLength>
                     <scaleSize>.1</scaleSize>
               </enableOpenMBV>
-            </KineticExcitation>    
+            </KineticExcitation>  
                 <KineticExcitation name="Mxy_Tyre_r_I_exc">
                   <connect ref2="../../Group[Group_swingarm]/Object[Wheelaxis_rear]/Frame[C]"/>
                   <frameOfReference>"firstFrame"</frameOfReference>
@@ -5326,7 +5426,7 @@ ret =[MIx;MIy;MIz]</SymbolicFunction>
                     <scaleLength>0.01</scaleLength>
                     <scaleSize>0.1</scaleSize>
               </enableOpenMBV>
-            </KineticExcitation>    
+            </KineticExcitation>  
                 <KineticExcitation name="Mz_Tyre_r_I_exc">
                   <connect ref2="../../Group[Group_swingarm]/Object[Wheelaxis_rear]/Frame[C]"/>
                   <frameOfReference>"firstFrame"</frameOfReference>
@@ -5359,29 +5459,14 @@ ret =[MIx;MIy;MIz]</SymbolicFunction>
                     <scaleLength>0.01</scaleLength>
                     <scaleSize>0.1</scaleSize>
               </enableOpenMBV>
-            </KineticExcitation>    
-                <GeneralizedVelocitySensor xmlns="http://www.mbsim-env.de/MBSimControl" name="om_y_r">
-                  <object ref="../Object[Rear_wheel]"/>
-            </GeneralizedVelocitySensor>    
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="v_rot_r">
-                  <inputSignal ref="../Link[om_y_r]"/>
-                  <inputSignal ref="../Link[Rollangle_r]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="om" arg1Dim="1" arg2="al" arg2Dim="1">
-                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret = -om(1)*(r_rim_RW + rc_RW*cos(al(1)))</ele>
-                  </xmlVector>
-                </SymbolicFunction>
-              </function>
-            </SignalOperation>    
+            </KineticExcitation>  
                 <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="My_Fx_r_W_sop">
                   <inputSignal ref="../Link[Fx_Tyre_r_C]"/>
-                  <inputSignal ref="../Link[Rollangle_r]"/>
+                  <inputSignal ref="../Group[Kinematics]/Link[r_c_wc]"/>
                   <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="Fx" arg1Dim="1" arg2="ga" arg2Dim="1">R_eff =  r_rim_RW + rc_RW*cos(ga(1))
-ret = -R_eff*Fx(1)</SymbolicFunction>
+                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="Fx" arg1Dim="1" arg2="r" arg2Dim="3">ret = r(3)*Fx(1)</SymbolicFunction>
                 </function>
-              </SignalOperation>  
+              </SignalOperation>
                 <KineticExcitation name="My_Fx_r_W_exc" xmlns="http://www.mbsim-env.de/MBSim">
                   <connect ref1="../../Frame[I]" ref2="../Object[Rear_wheel]/Frame[C]"/>
                   <momentDirection unit="-">
@@ -5402,12 +5487,11 @@ ret = -R_eff*Fx(1)</SymbolicFunction>
                       <returnSignal ref="../../Link[My_Fx_r_W_sop]"/>
                     </SignalFunction>
                   </momentFunction>
-                </KineticExcitation>  
-                <Multiplexer xmlns="http://www.mbsim-env.de/MBSimControl" name="My_drive_r_W_in">
+                </KineticExcitation><Multiplexer xmlns="http://www.mbsim-env.de/MBSimControl" name="My_drive_r_W_in">
                   <inputSignal ref="../../Group[Group_Controller]/Group[longitudinal]/Link[M_brake_r_stat]"/>
                   <inputSignal ref="../../Group[Group_Controller]/Group[longitudinal]/Link[M_brake]"/>
                   <inputSignal ref="../../Group[Group_Controller]/Group[longitudinal]/Link[M_drive]"/>
-              </Multiplexer>  
+                </Multiplexer>
                 <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="My_drive_r_W_sop">
                   <inputSignal ref="../Link[My_drive_r_W_in]"/>
                   <function>
@@ -5416,722 +5500,44 @@ Mbr_dyn = i(2)
 Mdrive    = i(3)
 
 ret = Mbr_st*(1-Velocity_controller) + (1-Brake_distribution)*Mbr_dyn + Mdrive</SymbolicFunction>
-                </function>
-              </SignalOperation>  
+                  </function>
+                </SignalOperation>
                 <KineticExcitation name="My_drive_W_exc" xmlns="http://www.mbsim-env.de/MBSim">
                   <connect ref1="../../Group[Group_swingarm]/Object[Wheelaxis_rear]/Frame[C]" ref2="../Object[Rear_wheel]/Frame[C]"/>
+                  <frameOfReference>"secondFrame"</frameOfReference>
                   <momentDirection unit="-">
                     <xmlMatrix xmlns="http://www.mbsim-env.de/MBXMLUtils">
                       <row>
                         <ele>0</ele>
-                    </row>
+                      </row>
                       <row>
                         <ele>1</ele>
-                    </row>
+                      </row>
                       <row>
                         <ele>0</ele>
-                    </row>
-                  </xmlMatrix>
-                </momentDirection>
+                      </row>
+                    </xmlMatrix>
+                  </momentDirection>
                   <momentFunction>
                     <SignalFunction xmlns="http://www.mbsim-env.de/MBSimControl">
                       <returnSignal ref="../../Link[My_drive_r_W_sop]"/>
-                  </SignalFunction>
-                </momentFunction>
+                    </SignalFunction>
+                  </momentFunction>
                   <enableOpenMBV>
                     <diffuseColor>
                       <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
                         <ele>0.111111</ele>
                         <ele>1</ele>
                         <ele>1</ele>
-                    </xmlVector>
-                  </diffuseColor>
+                      </xmlVector>
+                    </diffuseColor>
                     <scaleLength>.01</scaleLength>
                     <scaleSize>.1</scaleSize>
-                </enableOpenMBV>
-              </KineticExcitation></links>
+                  </enableOpenMBV>
+                </KineticExcitation>
+              </links>
               <constraints>
               </constraints>
-              <observers/>
-            </Group>
-          </Embed>
-          <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" parameterHref="Data/Group_Front_wheel.xml">
-            <Group xmlns="http://www.mbsim-env.de/MBSim" name="Group_Gyro_FW">
-              <frames/>
-              <contours/>
-              <groups/>
-              <objects>
-          </objects>
-              <links>
-                <AngularVelocitySensor xmlns="http://www.mbsim-env.de/MBSimControl" name="om_FW_I">
-                  <frame ref="../../Group[Group_Front_wheel]/Object[Front_wheel]/Frame[C]"/>
-            </AngularVelocitySensor>
-                <AngularAccelerationSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="omp_FW_I">
-                  <frame ref="../../Group[Group_Front_wheel]/Object[Front_wheel]/Frame[C]"/>
-            </AngularAccelerationSensor>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="om_FW_FW">
-                  <inputSignal ref="../Link[om_FW_I]"/>
-                  <inputSignal ref="../../Group[Group_Kinematic_Observer]/Link[S_I_FW]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="om" arg1Dim="3" arg2="s" arg2Dim="9">
-                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret = s(1)*om(1)+s(4)*om(2)+s(7)*om(3)</ele>
-                        <ele>ret = s(2)*om(1)+s(5)*om(2)+s(8)*om(3)</ele>
-                        <ele>ret = s(3)*om(1)+s(6)*om(2)+s(9)*om(3)</ele>
-                  </xmlVector>
-                </SymbolicFunction>
-              </function>
-            </SignalOperation>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="omp_FW_K">
-                  <inputSignal ref="../Link[omp_FW_I]"/>
-                  <inputSignal ref="../../Group[Group_Kinematic_Observer]/Link[S_I_FW]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="omp" arg1Dim="3" arg2="s" arg2Dim="9">
-                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret = s(1)*omp(1)+s(4)*omp(2)+s(7)*omp(3)</ele>
-                        <ele>ret = s(2)*omp(1)+s(5)*omp(2)+s(8)*omp(3)</ele>
-                        <ele>ret = s(3)*omp(1)+s(6)*omp(2)+s(9)*omp(3)</ele>
-                  </xmlVector>
-                </SymbolicFunction>
-              </function>
-            </SignalOperation>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="M_Gyro_FW">
-                  <inputSignal ref="../Link[om_FW_FW]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="om" arg1Dim="3">Mx = om(2)*om(3)*(T_FW(1)-T_FW(5));
-My = 0;
-Mz = om(1)*om(2)*(T_FW(5)-T_FW(1));
-
-ret=[Mx;My;Mz]</SymbolicFunction>
-                </function>
-              </SignalOperation>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="M_Gyro_FW_Komp">
-                  <inputSignal ref="../Link[M_Gyro_FW]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="Mg" arg1Dim="3">
-                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret = Mg(1)*Komp_Gyro_FW</ele>
-                        <ele>ret = Mg(2)*Komp_Gyro_FW</ele>
-                        <ele>ret = Mg(3)*Komp_Gyro_FW</ele>
-                    </xmlVector>
-                  </SymbolicFunction>
-                </function>
-              </SignalOperation>
-                <KineticExcitation name="M_Gyro_Komp_exc">
-                  <connect ref1="../../Frame[I]" ref2="../../Group[Group_Front_wheel]/Object[Front_wheel]/Frame[C]"/>
-                  <frameOfReference>"secondFrame"</frameOfReference>
-                  <momentDirection unit="-">
-                    <xmlMatrix xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                      <row>
-                        <ele>1</ele>
-                        <ele>0</ele>
-                        <ele>0</ele>
-                  </row>
-                      <row>
-                        <ele>0</ele>
-                        <ele>1</ele>
-                        <ele>0</ele>
-                  </row>
-                      <row>
-                        <ele>0</ele>
-                        <ele>0</ele>
-                        <ele>1</ele>
-                  </row>
-                </xmlMatrix>
-              </momentDirection>
-                  <momentFunction>
-                    <SignalFunction xmlns="http://www.mbsim-env.de/MBSimControl">
-                      <returnSignal ref="../../Link[M_Gyro_FW_Komp]"/>
-                </SignalFunction>
-              </momentFunction>
-                  <enableOpenMBV>
-                    <diffuseColor>
-                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>0.166667</ele>
-                        <ele>1</ele>
-                        <ele>0.666667</ele>
-                  </xmlVector>
-                </diffuseColor>
-                    <scaleLength>.1</scaleLength>
-                    <scaleSize>.1</scaleSize>
-              </enableOpenMBV>
-            </KineticExcitation>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="M_Gyro_FW_upperfork">
-                  <inputSignal ref="../Link[M_Gyro_FW]"/>
-                  <inputSignal ref="../../Group[Group_Kinematic_Observer]/Link[S_upperfork_FW]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="M" arg1Dim="3" arg2="s" arg2Dim="9">
-                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret = -(s(1)*M(1)+s(2)*M(2)+s(3)*M(3)) * (1. - Komp_Gyro_FW)  % Wirkung auf Fahrzeug ==&gt; neg. VZ!!!</ele>
-                        <ele>ret = -(s(4)*M(1)+s(5)*M(2)+s(6)*M(3)) * (1. - Komp_Gyro_FW)  % Wirkung auf Fahrzeug ==&gt; neg. VZ!!!</ele>
-                        <ele>ret = -(s(7)*M(1)+s(8)*M(2)+s(9)*M(3)) * (1. - Komp_Gyro_FW)  % Wirkung auf Fahrzeug ==&gt; neg. VZ!!!</ele>
-                    </xmlVector>
-                  </SymbolicFunction>
-                </function>
-              </SignalOperation>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="F_Tyre_Wc_upperfork">
-                  <inputSignal ref="../../Group[Group_Front_wheel]/Link[F_Tyre_f_I]"/>
-                  <inputSignal ref="../../Group[Group_Kinematic_Observer]/Link[S_I_upperfork]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="F" arg1Dim="3" arg2="s" arg2Dim="9">
-                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret = s(1)*F(1) + s(4)*F(2) + s(7)*F(3)</ele>
-                        <ele>ret = s(2)*F(1) + s(5)*F(2) + s(8)*F(3)</ele>
-                        <ele>ret = s(3)*F(1) + s(6)*F(2) + s(9)*F(3)</ele>
-                    </xmlVector>
-                  </SymbolicFunction>
-                </function>
-              </SignalOperation>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="M_Tyre_Wc_upperfork">
-                  <inputSignal ref="../../Group[Group_Front_wheel]/Link[M_Tyre_f_I]"/>
-                  <inputSignal ref="../../Group[Group_Kinematic_Observer]/Link[S_I_upperfork]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="M" arg1Dim="3" arg2="s" arg2Dim="9">
-                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret = s(1)*M(1) + s(4)*M(2) + s(7)*M(3)</ele>
-                        <ele>ret = s(2)*M(1) + s(5)*M(2) + s(8)*M(3)</ele>
-                        <ele>ret = s(3)*M(1) + s(6)*M(2) + s(9)*M(3)</ele>
-                    </xmlVector>
-                  </SymbolicFunction>
-                </function>
-              </SignalOperation>
-                <Multiplexer xmlns="http://www.mbsim-env.de/MBSimControl" name="M_upperfork_input">
-                  <inputSignal ref="../Link[F_Tyre_Wc_upperfork]"/>
-                  <inputSignal ref="../Link[M_Tyre_Wc_upperfork]"/>
-                  <inputSignal ref="../../Group[Group_Front_fork]/Link[fork_offset]"/>
-              </Multiplexer>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="M_Tyre_upperfork">
-                  <inputSignal ref="../Link[M_upperfork_input]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="i" arg1Dim="7">Fx     = i(1);
-Fy     = i(2);
-Fz     = i(3);
-Mx    = i(4);
-My    = i(5);
-Mz    = i(6);
-x_off = i(7);
-
-M_Fz  =  x_off*Fy ; 
-
-ret = [Mx ; My ; Mz+M_Fz]</SymbolicFunction>
-                </function>
-              </SignalOperation>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="M_Eul_upperfork">
-                  <inputSignal ref="../Link[omp_FW_K]"/>
-                  <inputSignal ref="../../Group[Group_Kinematic_Observer]/Link[S_upperfork_FW]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="omp" arg1Dim="3" arg2="s" arg2Dim="9">Mxk = T_FW(1)*omp(1);
-Myk = T_FW(5)*omp(2);
-Mzk = T_FW(1)*omp(3);
-
-MxG = s(1)*Mxk + s(2)*Myk + s(3)*Mzk;
-MyG = s(4)*Mxk + s(5)*Myk + s(6)*Mzk;
-MzG = s(7)*Mxk + s(8)*Myk + s(9)*Mzk;
-
-ret = [-MxG; -MyG; -MzG]  % Wirkung auf Fahrzeug ==&gt; neg. VZ!!!</SymbolicFunction>
-                </function>
-              </SignalOperation>  
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="M_EG_upperfork">
-                  <inputSignal ref="../Link[M_Gyro_FW_upperfork]"/>
-                  <inputSignal ref="../Link[M_Eul_upperfork]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="MG" arg1Dim="3" arg2="ME" arg2Dim="3">
-                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret = ME(1) + MG(1)</ele>
-                        <ele>ret = ME(2) + MG(2)</ele>
-                        <ele>ret = ME(3) + MG(3)</ele>
-                    </xmlVector>
-                  </SymbolicFunction>
-                </function>
-              </SignalOperation>  
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="M_Zw_upperfork">
-                  <inputSignal ref="../Link[M_EG_upperfork]"/>
-                  <inputSignal ref="../Link[M_Tyre_upperfork]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="MEG" arg1Dim="3" arg2="MR" arg2Dim="3">
-                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret = MR(1) + MEG(1)</ele>
-                        <ele>ret = MR(2) + MEG(2)</ele>
-                        <ele>ret = MR(3) + MEG(3)</ele>
-                    </xmlVector>
-                  </SymbolicFunction>
-                </function>
-              </SignalOperation></links>
-              <constraints/>
-              <observers/>
-            </Group>
-          </Embed>
-          <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" parameterHref="Data/Group_Rear_wheel.xml">
-            <Group xmlns="http://www.mbsim-env.de/MBSim" name="Group_Gyro_RW">
-              <frames/>
-              <contours/>
-              <groups/>
-              <objects/>
-              <links>
-                <AngularVelocitySensor xmlns="http://www.mbsim-env.de/MBSimControl" name="om_RW_I">
-                  <frame ref="../../Group[Group_Rear_wheel]/Object[Rear_wheel]/Frame[C]"/>
-              </AngularVelocitySensor>
-                <AngularAccelerationSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="omp_RW_I">
-                  <frame ref="../../Group[Group_Rear_wheel]/Object[Rear_wheel]/Frame[C]"/>
-              </AngularAccelerationSensor>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="om_RW_RW">
-                  <inputSignal ref="../Link[om_RW_I]"/>
-                  <inputSignal ref="../../Group[Group_Kinematic_Observer]/Link[S_I_RW]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="om" arg1Dim="3" arg2="s" arg2Dim="9">
-                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret = s(1)*om(1)+s(4)*om(2)+s(7)*om(3)</ele>
-                        <ele>ret = s(2)*om(1)+s(5)*om(2)+s(8)*om(3)</ele>
-                        <ele>ret = s(3)*om(1)+s(6)*om(2)+s(9)*om(3)</ele>
-                    </xmlVector>
-                  </SymbolicFunction>
-                </function>
-              </SignalOperation>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="omp_RW_K">
-                  <inputSignal ref="../Link[omp_RW_I]"/>
-                  <inputSignal ref="../../Group[Group_Kinematic_Observer]/Link[S_I_RW]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="omp" arg1Dim="3" arg2="s" arg2Dim="9">
-                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret = s(1)*omp(1)+s(4)*omp(2)+s(7)*omp(3)</ele>
-                        <ele>ret = s(2)*omp(1)+s(5)*omp(2)+s(8)*omp(3)</ele>
-                        <ele>ret = s(3)*omp(1)+s(6)*omp(2)+s(9)*omp(3)</ele>
-                    </xmlVector>
-                  </SymbolicFunction>
-                </function>
-              </SignalOperation>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="M_Gyro_RW">
-                  <inputSignal ref="../Link[om_RW_RW]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="om" arg1Dim="3">Mx = om(2)*om(3)*(T_RW(1)-T_RW(5));
-My = 0;
-Mz = om(1)*om(2)*(T_RW(5)-T_RW(1));
-
-ret=[Mx;My;Mz]</SymbolicFunction>
-                </function>
-              </SignalOperation>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="M_Gyro_RW_Komp">
-                  <inputSignal ref="../Link[M_Gyro_RW]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="Mg" arg1Dim="3">
-                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret = Mg(1)*Komp_Gyro_RW</ele>
-                        <ele>ret = Mg(2)*Komp_Gyro_RW</ele>
-                        <ele>ret = Mg(3)*Komp_Gyro_RW</ele>
-                    </xmlVector>
-                  </SymbolicFunction>
-                </function>
-              </SignalOperation>
-                <KineticExcitation name="M_Gyro_RW_Komp_exc">
-                  <connect ref1="../../Frame[I]" ref2="../../Group[Group_Rear_wheel]/Object[Rear_wheel]/Frame[C]"/>
-                  <frameOfReference>"secondFrame"</frameOfReference>
-                  <momentDirection unit="-">
-                    <xmlMatrix xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                      <row>
-                        <ele>1</ele>
-                        <ele>0</ele>
-                        <ele>0</ele>
-                    </row>
-                      <row>
-                        <ele>0</ele>
-                        <ele>1</ele>
-                        <ele>0</ele>
-                    </row>
-                      <row>
-                        <ele>0</ele>
-                        <ele>0</ele>
-                        <ele>1</ele>
-                    </row>
-                  </xmlMatrix>
-                </momentDirection>
-                  <momentFunction>
-                    <SignalFunction xmlns="http://www.mbsim-env.de/MBSimControl">
-                      <returnSignal ref="../../Link[M_Gyro_RW_Komp]"/>
-                  </SignalFunction>
-                </momentFunction>
-                  <enableOpenMBV>
-                    <diffuseColor>
-                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>0.166667</ele>
-                        <ele>1</ele>
-                        <ele>0.666667</ele>
-                    </xmlVector>
-                  </diffuseColor>
-                    <scaleLength>.1</scaleLength>
-                    <scaleSize>.1</scaleSize>
-                </enableOpenMBV>
-              </KineticExcitation>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="M_Gyro_RW_War">
-                  <inputSignal ref="../Link[M_Gyro_RW]"/>
-                  <inputSignal ref="../../Group[Group_Kinematic_Observer]/Link[S_War_RW]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="M" arg1Dim="3" arg2="s" arg2Dim="9">
-                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret = -(s(1)*M(1)+s(2)*M(2)+s(3)*M(3)) * (1. - Komp_Gyro_RW)  % Wirkung auf Fahrzeug ==&gt; neg. VZ!!!</ele>
-                        <ele>ret = -(s(4)*M(1)+s(5)*M(2)+s(6)*M(3)) * (1. - Komp_Gyro_RW)  % Wirkung auf Fahrzeug ==&gt; neg. VZ!!!</ele>
-                        <ele>ret = -(s(7)*M(1)+s(8)*M(2)+s(9)*M(3)) * (1. - Komp_Gyro_RW)  % Wirkung auf Fahrzeug ==&gt; neg. VZ!!!</ele>
-                    </xmlVector>
-                  </SymbolicFunction>
-                </function>
-              </SignalOperation>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="M_Tyre_War">
-                  <inputSignal ref="../../Group[Group_Rear_wheel]/Link[M_Tyre_r_I]"/>
-                  <inputSignal ref="../../Group[Group_Rear_wheel]/Link[S_I_War]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="M" arg1Dim="3" arg2="s" arg2Dim="9">
-                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret = s(1)*M(1) + s(4)*M(2) + s(7)*M(3)</ele>
-                        <ele>ret = s(2)*M(1) + s(5)*M(2) + s(8)*M(3)</ele>
-                        <ele>ret = s(3)*M(1) + s(6)*M(2) + s(9)*M(3)</ele>
-                    </xmlVector>
-                  </SymbolicFunction>
-                </function>
-              </SignalOperation>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="M_Eul_War">
-                  <inputSignal ref="../Link[omp_RW_K]"/>
-                  <inputSignal ref="../../Group[Group_Kinematic_Observer]/Link[S_War_RW]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="omp" arg1Dim="3" arg2="s" arg2Dim="9">Mxk = T_RW(1)*omp(1);
-Myk = T_RW(5)*omp(2);
-Mzk = T_RW(1)*omp(3);
-
-MxG = s(1)*Mxk + s(2)*Myk + s(3)*Mzk;
-MyG = s(4)*Mxk + s(5)*Myk + s(6)*Mzk;
-MzG = s(7)*Mxk + s(8)*Myk + s(9)*Mzk;
-
-ret = [-MxG; -MyG; -MzG]  % Wirkung auf Fahrzeug ==&gt; neg. VZ!!!</SymbolicFunction>
-                </function>
-              </SignalOperation>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="M_EG_War">
-                  <inputSignal ref="../Link[M_Gyro_RW_War]"/>
-                  <inputSignal ref="../Link[M_Eul_War]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="MG" arg1Dim="3" arg2="ME" arg2Dim="3">
-                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret = ME(1) + MG(1)</ele>
-                        <ele>ret = ME(2) + MG(2)</ele>
-                        <ele>ret = ME(3) + MG(3)</ele>
-                    </xmlVector>
-                  </SymbolicFunction>
-                </function>
-              </SignalOperation>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="M_Zw_War">
-                  <inputSignal ref="../Link[M_EG_War]"/>
-                  <inputSignal ref="../Link[M_Tyre_War]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="MEG" arg1Dim="3" arg2="MR" arg2Dim="3">
-                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret = MR(1) + MEG(1)</ele>
-                        <ele>ret = MR(2) + MEG(2)</ele>
-                        <ele>ret = MR(3) + MEG(3)</ele>
-                    </xmlVector>
-                  </SymbolicFunction>
-                </function>
-              </SignalOperation>
-            </links>
-              <constraints/>
-              <observers/>
-          </Group>
-        </Embed>
-          <Group name="Group_Kinematic_Observer">
-            <frames/>
-            <contours/>
-            <groups/>
-            <objects/>
-            <links>
-              <OrientationSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="S_I_FW">
-                <frame ref="../../Group[Group_Front_wheel]/Object[Front_wheel]/Frame[C]"/>
-            </OrientationSensor>
-              <OrientationSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="S_I_upperfork">
-                <frame ref="../../Group[Group_Front_fork]/Object[upper_fork]/Frame[fork_joint]"/>
-            </OrientationSensor>
-              <OrientationSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="S_I_lowerfork">
-                <frame ref="../../Group[Group_Front_fork]/Object[lower_fork]/Frame[joint_fork]"/>
-            </OrientationSensor>
-              <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="S_I_upperfork_W">
-                <inputSignal ref="../Link[S_I_upperfork]"/>
-                <inputSignal ref="../../Group[Group_Front_wheel]/Link[S_I_Wf]"/>
-                <function>
-                  <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="sL" arg1Dim="9" arg2="sW" arg2Dim="9">
-                    <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                      <ele>ret = sL(1)*sW(1) + sL(4)*sW(4) + sL(7)*sW(7)</ele>
-                      <ele>ret = sL(1)*sW(2) + sL(4)*sW(5) + sL(7)*sW(8)</ele>
-                      <ele>ret = sL(1)*sW(3) + sL(4)*sW(6) + sL(7)*sW(9)</ele>
-                      <ele>ret = sL(2)*sW(1) + sL(5)*sW(4) + sL(8)*sW(7)</ele>
-                      <ele>ret = sL(2)*sW(2) + sL(5)*sW(5) + sL(8)*sW(8)</ele>
-                      <ele>ret = sL(2)*sW(3) + sL(5)*sW(6) + sL(8)*sW(9)</ele>
-                      <ele>ret = sL(3)*sW(1) + sL(6)*sW(4) + sL(9)*sW(7)</ele>
-                      <ele>ret = sL(3)*sW(2) + sL(6)*sW(5) + sL(9)*sW(8)</ele>
-                      <ele>ret = sL(3)*sW(3) + sL(6)*sW(6) + sL(9)*sW(9)</ele>
-                  </xmlVector>
-                </SymbolicFunction>
-              </function>
-            </SignalOperation>
-              <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="S_upperfork_FW">
-                <inputSignal ref="../Link[S_I_upperfork]"/>
-                <inputSignal ref="../Link[S_I_FW]"/>
-                <function>
-                  <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="sL" arg1Dim="9" arg2="sW" arg2Dim="9">
-                    <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                      <ele>ret = sL(1)*sW(1) + sL(4)*sW(4) + sL(7)*sW(7)</ele>
-                      <ele>ret = sL(1)*sW(2) + sL(4)*sW(5) + sL(7)*sW(8)</ele>
-                      <ele>ret = sL(1)*sW(3) + sL(4)*sW(6) + sL(7)*sW(9)</ele>
-                      <ele>ret = sL(2)*sW(1) + sL(5)*sW(4) + sL(8)*sW(7)</ele>
-                      <ele>ret = sL(2)*sW(2) + sL(5)*sW(5) + sL(8)*sW(8)</ele>
-                      <ele>ret = sL(2)*sW(3) + sL(5)*sW(6) + sL(8)*sW(9)</ele>
-                      <ele>ret = sL(3)*sW(1) + sL(6)*sW(4) + sL(9)*sW(7)</ele>
-                      <ele>ret = sL(3)*sW(2) + sL(6)*sW(5) + sL(9)*sW(8)</ele>
-                      <ele>ret = sL(3)*sW(3) + sL(6)*sW(6) + sL(9)*sW(9)</ele>
-                  </xmlVector>
-                </SymbolicFunction>
-              </function>
-            </SignalOperation>
-              <AngularVelocitySensor xmlns="http://www.mbsim-env.de/MBSimControl" name="om_upperfork_I">
-                <frame ref="../../Group[Group_Front_fork]/Object[upper_fork]/Frame[C]"/>
-            </AngularVelocitySensor>
-              <AngularVelocitySensor xmlns="http://www.mbsim-env.de/MBSimControl" name="om_lowerfork_I">
-                <frame ref="../../Group[Group_Front_fork]/Object[lower_fork]/Frame[C]"/>
-            </AngularVelocitySensor>
-              <AngularAccelerationSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="omp_upperfork_I">
-                <frame ref="../../Group[Group_Front_fork]/Object[upper_fork]/Frame[C]"/>
-            </AngularAccelerationSensor>
-              <AngularAccelerationSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="omp_lowerfork_I">
-                <frame ref="../../Group[Group_Front_fork]/Object[lower_fork]/Frame[C]"/>
-            </AngularAccelerationSensor>
-              <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="omp_upperfork_UF">
-                <inputSignal ref="../Link[omp_upperfork_I]"/>
-                <inputSignal ref="../Link[S_I_upperfork]"/>
-                <function>
-                  <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="omp" arg1Dim="3" arg2="s" arg2Dim="9">
-                    <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                      <ele>ret = s(1)*omp(1)+s(4)*omp(2)+s(7)*omp(3)</ele>
-                      <ele>ret = s(2)*omp(1)+s(5)*omp(2)+s(8)*omp(3)</ele>
-                      <ele>ret = s(3)*omp(1)+s(6)*omp(2)+s(9)*omp(3)</ele>
-                  </xmlVector>
-                </SymbolicFunction>
-              </function>
-            </SignalOperation>
-              <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="omp_lowerfork_UF">
-                <inputSignal ref="../Link[omp_lowerfork_I]"/>
-                <inputSignal ref="../Link[S_I_upperfork]"/>
-                <function>
-                  <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="omp" arg1Dim="3" arg2="s" arg2Dim="9">
-                    <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                      <ele>ret = s(1)*omp(1)+s(4)*omp(2)+s(7)*omp(3)</ele>
-                      <ele>ret = s(2)*omp(1)+s(5)*omp(2)+s(8)*omp(3)</ele>
-                      <ele>ret = s(3)*omp(1)+s(6)*omp(2)+s(9)*omp(3)</ele>
-                  </xmlVector>
-                </SymbolicFunction>
-              </function>
-            </SignalOperation>
-              <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="om_upperfork_FW">
-                <inputSignal ref="../Link[om_upperfork_I]"/>
-                <inputSignal ref="../Link[S_I_FW]"/>
-                <function>
-                  <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="om" arg1Dim="3" arg2="s" arg2Dim="9">
-                    <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                      <ele>ret = s(1)*om(1) + s(4)*om(2) + s(7)*om(3)</ele>
-                      <ele>ret = s(2)*om(1) + s(5)*om(2) + s(8)*om(3)</ele>
-                      <ele>ret = s(3)*om(1) + s(6)*om(2) + s(9)*om(3)</ele>
-                  </xmlVector>
-                </SymbolicFunction>
-              </function>
-            </SignalOperation>
-              <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="om_lowerfork_FW">
-                <inputSignal ref="../Link[om_lowerfork_I]"/>
-                <inputSignal ref="../Link[S_I_FW]"/>
-                <function>
-                  <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="om" arg1Dim="3" arg2="s" arg2Dim="9">
-                    <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                      <ele>ret = s(1)*om(1) + s(4)*om(2) + s(7)*om(3)</ele>
-                      <ele>ret = s(2)*om(1) + s(5)*om(2) + s(8)*om(3)</ele>
-                      <ele>ret = s(3)*om(1) + s(6)*om(2) + s(9)*om(3)</ele>
-                  </xmlVector>
-                </SymbolicFunction>
-              </function>
-            </SignalOperation>
-              <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="omp_upperfork_FW">
-                <inputSignal ref="../../Group[Group_Kinematic_Observer]/Link[omp_upperfork_I]"/>
-                <inputSignal ref="../../Group[Group_Kinematic_Observer]/Link[S_I_FW]"/>
-                <function>
-                  <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="om" arg1Dim="3" arg2="s" arg2Dim="9">
-                    <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                      <ele>ret = s(1)*om(1) + s(4)*om(2) + s(7)*om(3)</ele>
-                      <ele>ret = s(2)*om(1) + s(5)*om(2) + s(8)*om(3)</ele>
-                      <ele>ret = s(3)*om(1) + s(6)*om(2) + s(9)*om(3)</ele>
-                  </xmlVector>
-                </SymbolicFunction>
-              </function>
-            </SignalOperation>  
-              <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="omp_lowerfork_FW">
-                <inputSignal ref="../../Group[Group_Kinematic_Observer]/Link[omp_lowerfork_I]"/>
-                <inputSignal ref="../../Group[Group_Kinematic_Observer]/Link[S_I_FW]"/>
-                <function>
-                  <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="om" arg1Dim="3" arg2="s" arg2Dim="9">
-                    <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                      <ele>ret = s(1)*om(1) + s(4)*om(2) + s(7)*om(3)</ele>
-                      <ele>ret = s(2)*om(1) + s(5)*om(2) + s(8)*om(3)</ele>
-                      <ele>ret = s(3)*om(1) + s(6)*om(2) + s(9)*om(3)</ele>
-                  </xmlVector>
-                </SymbolicFunction>
-              </function>
-            </SignalOperation>  
-              <OrientationSensor xmlns="http://www.mbsim-env.de/MBSimControl" name="S_I_RW">
-                <frame ref="../../Group[Group_Rear_wheel]/Object[Rear_wheel]/Frame[C]"/>
-            </OrientationSensor>
-              <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="S_War_RW">
-                <inputSignal ref="../../Group[Group_Rear_wheel]/Link[S_I_War]"/>
-                <inputSignal ref="../Link[S_I_RW]"/>
-                <function>
-                  <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="sL" arg1Dim="9" arg2="sW" arg2Dim="9">
-                    <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                      <ele>ret = sL(1)*sW(1) + sL(4)*sW(4) + sL(7)*sW(7)</ele>
-                      <ele>ret = sL(1)*sW(2) + sL(4)*sW(5) + sL(7)*sW(8)</ele>
-                      <ele>ret = sL(1)*sW(3) + sL(4)*sW(6) + sL(7)*sW(9)</ele>
-                      <ele>ret = sL(2)*sW(1) + sL(5)*sW(4) + sL(8)*sW(7)</ele>
-                      <ele>ret = sL(2)*sW(2) + sL(5)*sW(5) + sL(8)*sW(8)</ele>
-                      <ele>ret = sL(2)*sW(3) + sL(5)*sW(6) + sL(8)*sW(9)</ele>
-                      <ele>ret = sL(3)*sW(1) + sL(6)*sW(4) + sL(9)*sW(7)</ele>
-                      <ele>ret = sL(3)*sW(2) + sL(6)*sW(5) + sL(9)*sW(8)</ele>
-                      <ele>ret = sL(3)*sW(3) + sL(6)*sW(6) + sL(9)*sW(9)</ele>
-                  </xmlVector>
-                </SymbolicFunction>
-              </function>
-            </SignalOperation>
-            </links>
-            <constraints/>
-            <observers/>
-          </Group>
-          <Embed xmlns="http://www.mbsim-env.de/MBXMLUtils" parameterHref="Data/Group_Front_wheel.xml">
-            <Group xmlns="http://www.mbsim-env.de/MBSim" name="Group_Compensation_wobble">
-              <frames/>
-              <contours/>
-              <groups/>
-              <objects/>
-              <links>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="om_Diff">
-                  <inputSignal ref="../../Group[Group_Kinematic_Observer]/Link[om_upperfork_FW]"/>
-                  <inputSignal ref="../../Group[Group_Kinematic_Observer]/Link[om_lowerfork_FW]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="om_got" arg1Dim="3" arg2="om_gut" arg2Dim="3">
-                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret = om_gut(1) - om_got(1)</ele>
-                        <ele>ret = om_gut(2) - om_got(2)</ele>
-                        <ele>ret = om_gut(3) - om_got(3)</ele>
-                  </xmlVector>
-                </SymbolicFunction>
-              </function>
-            </SignalOperation>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="M_Gyro_comp_wobble">
-                  <inputSignal ref="../Link[om_Diff]"/>
-                  <inputSignal ref="../../Group[Group_Front_wheel]/Link[om_y_f]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="om" arg1Dim="3" arg2="omy" arg2Dim="1">
-                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret  = om(3)*omy(1)*(T_FW(1)-T_FW(5))</ele>
-                        <ele>ret  =0</ele>
-                        <ele>ret  = om(1)*omy(1)*(T_FW(5)-T_FW(1))</ele>
-                      </xmlVector>
-                    </SymbolicFunction>
-                  </function>
-                </SignalOperation>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="M_Gyro_comp_wobble_Sw">
-                  <inputSignal ref="../Link[M_Gyro_comp_wobble]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="M" arg1Dim="3">
-                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret  = Switch_Gyro_comp_wobble*M(1)</ele>
-                        <ele>ret  = Switch_Gyro_comp_wobble*M(2)</ele>
-                        <ele>ret  = Switch_Gyro_comp_wobble*M(3)</ele>
-                      </xmlVector>
-                    </SymbolicFunction>
-                  </function>
-                </SignalOperation>
-                <KineticExcitation name="M_Gyro_comp_wobble_exc">
-                  <connect ref2="../../Group[Group_Front_wheel]/Object[Front_wheel]/Frame[C]"/>
-                  <frameOfReference>"secondFrame"</frameOfReference>
-                  <momentDirection unit="-">
-                    <xmlMatrix xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                      <row>
-                        <ele>1</ele>
-                        <ele>0</ele>
-                        <ele>0</ele>
-                      </row>
-                      <row>
-                        <ele>0</ele>
-                        <ele>1</ele>
-                        <ele>0</ele>
-                      </row>
-                      <row>
-                        <ele>0</ele>
-                        <ele>0</ele>
-                        <ele>1</ele>
-                      </row>
-                    </xmlMatrix>
-                  </momentDirection>
-                  <momentFunction>
-                    <SignalFunction xmlns="http://www.mbsim-env.de/MBSimControl">
-                      <returnSignal ref="../../Link[M_Gyro_comp_wobble_Sw]"/>
-                    </SignalFunction>
-                  </momentFunction>
-                  <enableOpenMBV/>
-                </KineticExcitation>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="omp_Diff">
-                  <inputSignal ref="../../Group[Group_Kinematic_Observer]/Link[omp_upperfork_FW]"/>
-                  <inputSignal ref="../../Group[Group_Kinematic_Observer]/Link[omp_lowerfork_FW]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="om_got" arg1Dim="3" arg2="om_gut" arg2Dim="3">
-                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret = om_gut(1) - om_got(1)</ele>
-                        <ele>ret = om_gut(2) - om_got(2)</ele>
-                        <ele>ret = om_gut(3) - om_got(3)</ele>
-                  </xmlVector>
-                </SymbolicFunction>
-              </function>
-            </SignalOperation>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="M_Eul_comp_wobble">
-                  <inputSignal ref="../Link[omp_Diff]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="omp" arg1Dim="3">
-                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret = T_FW(1)*omp(1)</ele>
-                        <ele>ret = T_FW(5)*omp(2)</ele>
-                        <ele>ret = T_FW(1)*omp(3)</ele>
-                  </xmlVector>
-                </SymbolicFunction>
-              </function>
-            </SignalOperation>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="M_Gyro_comp_wobble_upperfork">
-                  <inputSignal ref="../Link[M_Gyro_comp_wobble]"/>
-                  <inputSignal ref="../../Group[Group_Kinematic_Observer]/Link[S_upperfork_FW]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="M" arg1Dim="3" arg2="s" arg2Dim="9">
-                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret = s(1)*M(1)+s(2)*M(2)+s(3)*M(3)</ele>
-                        <ele>ret = s(4)*M(1)+s(5)*M(2)+s(6)*M(3)</ele>
-                        <ele>ret = s(7)*M(1)+s(8)*M(2)+s(9)*M(3)</ele>
-                  </xmlVector>
-                </SymbolicFunction>
-              </function>
-            </SignalOperation>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="M_Eul_comp_wobble_upperfork">
-                  <inputSignal ref="../Link[M_Eul_comp_wobble]"/>
-                  <inputSignal ref="../../Group[Group_Kinematic_Observer]/Link[S_upperfork_FW]"/>
-                  <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="M" arg1Dim="3" arg2="s" arg2Dim="9">
-                      <xmlVector xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                        <ele>ret = s(1)*M(1)+s(2)*M(2)+s(3)*M(3)</ele>
-                        <ele>ret = s(4)*M(1)+s(5)*M(2)+s(6)*M(3)</ele>
-                        <ele>ret = s(7)*M(1)+s(8)*M(2)+s(9)*M(3)</ele>
-                  </xmlVector>
-                </SymbolicFunction>
-              </function>
-            </SignalOperation>    
-                <GeneralizedVelocitySensor xmlns="http://www.mbsim-env.de/MBSimControl" name="alp">
-                  <object ref="../../Group[Group_Front_fork]/Object[Fork_rot_x]"/>
-                </GeneralizedVelocitySensor>
-              </links>  
-              <constraints/>
               <observers/>
             </Group>
           </Embed>  
@@ -6297,6 +5703,9 @@ ret = [-MxG; -MyG; -MzG]  % Wirkung auf Fahrzeug ==&gt; neg. VZ!!!</SymbolicFunc
       <plotStepSize unit="s">1e-2</plotStepSize>
     </LSODEIntegrator>
   </MBSimProject>
+
+
+
 
 
 

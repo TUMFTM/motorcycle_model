@@ -50,6 +50,7 @@
       </xmlMatrix>
    </matrixParameter>
    <scalarParameter name="m_unbalance">0.000000</scalarParameter>
+   <scalarParameter name="Fz0_FW">1100.000000</scalarParameter>
    <scalarParameter name="rBx1">13.476000</scalarParameter>
    <scalarParameter name="rBx2">11.354000</scalarParameter>
    <scalarParameter name="Cxal">1.123100</scalarParameter>
