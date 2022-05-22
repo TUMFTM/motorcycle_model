@@ -3667,8 +3667,8 @@ ret = [v(1) + om(2)*r(3) - om(3)*r(2); v(2) + om(3)*r(1) - om(1)*r(3); v(3) + om
                   <inputSignal ref="../Link[Long_slip_f]"/>
                   <inputSignal ref="../Link[Slipangle_f_pt1]"/>
                   <inputSignal ref="../Link[Kyal_f]"/>
-                  <inputSignal ref="../../Group[Group_Controller]/Link[time]"/>
-                </Multiplexer><SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Fx_Tyre_f_C">
+                </Multiplexer>
+                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Fx_Tyre_f_C">
                   <inputSignal ref="../Link[Tyre_f_input]"/>
                   <inputSignal ref="../Link[Fz_Tyre_f_C]"/>
                   <function>
@@ -3694,7 +3694,7 @@ ret=Fx</SymbolicFunction>
                   <inputSignal ref="../Link[Tyre_f_input]"/>
                   <inputSignal ref="../Link[Fz_Tyre_f_C]"/>
                   <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="i" arg1Dim="5" arg2="FzV" arg2Dim="1">Fz0   = Fz0_FW
+                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="i" arg1Dim="4" arg2="FzV" arg2Dim="1">Fz0   = Fz0_FW
 Fz     = FzV(1)
 ga     = i(1)
 ka     = i(2)
@@ -5026,13 +5026,12 @@ ret = [v(1) + om(2)*r(3) - om(3)*r(2); v(2) + om(3)*r(1) - om(1)*r(3); v(3) + om
                   <inputSignal ref="../Link[Long_slip_r]"/>
                   <inputSignal ref="../Link[Slipangle_r_pt1]"/>
                   <inputSignal ref="../Link[Kyal_r]"/>
-                  <inputSignal ref="../../Group[Group_Controller]/Link[time]"/>
-              </Multiplexer>  
+                </Multiplexer>  
                 <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Fx_Tyre_r_C">
                   <inputSignal ref="../Link[Tyre_r_input]"/>
                   <inputSignal ref="../Link[Fz_Tyre_r_C]"/>
                   <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="i" arg1Dim="5" arg2="FzH" arg2Dim="1">ka  = i(2)
+                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="i" arg1Dim="4" arg2="FzH" arg2Dim="1">ka  = i(2)
 als  = i(3)
 Fz   = FzH(1)
 Fz0 = Fz0_RW
@@ -5055,7 +5054,7 @@ ret=Fx</SymbolicFunction>
                   <inputSignal ref="../Link[Tyre_r_input]"/>
                   <inputSignal ref="../Link[Fz_Tyre_r_C]"/>
                   <function>
-                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="i" arg1Dim="5" arg2="FzH" arg2Dim="1">Fz0    = Fz0_RW
+                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="i" arg1Dim="4" arg2="FzH" arg2Dim="1">Fz0    = Fz0_RW
 Fz     = FzH(1)
 ga     = i(1)
 ka     = i(2)
@@ -5655,6 +5654,7 @@ ret = Mbr_st*(1-Velocity_controller) + (1-Brake_distribution)*Mbr_dyn + Mdrive</
       <plotStepSize unit="s">1e-2</plotStepSize>
     </LSODEIntegrator>
   </MBSimProject>
+
 
 
 
