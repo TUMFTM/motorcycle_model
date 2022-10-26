@@ -3863,15 +3863,15 @@ ret =[FIx;FIy;FIz]</SymbolicFunction>
                     <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="i" arg1Dim="15">s = [i(1);i(2);i(3);i(4);i(5);i(6);i(7);i(8);i(9)];
 Mx = i(10)+i(11)+i(13);
 My = i(14);
-Mz = i(12)+i(15);
+Mz = i(15);%i(12)+i(15);
 
 MIx = s(1)*Mx + s(2)*My + s(3)*Mz; 
 MIy = s(4)*Mx + s(5)*My + s(6)*Mz; 
 MIz = s(7)*Mx + s(8)*My + s(9)*Mz; 
 
 ret =[MIx;MIy;MIz]</SymbolicFunction>
-                </function>
-              </SignalOperation>  
+                  </function>
+                </SignalOperation>  
                 <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Fxy_Tyre_f_I">
                   <inputSignal ref="../Link[F_Tyre_f_I]"/>
                   <function>
@@ -4119,6 +4119,28 @@ ret =[MIx;MIy;MIz]</SymbolicFunction>
                     <scaleLength>.01</scaleLength>
                     <scaleSize>.1</scaleSize>
                   </enableOpenMBV>
+                </KineticExcitation>
+                <KineticExcitation name="Mz_Tyre_f_C_exc">
+                  <connect ref2="../Object[Front_wheel]/Frame[C]"/>
+                  <momentDirection unit="-">
+                    <xmlMatrix xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                      <row>
+                        <ele>0</ele>
+                      </row>
+                      <row>
+                        <ele>0</ele>
+                      </row>
+                      <row>
+                        <ele>1</ele>
+                      </row>
+                    </xmlMatrix>
+                  </momentDirection>
+                  <momentFunction>
+                    <SignalFunction xmlns="http://www.mbsim-env.de/MBSimControl">
+                      <returnSignal ref="../../Link[Mz_Tyre_f_C]"/>
+                    </SignalFunction>
+                  </momentFunction>
+                  <enableOpenMBV/>
                 </KineticExcitation>
               </links>
               <constraints/>
@@ -5486,6 +5508,28 @@ ret = Mbr_st*(1-Velocity_controller) + (1-Brake_distribution)*Mbr_dyn + Mdrive</
                     <scaleSize>.1</scaleSize>
                   </enableOpenMBV>
                 </KineticExcitation>
+                <KineticExcitation name="Mz_Tyre_r_C_exc">
+                  <connect ref2="../Object[Rear_wheel]/Frame[C]"/>
+                  <momentDirection unit="-">
+                    <xmlMatrix xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                      <row>
+                        <ele>0</ele>
+                      </row>
+                      <row>
+                        <ele>0</ele>
+                      </row>
+                      <row>
+                        <ele>1</ele>
+                      </row>
+                    </xmlMatrix>
+                  </momentDirection>
+                  <momentFunction>
+                    <SignalFunction xmlns="http://www.mbsim-env.de/MBSimControl">
+                      <returnSignal ref="../../Link[Mz_Tyre_r_C]"/>
+                    </SignalFunction>
+                  </momentFunction>
+                  <enableOpenMBV/>
+                </KineticExcitation>
               </links>
               <constraints>
               </constraints>
@@ -5654,6 +5698,7 @@ ret = Mbr_st*(1-Velocity_controller) + (1-Brake_distribution)*Mbr_dyn + Mdrive</
       <plotStepSize unit="s">1e-2</plotStepSize>
     </LSODEIntegrator>
   </MBSimProject>
+
 
 
 
