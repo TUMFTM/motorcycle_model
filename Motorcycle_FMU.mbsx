@@ -28,7 +28,7 @@
         <scalarParameter name="Velocity_controller">1                     % [/]</scalarParameter>
         <scalarParameter name="Brake_distribution">0.8                   % front brake</scalarParameter>        
         <scalarParameter name="_______________steering_control___________________________________________________________">0%____________________________________________________________________</scalarParameter>        
-        <scalarParameter name="Steering_controller">1                     % [/]                           </scalarParameter>
+        <scalarParameter name="Steering_controller">0                     % [/]                           </scalarParameter>
         <scalarParameter name="Setval_roll_angle">30                  % [Grad]         </scalarParameter>
         <scalarParameter name="T_roll_start">0.5                   % [sec]      </scalarParameter>
         <scalarParameter name="T_roll_exc">1.0                    % Duration ramp up setvalue [sec]      </scalarParameter>
@@ -5660,23 +5660,13 @@ ret = Mbr_st*(1-Velocity_controller) + (1-Brake_distribution)*Mbr_dyn + Mdrive</
             <constraints/>
             <observers/>
         </Group>
-          <Group name="Input_Output">
-            <frames/>
-            <contours/>
-            <groups/>
-            <objects/>
-            <links>
-              <ExternSignalSink xmlns="http://www.mbsim-env.de/MBSimControl" name="roll_angle_out">
-                <inputSignal ref="../../Group[Group_Controller]/Link[Roll_angle_deg]"/>
-              </ExternSignalSink>
-            </links>
-            <constraints/>
-            <observers/>
-            <enableOpenMBVFrameI/>
-          </Group>
         </groups>
         <objects/>
-        <links/>
+        <links>
+          <ExternSignalSink xmlns="http://www.mbsim-env.de/MBSimControl" name="roll_angle_out">
+            <inputSignal ref="../Group[Group_Controller]/Group[lateral]/Link[roll_angle]"/>
+          </ExternSignalSink>
+        </links>
         <constraints/>
         <observers>
         </observers>  
@@ -5712,6 +5702,7 @@ ret = Mbr_st*(1-Velocity_controller) + (1-Brake_distribution)*Mbr_dyn + Mdrive</
       <plotStepSize unit="s">1e-2</plotStepSize>
     </LSODEIntegrator>
   </MBSimProject>
+
 
 
 
