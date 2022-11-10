@@ -70,12 +70,12 @@ from MBSim the following command must be executed from the terminal:<br />
 `path\to\mbsim-env\bin\mbsimCreateFMU.exe --cosim path\to\Motorcycle_FMU.mbsx`<br />
 The command `--cosim` is needed to generate a Co-Simulation. Without it a Model-Exchange
 is generated.<br />
-The file `Motorcycle_FMU.mbsx` is identical to the standard model, but under `links` there is the possibiliy to define input and outputs for the FMU. Please 
+The file `Motorcycle_FMU.mbsx` is identical to the standard model, but under links there is the possibiliy to define input and outputs for the FMU. Please 
 add inputs and outpus with `ExternSignalSource` and `ExternSignalSink` respectively. 
 When importing the FMU for example in Simulink, the inputs and outpus will appear 
 in the related box. Moreover, a suitable solver for the Co-Simulation is already set
 in `Motorcycle_FMU.mbsx`.
-In Simulink, a bus object for the input and outputs must be create. For that, please run the simulink model containing the FMU. Simulink will throw an error and suggest to create the bus object with the command <br /> fmudialog.createBusType() <br />. After that the bus object can be save to a .mat file and loaded every time before loading the simulink model.
+In Simulink, a bus object for the input and outputs must be create. For that, please run the simulink model containing the FMU. Simulink will throw an error and suggest to create the bus object with the command `fmudialog.createBusType()`. After that the bus object can be save to a .mat file and loaded every time before loading the simulink model.
 
 # Authors
 The multibody model was developed by Francesco Passigato (Chair of Automotive Technology at TU Munich) and
