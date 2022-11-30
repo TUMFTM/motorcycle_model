@@ -76,6 +76,7 @@ When importing the FMU for example in Simulink, the inputs and outpus will appea
 in the related box. Moreover, a suitable solver for the Co-Simulation is already set
 in `Motorcycle_FMU.mbsx`.
 In Simulink, a bus object for the input and outputs must be create. For that, please run the simulink model containing the FMU. Simulink will throw an error and suggest to create the bus object with the command `fmudialog.createBusType()`. After that the bus object can be saved to a .mat file and loaded every time before loading the simulink model.
+In the directory FMU an example is present, where the FMU model of the motorcycle accepts steering moment as input and provides the roll angle as output. Please follow the configuration in the "example.slx" simulink model. In particular, a bus creator and selector are needed. In the bus creator please select the option "Output as nonvirtual bus"; this option is already selected in the example. Moreover, in the FMU itself, the name of the input and output bus should be changes, for example in "mbs_in" and "mbs_out" as in the proposed file.
 
 # Authors
 The multibody model was developed by Francesco Passigato (Chair of Automotive Technology at TU Munich) and
