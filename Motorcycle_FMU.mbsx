@@ -5663,9 +5663,33 @@ ret = Mbr_st*(1-Velocity_controller) + (1-Brake_distribution)*Mbr_dyn + Mdrive</
         </groups>
         <objects/>
         <links>
+          <ExternSignalSource xmlns="http://www.mbsim-env.de/MBSimControl" name="steering_mom_in">
+            <sourceSize>1</sourceSize>
+          </ExternSignalSource>
           <ExternSignalSink xmlns="http://www.mbsim-env.de/MBSimControl" name="roll_angle_out">
             <inputSignal ref="../Group[Group_Controller]/Group[lateral]/Link[roll_angle]"/>
-          </ExternSignalSink>
+          </ExternSignalSink><KineticExcitation name="steering_mom_in_exc">
+            <connect ref1="../Group[Group_Frame]/Object[frame_torsion]/Frame[C]" ref2="../Group[Group_Front_fork]/Object[Steering_axis]/Frame[C]"/>
+            <momentDirection unit="-">
+              <xmlMatrix xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                <row>
+                  <ele>0</ele>
+                </row>
+                <row>
+                  <ele>0</ele>
+                </row>
+                <row>
+                  <ele>1</ele>
+                </row>
+              </xmlMatrix>
+            </momentDirection>
+            <momentFunction>
+              <SignalFunction xmlns="http://www.mbsim-env.de/MBSimControl">
+                <returnSignal ref="../../Link[steering_mom_in]"/>
+              </SignalFunction>
+            </momentFunction>
+            <enableOpenMBV/>
+          </KineticExcitation>
         </links>
         <constraints/>
         <observers>
@@ -5702,6 +5726,7 @@ ret = Mbr_st*(1-Velocity_controller) + (1-Brake_distribution)*Mbr_dyn + Mdrive</
       <plotStepSize unit="s">1e-2</plotStepSize>
     </LSODEIntegrator>
   </MBSimProject>
+
 
 
 
