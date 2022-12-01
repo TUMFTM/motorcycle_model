@@ -66,7 +66,7 @@ environments. The model can be exported as Co-Simulation or Model-Exchange. In t
 case the solver in MBSim is exported together with the model; in the second case the 
 solver must be provided from the environment where the model is run. Further information 
 about FMU can be found in (https://fmi-standard.org/). In order to export the FMU 
-from MBSim the following command must be executed from the matlab command:<br />
+from MBSim the following command must be executed from the matlab command line:<br />
 `system('path\to\mbsim-env\bin\mbsimCreateFMU.exe --cosim path\to\Motorcycle_FMU.mbsx')`<br />
 The command `--cosim` is needed to generate a Co-Simulation. Without it a Model-Exchange
 is generated.<br />
