@@ -3863,7 +3863,7 @@ ret =[FIx;FIy;FIz]</SymbolicFunction>
                     <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="i" arg1Dim="15">s = [i(1);i(2);i(3);i(4);i(5);i(6);i(7);i(8);i(9)];
 Mx = i(10)+i(11)+i(13);
 My = i(14);
-Mz = i(15);%i(12)+i(15);
+Mz = i(15);
 
 MIx = s(1)*Mx + s(2)*My + s(3)*Mz; 
 MIy = s(4)*Mx + s(5)*My + s(6)*Mz; 
@@ -3872,6 +3872,21 @@ MIz = s(7)*Mx + s(8)*My + s(9)*Mz;
 ret =[MIx;MIy;MIz]</SymbolicFunction>
                   </function>
                 </SignalOperation>  
+                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="M_Tyre_f_I_aligning">
+                  <inputSignal ref="../Link[M_Tyre_f_input]"/>
+                  <function>
+                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="i" arg1Dim="15">s = [i(1);i(2);i(3);i(4);i(5);i(6);i(7);i(8);i(9)];
+Mx = 0;
+My = 0;
+Mz = i(12);
+
+MIx = s(1)*Mx + s(2)*My + s(3)*Mz; 
+MIy = s(4)*Mx + s(5)*My + s(6)*Mz; 
+MIz = s(7)*Mx + s(8)*My + s(9)*Mz; 
+
+ret =[MIx;MIy;MIz]</SymbolicFunction>
+                  </function>
+                </SignalOperation>
                 <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Fxy_Tyre_f_I">
                   <inputSignal ref="../Link[F_Tyre_f_I]"/>
                   <function>
@@ -3882,8 +3897,7 @@ ret =[MIx;MIy;MIz]</SymbolicFunction>
                   </xmlVector>
                 </SymbolicFunction>
               </function>
-            </SignalOperation>  
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Fz_Tyre_f_I">
+            </SignalOperation>    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Fz_Tyre_f_I">
                   <inputSignal ref="../Link[F_Tyre_f_I]"/>
                   <function>
                     <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="F" arg1Dim="3">
@@ -3892,8 +3906,7 @@ ret =[MIx;MIy;MIz]</SymbolicFunction>
                   </xmlVector>
                 </SymbolicFunction>
               </function>
-            </SignalOperation>  
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Mxy_Tyre_f_I">
+            </SignalOperation>    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Mxy_Tyre_f_I">
                   <inputSignal ref="../Link[M_Tyre_f_I]"/>
                   <function>
                     <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="M" arg1Dim="3">
@@ -3903,8 +3916,7 @@ ret =[MIx;MIy;MIz]</SymbolicFunction>
                   </xmlVector>
                 </SymbolicFunction>
               </function>
-            </SignalOperation>  
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Mz_Tyre_f_I">
+            </SignalOperation>    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Mz_Tyre_f_I">
                   <inputSignal ref="../Link[M_Tyre_f_I]"/>
                   <function>
                     <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="M" arg1Dim="3">
@@ -3913,8 +3925,7 @@ ret =[MIx;MIy;MIz]</SymbolicFunction>
                   </xmlVector>
                 </SymbolicFunction>
               </function>
-            </SignalOperation>  
-                <KineticExcitation name="Fxy_Tyre_f_I_exc">
+            </SignalOperation>    <KineticExcitation name="Fxy_Tyre_f_I_exc">
                   <connect ref2="../../Group[Group_Front_fork]/Object[lower_fork]/Frame[Wheel_Center]"/>
                   <frameOfReference>"firstFrame"</frameOfReference>
                   <forceDirection unit="-">
@@ -3981,8 +3992,7 @@ ret =[MIx;MIy;MIz]</SymbolicFunction>
                     <scaleLength>.0005</scaleLength>
                     <scaleSize>.1</scaleSize>
               </enableOpenMBV>
-            </KineticExcitation>  
-                <KineticExcitation name="Mxy_Tyre_f_I_exc">
+            </KineticExcitation>    <KineticExcitation name="Mxy_Tyre_f_I_exc">
                   <connect ref2="../../Group[Group_Front_fork]/Object[lower_fork]/Frame[Wheel_Center]"/>
                   <frameOfReference>"firstFrame"</frameOfReference>
                   <momentDirection unit="-">
@@ -4049,15 +4059,41 @@ ret =[MIx;MIy;MIz]</SymbolicFunction>
                     <scaleLength>.01</scaleLength>
                     <scaleSize>.1</scaleSize>
               </enableOpenMBV>
-            </KineticExcitation>  
+            </KineticExcitation>    <KineticExcitation name="Mz_Tyre_f_I_aligning_exc">
+                  <connect ref2="../Object[Front_wheel]/Frame[C]"/>
+                  <momentDirection unit="-">
+                    <xmlMatrix xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                      <row>
+                        <ele>1</ele>
+                        <ele>0</ele>
+                        <ele>0</ele>
+                      </row>
+                      <row>
+                        <ele>0</ele>
+                        <ele>1</ele>
+                        <ele>0</ele>
+                      </row>
+                      <row>
+                        <ele>0</ele>
+                        <ele>0</ele>
+                        <ele>1</ele>
+                      </row>
+                    </xmlMatrix>
+                  </momentDirection>
+                  <momentFunction>
+                    <SignalFunction xmlns="http://www.mbsim-env.de/MBSimControl">
+                      <returnSignal ref="../../Link[M_Tyre_f_I_aligning]"/>
+                    </SignalFunction>
+                  </momentFunction>
+                  <enableOpenMBV/>
+                </KineticExcitation>
                 <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="My_Fx_f_W_sop">
                   <inputSignal ref="../Link[Fx_Tyre_f_C]"/>
                   <inputSignal ref="../Group[Kinematics]/Link[r_c_wc]"/>
                   <function>
                     <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="Fx" arg1Dim="1" arg2="r" arg2Dim="3">ret = r(3)*Fx(1) </SymbolicFunction>
                 </function>
-              </SignalOperation>
-                <KineticExcitation name="My_Fx_f_W_exc" xmlns="http://www.mbsim-env.de/MBSim">
+              </SignalOperation>  <KineticExcitation name="My_Fx_f_W_exc" xmlns="http://www.mbsim-env.de/MBSim">
                   <connect ref1="../../Frame[I]" ref2="../Object[Front_wheel]/Frame[C]"/>
                   <momentDirection unit="-">
                     <xmlMatrix xmlns="http://www.mbsim-env.de/MBXMLUtils">
@@ -4087,8 +4123,7 @@ ret =[MIx;MIy;MIz]</SymbolicFunction>
                       </xmlVector>
                     </SymbolicFunction>
                   </function>
-                </SignalOperation>
-                <KineticExcitation name="My_brake_f_W_exc" xmlns="http://www.mbsim-env.de/MBSim">
+                </SignalOperation><KineticExcitation name="My_brake_f_W_exc" xmlns="http://www.mbsim-env.de/MBSim">
                   <connect ref1="../../Group[Group_Front_fork]/Object[lower_fork]/Frame[Wheel_Center]" ref2="../Object[Front_wheel]/Frame[C]"/>
                   <momentDirection unit="-">
                     <xmlMatrix xmlns="http://www.mbsim-env.de/MBXMLUtils">
@@ -4119,30 +4154,7 @@ ret =[MIx;MIy;MIz]</SymbolicFunction>
                     <scaleLength>.01</scaleLength>
                     <scaleSize>.1</scaleSize>
                   </enableOpenMBV>
-                </KineticExcitation>
-                <KineticExcitation name="Mz_Tyre_f_C_exc">
-                  <connect ref2="../Object[Front_wheel]/Frame[C]"/>
-                  <momentDirection unit="-">
-                    <xmlMatrix xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                      <row>
-                        <ele>0</ele>
-                      </row>
-                      <row>
-                        <ele>0</ele>
-                      </row>
-                      <row>
-                        <ele>1</ele>
-                      </row>
-                    </xmlMatrix>
-                  </momentDirection>
-                  <momentFunction>
-                    <SignalFunction xmlns="http://www.mbsim-env.de/MBSimControl">
-                      <returnSignal ref="../../Link[Mz_Tyre_f_C]"/>
-                    </SignalFunction>
-                  </momentFunction>
-                  <enableOpenMBV/>
-                </KineticExcitation>
-              </links>
+                </KineticExcitation></links>
               <constraints/>
               <observers/>
             </Group>
@@ -5245,15 +5257,30 @@ ret =[FIx;FIy;FIz]</SymbolicFunction>
                     <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="i" arg1Dim="15">s = [i(1);i(2);i(3);i(4);i(5);i(6);i(7);i(8);i(9)];
 Mx = i(10)+i(11)+i(13);
 My = i(14);
-Mz = i(12)+i(15);
+Mz = i(15);
 
 MIx = s(1)*Mx + s(2)*My + s(3)*Mz; 
 MIy = s(4)*Mx + s(5)*My + s(6)*Mz; 
 MIz = s(7)*Mx + s(8)*My + s(9)*Mz; 
 
 ret =[MIx;MIy;MIz]</SymbolicFunction>
-                </function>
-              </SignalOperation>  
+                  </function>
+                </SignalOperation>  
+                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="M_Tyre_r_I_aligning">
+                  <inputSignal ref="../Link[M_Tyre_r_input]"/>
+                  <function>
+                    <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="i" arg1Dim="15">s = [i(1);i(2);i(3);i(4);i(5);i(6);i(7);i(8);i(9)];
+Mx = 0;
+My = 0;
+Mz = i(12);
+
+MIx = s(1)*Mx + s(2)*My + s(3)*Mz; 
+MIy = s(4)*Mx + s(5)*My + s(6)*Mz; 
+MIz = s(7)*Mx + s(8)*My + s(9)*Mz; 
+
+ret =[MIx;MIy;MIz]</SymbolicFunction>
+                  </function>
+                </SignalOperation>
                 <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Fxy_Tyre_r_I">
                   <inputSignal ref="../Link[F_Tyre_r_I]"/>
                   <function>
@@ -5264,8 +5291,7 @@ ret =[MIx;MIy;MIz]</SymbolicFunction>
                   </xmlVector>
                 </SymbolicFunction>
               </function>
-            </SignalOperation>  
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Fz_Tyre_r_I">
+            </SignalOperation>    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Fz_Tyre_r_I">
                   <inputSignal ref="../Link[F_Tyre_r_I]"/>
                   <function>
                     <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="F" arg1Dim="3">
@@ -5274,8 +5300,7 @@ ret =[MIx;MIy;MIz]</SymbolicFunction>
                   </xmlVector>
                 </SymbolicFunction>
               </function>
-            </SignalOperation>  
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Mxy_Tyre_r_I">
+            </SignalOperation>    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Mxy_Tyre_r_I">
                   <inputSignal ref="../Link[M_Tyre_r_I]"/>
                   <function>
                     <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="M" arg1Dim="3">
@@ -5285,8 +5310,7 @@ ret =[MIx;MIy;MIz]</SymbolicFunction>
                   </xmlVector>
                 </SymbolicFunction>
               </function>
-            </SignalOperation>  
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Mz_Tyre_r_I">
+            </SignalOperation>    <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="Mz_Tyre_r_I">
                   <inputSignal ref="../Link[M_Tyre_r_I]"/>
                   <function>
                     <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="M" arg1Dim="3">
@@ -5295,8 +5319,7 @@ ret =[MIx;MIy;MIz]</SymbolicFunction>
                   </xmlVector>
                 </SymbolicFunction>
               </function>
-            </SignalOperation>  
-                <KineticExcitation name="Fxy_Tyre_r_I_exc">
+            </SignalOperation>    <KineticExcitation name="Fxy_Tyre_r_I_exc">
                   <connect ref2="../../Group[Group_swingarm]/Object[Wheelaxis_rear]/Frame[C]"/>
                   <frameOfReference>"firstFrame"</frameOfReference>
                   <forceDirection unit="-">
@@ -5363,8 +5386,7 @@ ret =[MIx;MIy;MIz]</SymbolicFunction>
                     <scaleLength>.0005</scaleLength>
                     <scaleSize>.1</scaleSize>
               </enableOpenMBV>
-            </KineticExcitation>  
-                <KineticExcitation name="Mxy_Tyre_r_I_exc">
+            </KineticExcitation>    <KineticExcitation name="Mxy_Tyre_r_I_exc">
                   <connect ref2="../../Group[Group_swingarm]/Object[Wheelaxis_rear]/Frame[C]"/>
                   <frameOfReference>"firstFrame"</frameOfReference>
                   <momentDirection unit="-">
@@ -5399,8 +5421,7 @@ ret =[MIx;MIy;MIz]</SymbolicFunction>
                     <scaleLength>0.01</scaleLength>
                     <scaleSize>0.1</scaleSize>
               </enableOpenMBV>
-            </KineticExcitation>  
-                <KineticExcitation name="Mz_Tyre_r_I_exc">
+            </KineticExcitation>    <KineticExcitation name="Mz_Tyre_r_I_exc">
                   <connect ref2="../../Group[Group_swingarm]/Object[Wheelaxis_rear]/Frame[C]"/>
                   <frameOfReference>"firstFrame"</frameOfReference>
                   <momentDirection unit="-">
@@ -5432,15 +5453,41 @@ ret =[MIx;MIy;MIz]</SymbolicFunction>
                     <scaleLength>0.01</scaleLength>
                     <scaleSize>0.1</scaleSize>
               </enableOpenMBV>
-            </KineticExcitation>  
+            </KineticExcitation>    <KineticExcitation name="Mz_Tyre_r_I_aligning_exc">
+                  <connect ref2="../Object[Rear_wheel]/Frame[C]"/>
+                  <momentDirection unit="-">
+                    <xmlMatrix xmlns="http://www.mbsim-env.de/MBXMLUtils">
+                      <row>
+                        <ele>1</ele>
+                        <ele>0</ele>
+                        <ele>0</ele>
+                      </row>
+                      <row>
+                        <ele>0</ele>
+                        <ele>1</ele>
+                        <ele>0</ele>
+                      </row>
+                      <row>
+                        <ele>0</ele>
+                        <ele>0</ele>
+                        <ele>1</ele>
+                      </row>
+                    </xmlMatrix>
+                  </momentDirection>
+                  <momentFunction>
+                    <SignalFunction xmlns="http://www.mbsim-env.de/MBSimControl">
+                      <returnSignal ref="../../Link[M_Tyre_r_I_aligning]"/>
+                    </SignalFunction>
+                  </momentFunction>
+                  <enableOpenMBV/>
+                </KineticExcitation>
                 <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="My_Fx_r_W_sop">
                   <inputSignal ref="../Link[Fx_Tyre_r_C]"/>
                   <inputSignal ref="../Group[Kinematics]/Link[r_c_wc]"/>
                   <function>
                     <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="Fx" arg1Dim="1" arg2="r" arg2Dim="3">ret = r(3)*Fx(1)</SymbolicFunction>
                 </function>
-              </SignalOperation>
-                <KineticExcitation name="My_Fx_r_W_exc" xmlns="http://www.mbsim-env.de/MBSim">
+              </SignalOperation>  <KineticExcitation name="My_Fx_r_W_exc" xmlns="http://www.mbsim-env.de/MBSim">
                   <connect ref1="../../Frame[I]" ref2="../Object[Rear_wheel]/Frame[C]"/>
                   <momentDirection unit="-">
                     <xmlMatrix xmlns="http://www.mbsim-env.de/MBXMLUtils">
@@ -5464,8 +5511,7 @@ ret =[MIx;MIy;MIz]</SymbolicFunction>
                   <inputSignal ref="../../Group[Group_Controller]/Group[longitudinal]/Link[M_brake_r_stat]"/>
                   <inputSignal ref="../../Group[Group_Controller]/Group[longitudinal]/Link[M_brake]"/>
                   <inputSignal ref="../../Group[Group_Controller]/Group[longitudinal]/Link[M_drive]"/>
-                </Multiplexer>
-                <SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="My_drive_r_W_sop">
+                </Multiplexer><SignalOperation xmlns="http://www.mbsim-env.de/MBSimControl" name="My_drive_r_W_sop">
                   <inputSignal ref="../Link[My_drive_r_W_in]"/>
                   <function>
                     <SymbolicFunction xmlns="http://www.mbsim-env.de/MBSim" arg1="i" arg1Dim="3">Mbr_st    = i(1)
@@ -5474,8 +5520,7 @@ Mdrive    = i(3)
 
 ret = Mbr_st*(1-Velocity_controller) + (1-Brake_distribution)*Mbr_dyn + Mdrive</SymbolicFunction>
                   </function>
-                </SignalOperation>
-                <KineticExcitation name="My_drive_W_exc" xmlns="http://www.mbsim-env.de/MBSim">
+                </SignalOperation><KineticExcitation name="My_drive_W_exc" xmlns="http://www.mbsim-env.de/MBSim">
                   <connect ref1="../../Group[Group_swingarm]/Object[Wheelaxis_rear]/Frame[C]" ref2="../Object[Rear_wheel]/Frame[C]"/>
                   <frameOfReference>"secondFrame"</frameOfReference>
                   <momentDirection unit="-">
@@ -5507,30 +5552,7 @@ ret = Mbr_st*(1-Velocity_controller) + (1-Brake_distribution)*Mbr_dyn + Mdrive</
                     <scaleLength>.01</scaleLength>
                     <scaleSize>.1</scaleSize>
                   </enableOpenMBV>
-                </KineticExcitation>
-                <KineticExcitation name="Mz_Tyre_r_C_exc">
-                  <connect ref2="../Object[Rear_wheel]/Frame[C]"/>
-                  <momentDirection unit="-">
-                    <xmlMatrix xmlns="http://www.mbsim-env.de/MBXMLUtils">
-                      <row>
-                        <ele>0</ele>
-                      </row>
-                      <row>
-                        <ele>0</ele>
-                      </row>
-                      <row>
-                        <ele>1</ele>
-                      </row>
-                    </xmlMatrix>
-                  </momentDirection>
-                  <momentFunction>
-                    <SignalFunction xmlns="http://www.mbsim-env.de/MBSimControl">
-                      <returnSignal ref="../../Link[Mz_Tyre_r_C]"/>
-                    </SignalFunction>
-                  </momentFunction>
-                  <enableOpenMBV/>
-                </KineticExcitation>
-              </links>
+                </KineticExcitation></links>
               <constraints>
               </constraints>
               <observers/>
@@ -5698,6 +5720,7 @@ ret = Mbr_st*(1-Velocity_controller) + (1-Brake_distribution)*Mbr_dyn + Mdrive</
       <plotStepSize unit="s">1e-2</plotStepSize>
     </LSODEIntegrator>
   </MBSimProject>
+
 
 
 
