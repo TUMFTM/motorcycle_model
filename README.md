@@ -4,7 +4,13 @@ Please download the software under following link: https://www.mbsim-env.de/buil
 
 # Motorcycle model
 In the following some information about the model functionalities are given. More details on the model 
-can be found in the following paper: https://www.mdpi.com/2076-3417/10/19/6826.
+can be found in the following paper: https://www.mdpi.com/2076-3417/10/19/6826.<br />
+An updated version of the model using a tire model directly integrated in MBSim and a more realistic visualization (shown in the video below) is available. This model has different data compared to the version presented below and, therefore, cannot be directly used to reconstruct the results shown in the aforementioned paper. If you are interested in working with the new motorcycle model, please contact: francescopassigato@gmail.com or dwisselmann@t-online.de. 
+
+
+https://github.com/TUMFTM/motorcycle_model/assets/63056852/881d8061-4a85-4eaa-b8a9-01815eaa24e5
+
+
 
 ### Switch for Dofs
 The parameters with the name beginning in "enable_" allow to decide which Dofs are 
